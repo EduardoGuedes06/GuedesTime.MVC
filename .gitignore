@@ -1,0 +1,9 @@
+.vs
+/src/GuedesTime.Data/obj
+/src/CGuedesTime.Domain/obj
+/src/GuedesTime.MVC/bin/Debug/net8.0
+/src/GuedesTime.MVC/obj
+/src/GuedesTime.Service/obj
+/src/GuedesTime.Data/bin/Debug/net8.0
+/src/GuedesTime.Domain/bin/Debug/net8.0
+/src/GuedesTime.Service/bin/Debug/net8.0

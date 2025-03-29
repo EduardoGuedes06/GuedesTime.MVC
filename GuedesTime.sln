@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32104.313
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Aplication", "1 - Aplication", "{9702E154-C90B-41EA-92A4-B9C17EA77D0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Service", "3 - Service", "{DC413BEB-69C5-4059-818B-0D5B2BB3A604}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Infra", "4 - Infra", "{D0513309-B972-46F3-8147-8025D5EBC813}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.1 - Data", "4.1 - Data", "{82F59061-1B57-411D-8291-74109FCFEEDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Domain", "2 - Domain", "{0B6FE89B-3CB9-45BD-905D-D04B48755412}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuedesTime.MVC", "src\GuedesTime.MVC\GuedesTime.MVC.csproj", "{EF6D8616-9AB7-42F6-9208-02EAA9F2F815}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuedesTime.Domain", "src\GuedesTime.Domain\GuedesTime.Domain.csproj", "{481F4390-52F0-4D84-B498-4AB245D620E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuedesTime.Service", "src\GuedesTime.Service\GuedesTime.Service.csproj", "{70256804-A131-479E-B8EF-C0A2F1570626}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GuedesTime.Data", "src\GuedesTime.Data\GuedesTime.Data.csproj", "{1B0B3A20-C59C-460A-9B0F-DFC37A31ECCA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF6D8616-9AB7-42F6-9208-02EAA9F2F815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF6D8616-9AB7-42F6-9208-02EAA9F2F815}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF6D8616-9AB7-42F6-9208-02EAA9F2F815}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF6D8616-9AB7-42F6-9208-02EAA9F2F815}.Release|Any CPU.Build.0 = Release|Any CPU
+		{481F4390-52F0-4D84-B498-4AB245D620E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{481F4390-52F0-4D84-B498-4AB245D620E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{481F4390-52F0-4D84-B498-4AB245D620E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{481F4390-52F0-4D84-B498-4AB245D620E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70256804-A131-479E-B8EF-C0A2F1570626}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70256804-A131-479E-B8EF-C0A2F1570626}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70256804-A131-479E-B8EF-C0A2F1570626}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70256804-A131-479E-B8EF-C0A2F1570626}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B0B3A20-C59C-460A-9B0F-DFC37A31ECCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B0B3A20-C59C-460A-9B0F-DFC37A31ECCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B0B3A20-C59C-460A-9B0F-DFC37A31ECCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B0B3A20-C59C-460A-9B0F-DFC37A31ECCA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{82F59061-1B57-411D-8291-74109FCFEEDF} = {D0513309-B972-46F3-8147-8025D5EBC813}
+		{EF6D8616-9AB7-42F6-9208-02EAA9F2F815} = {9702E154-C90B-41EA-92A4-B9C17EA77D0D}
+		{481F4390-52F0-4D84-B498-4AB245D620E6} = {0B6FE89B-3CB9-45BD-905D-D04B48755412}
+		{70256804-A131-479E-B8EF-C0A2F1570626} = {DC413BEB-69C5-4059-818B-0D5B2BB3A604}
+		{1B0B3A20-C59C-460A-9B0F-DFC37A31ECCA} = {82F59061-1B57-411D-8291-74109FCFEEDF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C813139D-DDCD-462E-9D14-01F183F4D1FA}
+	EndGlobalSection
+EndGlobal

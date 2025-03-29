@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "PJ8MxOZg1FSHICfsjVOcHkrnJgUJs11CaKGIRaokyx2vZhuwRE8vm9EU2t75G+N8zPvkM2q6XbOkCu2+WeHO4w==",
+  "success": true,
+  "projectFilePath": "D:\\AMBIENTE DEV\\C#\\GuedesTime\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\eduar\\.nuget\\packages\\fluentvalidation\\11.4.0\\fluentvalidation.11.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}
