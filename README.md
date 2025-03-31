@@ -1,45 +1,62 @@
-# Objetivo:
-O Objetivo deste projeto é criar um sistema web para criação e publicação de videoaulas e disponibilização destes
-videos para formação
+# Documentação do Projeto
 
+## Objetivo
+O objetivo deste projeto é desenvolver uma interface web para escolas integrais criarem e planejarem suas aulas ao longo do ano letivo. O sistema visa facilitar a organização do cronograma escolar, permitindo a distribuição eficiente de disciplinas e professores.
 
-# Tecnologias:
-Para desenvolvimento da plataforma foram utilizados algumas tecnologias: 
+## Análise do Projeto
+O projeto busca solucionar a dificuldade das escolas em gerenciar e distribuir a carga horária das disciplinas ao longo do ano letivo. Para isso, será desenvolvida uma interface intuitiva e funcional que permita a criação, edição e acompanhamento do planejamento escolar.
 
-Para front-end: 
-	  Html5,
-	  Css,
-    Razor,???
-    JavaScritp;
-  
-  Para Backend:
-    MYSQL,
-    C#,
-    .Net Framework,
-    Entity Framework,
-    Linq.
+### Requisitos Funcionais
+- Cadastro de disciplinas, professores e turmas.
+- Planejamento de aulas distribuídas ao longo do ano letivo.
+- Interface intuitiva para visualização e edição do cronograma.
+- Exportação do planejamento em formatos acessíveis.
+- Controle de acessos conforme o perfil do usuário.
 
-# Ferramentas:
-	-Para edição de texto e a programação em si foi utilizada a IDE Visual Studio; 
-	
- # Banco de dados:
+### Requisitos Não Funcionais
+- Responsividade para diferentes dispositivos.
+- Segurança no armazenamento e manipulação dos dados.
+- Performance otimizada para grandes volumes de dados.
 
-	-Add-Migration InitialIdentity -Context ApplicationDbContext
-	-Update-Database -Context ApplicationDbContext
+## Tecnologias Utilizadas
+Para o desenvolvimento da plataforma, foram utilizadas as seguintes tecnologias:
 
-	-Add-Migration InitialDatabase -Context MeuDbContext
-	-Update-Database -Context MeuDbContext 
+### Front-end:
+- HTML5
+- CSS
+- JavaScript
+- Razor
 
-# Contato: 
-	Eduardo Guedes
-	 eduardoguedeslibra@gmail.com
-	 https://www.linkedin.com/in/eduardoguedespereira/
+### Back-end:
+- MySQL
+- C#
+- .NET Framework
+- Entity Framework
+- LINQ
 
+## Arquitetura do Sistema
+O sistema seguirá a arquitetura MVC (Model-View-Controller), garantindo a separação das responsabilidades e melhor manutenção do código.
 
-# Perfils com nivel de acesso
+### Camadas:
+- **Model**: Responsável pelos dados e regras de negócio.
+- **View**: Interface gráfica para interação do usuário.
+- **Controller**: Manipula as requisições e conecta a View ao Model.
 
-    edu@gmail.com - Edu#123 : Visualização
+## Ferramentas
+- Para edição de texto e desenvolvimento, foi utilizada a IDE Visual Studio.
 
-    store@gmail.com - Store#123 : Visualização e Postagem de produto
+## Banco de Dados
+Para gerenciamento do banco de dados, utilizamos os seguintes comandos:
 
-    admin@gmail.com - Admin#123 : Acesso ao CRUD completo# EduTime
+```sh
+Add-Migration InitialIdentity -Context ApplicationDbContext
+Update-Database -Context ApplicationDbContext
+
+Add-Migration InitialDatabase -Context MeuDbContext
+Update-Database -Context MeuDbContext
+```
+
+## Contato
+Eduardo Guedes  
+Email: eduardoguedeslibra@gmail.com  
+LinkedIn: [Eduardo Guedes Pereira](https://www.linkedin.com/in/eduardoguedespereira/)

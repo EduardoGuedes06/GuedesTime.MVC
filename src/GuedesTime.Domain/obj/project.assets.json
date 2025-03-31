@@ -53,11 +53,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\AMBIENTE DEV\\C#\\GuedesTime\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
+      "projectUniqueName": "D:\\AMBIENTE DEV\\PROJETO GUEDES TIME\\GuedesTime\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
       "projectName": "GuedesTime.Domain",
-      "projectPath": "D:\\AMBIENTE DEV\\C#\\GuedesTime\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
+      "projectPath": "D:\\AMBIENTE DEV\\PROJETO GUEDES TIME\\GuedesTime\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
       "packagesPath": "C:\\Users\\eduar\\.nuget\\packages\\",
-      "outputPath": "D:\\AMBIENTE DEV\\C#\\GuedesTime\\src\\GuedesTime.Domain\\obj\\",
+      "outputPath": "D:\\AMBIENTE DEV\\PROJETO GUEDES TIME\\GuedesTime\\src\\GuedesTime.Domain\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\eduar\\AppData\\Roaming\\NuGet\\NuGet.Config",
