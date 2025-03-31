@@ -23,10 +23,10 @@ A identidade visual do sistema seguirá uma paleta de cores frias, priorizando m
 
 | Cor           | Hex       |
 |---------------|---------- |
-| Azul-petróleo | ![#1E3A8A](https://via.placeholder.com/20/1E3A8A/000000?text=+) `#1E3A8A` |
-| Lilás         | ![#A78BFA](https://via.placeholder.com/20/A78BFA/000000?text=+) `#A78BFA` |
-| Cinza-claro   | ![#E5E7EB](https://via.placeholder.com/20/E5E7EB/000000?text=+) `#E5E7EB` |
-| Branco        | ![#FFFFFF](https://via.placeholder.com/20/FFFFFF/000000?text=+) `#FFFFFF` |
+| Azul-petróleo | ![#1E3A8A](https://www.colorhexa.com/1e3a8a.png) `#1E3A8A` |
+| Lilás         | ![#A78BFA](https://www.colorhexa.com/A78BFA.png) `#A78BFA` |
+| Cinza-claro   | ![#E5E7EB](https://www.colorhexa.com/E5E7EB.png) `#E5E7EB` |
+| Branco        | ![#FFFFFF](https://www.colorhexa.com/FFFFFF.png) `#FFFFFF` |
 
 
 ## Tecnologias Utilizadas
