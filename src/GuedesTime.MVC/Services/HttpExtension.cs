@@ -2,8 +2,9 @@
 using System.Text;
 using GuedesTime.MVC.Extensions;
 
-namespace GuedesTime.MVC.Services { 
-    public abstract class Service
+namespace GuedesTime.MVC.Services
+{
+    public abstract class HttpExtension
     {
         protected StringContent ObterConteudo(object dado)
         {

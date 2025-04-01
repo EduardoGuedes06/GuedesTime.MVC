@@ -6,7 +6,6 @@ namespace GuedesTime.MVC.Models
     {
         public string Nome { get; set; }     
         public string Imagem { get; set; }
-        public string Cep { get; set; }
         public string Numero { get; set; }
         public string Password { get; set; }
         public string ConfirmPassord { get; set; }

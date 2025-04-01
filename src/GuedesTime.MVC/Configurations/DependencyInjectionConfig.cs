@@ -4,9 +4,11 @@ using GuedesTime.Data.Repository;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Notificacoes;
 using GuedesTime.MVC.Extensions;
+using GuedesTime.MVC.Interfaces;
 using GuedesTime.MVC.Services;
 using GuedesTime.Service.Services;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using System.ComponentModel.Design;
 
 namespace GuedesTime.Configurations
 {
@@ -14,18 +16,17 @@ namespace GuedesTime.Configurations
     {
         public static IServiceCollection ResolveDependencies(this IServiceCollection services)
         {
+
             services.AddScoped<MeuDbContext>();
+            services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
+            services.AddHttpClient<IAutenticacaoService, AutenticacaoService>();
+            services.AddScoped<INotificador, Notificador>();
+
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-            services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
 
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-
-            services.AddHttpClient<IAutenticacaoService, AutenticacaoService>();
-
-            services.AddScoped<INotificador, Notificador>();
-
             services.AddScoped<IFornecedorService, FornecedorService>();
             services.AddScoped<IProdutoService, ProdutoService>();
 

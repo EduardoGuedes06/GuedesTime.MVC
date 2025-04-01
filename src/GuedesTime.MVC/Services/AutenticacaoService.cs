@@ -1,15 +1,19 @@
-﻿
-using GuedesTime.MVC.Extensions;
+﻿using GuedesTime.MVC.Extensions;
+using GuedesTime.MVC.Interfaces;
 using GuedesTime.MVC.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace GuedesTime.MVC.Services
 {
-    public class AutenticacaoService : Service, IAutenticacaoService
+    public class AutenticacaoService : HttpExtension, IAutenticacaoService
     {
         private readonly HttpClient _httpClient;
+        private readonly UserManager<ApplicationUser> _userManager;
+
 
         public AutenticacaoService(HttpClient httpClient,
+                                    UserManager<ApplicationUser> userManager,
                                    IOptions<AppSettings> settings)
         {
             httpClient.BaseAddress = new Uri(settings.Value.AutenticacaoUrl);
@@ -33,7 +37,6 @@ namespace GuedesTime.MVC.Services
 
             return await DeserializarObjetoResponse<UsuarioRespostaLogin>(response);
         }
-
         public async Task<UsuarioRespostaLogin> Registro(UsuarioRegistro usuarioRegistro)
         {
             var registroContent = ObterConteudo(usuarioRegistro);

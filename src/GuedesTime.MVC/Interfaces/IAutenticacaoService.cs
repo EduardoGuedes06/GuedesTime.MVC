@@ -1,10 +1,6 @@
-﻿
+﻿using GuedesTime.MVC.Models;
 
-
-
-using GuedesTime.MVC.Models;
-
-namespace GuedesTime.MVC.Services
+namespace GuedesTime.MVC.Interfaces
 {
     public interface IAutenticacaoService
     {

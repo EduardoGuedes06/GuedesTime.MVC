@@ -3,7 +3,6 @@ using GuedesTime.Configurations;
 using GuedesTime.Data.Context;
 using GuedesTime.MVC.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,11 +24,8 @@ builder.Services.AddDbContext<MeuDbContext>(options =>
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 builder.Services.AddMvcConfiguration();
 builder.Services.ResolveDependencies();
-
-
 builder.Services.AddControllersWithViews();
 
 

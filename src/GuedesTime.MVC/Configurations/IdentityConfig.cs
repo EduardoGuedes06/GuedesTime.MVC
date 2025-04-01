@@ -1,9 +1,8 @@
 ﻿
 using GuedesTime.MVC.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using GuedesTime.MVC.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
 namespace GuedesTime.MVC.Configurations
 {
@@ -21,7 +20,7 @@ namespace GuedesTime.MVC.Configurations
                                     options.UseMySql(configuration.GetConnectionString("connection"),
                                     Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.0-mysql")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
