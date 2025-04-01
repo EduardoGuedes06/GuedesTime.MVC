@@ -1,5 +1,4 @@
-﻿
-using GuedesTime.Domain.Intefaces;
+﻿using GuedesTime.Domain.Intefaces;
 using GuedesTime.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,19 +6,19 @@ namespace GuedesTime.MVC.Controllers
 {
     public abstract class BaseController : Controller
     {
-        private readonly INotificador _notificador;
+        public readonly INotificador _notificador;
 
-        protected BaseController(INotificador notificador)
+        internal BaseController(INotificador notificador)
         {
             _notificador = notificador;
         }
 
-        protected bool OperacaoValida()
+        internal bool OperacaoValida()
         {
             return !_notificador.TemNotificacao();
         }
 
-        protected bool ResponsePossuiErros(ResponseResult resposta)
+        internal bool ResponsePossuiErros(ResponseResult resposta)
         {
             if (resposta != null && resposta.Errors.Mensagens.Any())
             {

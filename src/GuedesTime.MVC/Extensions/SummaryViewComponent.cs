@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using GuedesTime.Domain.Intefaces;
+﻿using GuedesTime.Domain.Intefaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GuedesTime.MVC.Extensions

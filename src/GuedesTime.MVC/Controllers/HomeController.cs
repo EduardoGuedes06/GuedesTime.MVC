@@ -1,5 +1,4 @@
-﻿
-using GuedesTime.MVC.ViewModels;
+﻿using GuedesTime.MVC.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GuedesTime.MVC.Controllers

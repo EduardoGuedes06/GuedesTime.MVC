@@ -2,6 +2,7 @@
 /src/GuedesTime.Data/obj
 /src/GuedesTime.Domain/obj
 /src/GuedesTime.Domain/obj/Debug/net8.0
+src/GuedesTime.Domain/obj
 /src/GuedesTime.MVC/bin/Debug/net8.0
 /src/GuedesTime.MVC/obj
 /src/GuedesTime.Service/obj

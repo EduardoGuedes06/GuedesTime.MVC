@@ -49,7 +49,6 @@ namespace GuedesTime.MVC.Controllers
         }
 
 
-
         //[ClaimsAuthorize("Fornecedor", "Adicionar")]
         [Route("novo-fornecedor")]
         public IActionResult Create()
@@ -74,7 +73,6 @@ namespace GuedesTime.MVC.Controllers
 
         //[ClaimsAuthorize("Fornecedor", "Editar")]
         [Route("editar-fornecedor/{id:guid}")]
-
 
 
         public async Task<IActionResult> Edit(Guid id)
@@ -108,9 +106,6 @@ namespace GuedesTime.MVC.Controllers
 
         //[ClaimsAuthorize("Fornecedor", "Excluir")]
         [Route("excluir-fornecedor/{id:guid}")]
-
-
-
 
         public async Task<IActionResult> Delete(Guid id)
         {

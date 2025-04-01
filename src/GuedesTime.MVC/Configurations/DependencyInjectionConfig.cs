@@ -16,19 +16,22 @@ namespace GuedesTime.Configurations
     {
         public static IServiceCollection ResolveDependencies(this IServiceCollection services)
         {
+            services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
 
             services.AddScoped<MeuDbContext>();
             services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
+            services.AddScoped<IHttpService, HttpService>();
             services.AddHttpClient<IAutenticacaoService, AutenticacaoService>();
             services.AddScoped<INotificador, Notificador>();
+            services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
+
+            services.AddScoped<IFornecedorService, FornecedorService>();
+            services.AddScoped<IProdutoService, ProdutoService>();
 
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
 
-            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-            services.AddScoped<IFornecedorService, FornecedorService>();
-            services.AddScoped<IProdutoService, ProdutoService>();
 
             return services;
         }
