@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Models
 {
-    internal class Log
+    public class Log : Entity
     {
+        public DateTime DataHora { get; set; }
+        public string Acao { get; set; }
+        public string Usuario { get; set; }
+        public string Detalhes { get; set; }
+
     }
 }

@@ -12,7 +12,22 @@ namespace GuedesTime.Data.Context
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             ChangeTracker.AutoDetectChangesEnabled = false;
         }
+        //Tabelas GuedesTime
 
+        public DbSet<Atividades> Atividades { get; set; }
+        public DbSet<ConfiguracoesGenericas> ConfiguracoesGenericas { get; set; }
+        public DbSet<Disciplina> Disciplina { get; set; }
+        public DbSet<HistoricoExportacao> HistoricoExportacao { get; set; }
+        public DbSet<Horario> Horario { get; set; }
+        public DbSet<Log> Log { get; set; }
+        public DbSet<PlanejamentoDeAula> PlanejamentoDeAula { get; set; }
+        public DbSet<Professor> Professor { get; set; }
+        public DbSet<Restricao> Restricao { get; set; }
+        public DbSet<Sala> Sala { get; set; }
+        public DbSet<Tarefas> Tarefas { get; set; }
+        public DbSet<Turma> Turma { get; set; }
+
+        //Tabelas Genericas de Gestão de Produtos
         public DbSet<Produto> Produtos { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Fornecedor> Fornecedores { get; set; }

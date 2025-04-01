@@ -10,6 +10,7 @@ namespace GuedesTime.Domain.Models
     {
         public string Descricao { get; set; }
         public DateTime Data { get; set; }
+        public Guid ProfessorId { get; set; }
 
         /* EF Relations */
         public Professor Professor { get; set; }

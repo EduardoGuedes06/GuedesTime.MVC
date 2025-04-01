@@ -11,5 +11,6 @@ namespace GuedesTime.Domain.Models
         public string Nome { get; set; }
         public int Capacidade { get; set; }
 
+        public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
     }
 }

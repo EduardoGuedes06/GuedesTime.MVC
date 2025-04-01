@@ -15,5 +15,6 @@ namespace GuedesTime.Domain.Models
         public IEnumerable<Tarefas> Tarefas { get; set; }
         public IEnumerable<Restricao> Restricoes { get; set; }
         public IEnumerable<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
+        public IEnumerable<Atividades> Atividades { get; set; }
     }
 }
