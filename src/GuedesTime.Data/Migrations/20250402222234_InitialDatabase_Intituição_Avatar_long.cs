@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GuedesTime.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDatabase_Intituição_Endereço : Migration
+    public partial class InitialDatabase_Intituição_Avatar_long : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,9 +56,11 @@ namespace GuedesTime.Data.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 150, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Inep = table.Column<string>(type: "varchar(100)", maxLength: 8, nullable: false)
+                    CodigoCie = table.Column<string>(type: "varchar(100)", maxLength: 8, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Cnpj = table.Column<string>(type: "varchar(100)", maxLength: 18, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Avatar = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UsuarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
@@ -118,7 +120,7 @@ namespace GuedesTime.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Numero = table.Column<string>(type: "varchar(50)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Complemento = table.Column<string>(type: "varchar(250)", nullable: false)
+                    Complemento = table.Column<string>(type: "varchar(250)", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Cep = table.Column<string>(type: "varchar(8)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),

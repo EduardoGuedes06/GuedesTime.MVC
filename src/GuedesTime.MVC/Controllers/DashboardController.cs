@@ -34,7 +34,7 @@ namespace GuedesTime.MVC.Controllers
 
             if (!instituicoes.Any())
             {
-                return RedirectToAction("Create", "Instituicao");
+                return RedirectToAction("Upsert", "Instituicao");
             }
 
             var viewModel = new DashboardViewModel

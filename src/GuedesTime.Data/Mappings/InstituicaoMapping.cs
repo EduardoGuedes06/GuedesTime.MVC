@@ -16,18 +16,20 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasMaxLength(150);
 
-            builder.Property(i => i.Inep)
+            builder.Property(i => i.CodigoCie)
                 .IsRequired()
                 .HasMaxLength(8);
+
+            builder.Property(i => i.Avatar)
+                .HasColumnType("LONGTEXT")
+                .IsRequired(false);
 
             builder.Property(i => i.Cnpj)
                 .HasMaxLength(18)
                 .IsRequired(false);
 
-            builder.HasOne(i => i.Endereco)
-                .WithOne(e => e.Instituicao)
-                .HasForeignKey<Endereco>(e => e.InstituicaoId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(f => f.Endereco)
+                .WithOne(e => e.Instituicao);
 
 
             builder.HasMany(i => i.Feriados)

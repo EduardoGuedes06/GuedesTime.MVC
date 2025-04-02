@@ -17,10 +17,11 @@ namespace GuedesTime.MVC.ViewModels
         [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 3)]
         public string Nome { get; set; }
 
-        [DisplayName("INEP")]
+        [DisplayName("Codigo INEP / Codigo CIE")]
         [Required]
         [StringLength(8, MinimumLength = 8, ErrorMessage = "O INEP deve ter 8 dígitos.")]
-        public string Inep { get; set; }
+
+        public string CodigoCie { get; set; }
         [DisplayName("CNPJ")]
         [StringLength(18, ErrorMessage = "O campo {0} deve ter {1} caracteres")]
         public string? Cnpj { get; set; }
@@ -28,6 +29,10 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Usuário Responsável")]
         public Guid UsuarioId { get; set; }
+
+        [DisplayName("Avatar")]
+
+        public string? Avatar { get; set; }
 
         public EnderecoViewModel Endereco { get; set; }
         public ICollection<ProfessorViewModel>? Professores { get; set; }

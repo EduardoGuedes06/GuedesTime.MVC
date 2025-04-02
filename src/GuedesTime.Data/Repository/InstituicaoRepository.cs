@@ -22,8 +22,16 @@ namespace GuedesTime.Data.Repository
                 .Include(i => i.Salas)
                 .Include(i => i.Horarios)
                 .Include(i => i.Feriados)
+                .Include(i => i.Endereco)
                 .OrderBy(i => i.Nome)
                 .ToListAsync();
         }
+        public async Task<Instituicao?> ObterInstituicaoComEnderecoPorId(Guid id)
+        {
+            return await Db.Instituicao.AsNoTracking()
+                .Include(i => i.Endereco)
+                .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
     }
 }

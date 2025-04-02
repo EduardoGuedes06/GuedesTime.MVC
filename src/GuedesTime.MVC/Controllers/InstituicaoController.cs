@@ -52,30 +52,50 @@ namespace GuedesTime.MVC.Controllers
             return View();
         }
 
-        // SALVAR NOVA INSTITUIÇÃO
+        public async Task<IActionResult> Upsert(Guid? id)
+        {
+            InstituicaoViewModel instituicaoViewModel = new();
+
+            if (id.HasValue)
+            {
+                var instituicao = await _instituicaoService.ObterInstituicaoComEnderecoPorId(id.Value);
+                if (instituicao == null) return NotFound();
+                instituicaoViewModel = _mapper.Map<InstituicaoViewModel>(instituicao);
+
+                instituicaoViewModel.Endereco.Cep = instituicaoViewModel.Endereco.Cep.Replace("-", "");
+
+            }
+
+            return View(instituicaoViewModel);
+        }
+
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Create(InstituicaoViewModel instituicaoViewModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upsert(InstituicaoViewModel instituicaoViewModel)
         {
             if (!ModelState.IsValid) return View(instituicaoViewModel);
 
-            var UserId = Guid.Parse(_userManager.GetUserId(User));
-            instituicaoViewModel.UsuarioId = UserId;
-            await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
+            instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
 
-            if (!OperacaoValida()) return View(instituicaoViewModel);
+            if (instituicaoViewModel.Id == Guid.Empty)
+            {
+                instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
+                await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
+            }
+            else
+            {
+                var instituicaoExistente = await _instituicaoService.ObterPorId(instituicaoViewModel.Id);
+                if (instituicaoExistente == null) return NotFound();
 
-            return RedirectToAction(nameof(Index));
+                _mapper.Map(instituicaoViewModel, instituicaoExistente);
+                await _instituicaoService.Atualizar(instituicaoExistente);
+            }
+
+            return OperacaoValida() ? RedirectToAction(nameof(Index)) : View(instituicaoViewModel);
         }
 
-        // EDITAR INSTITUIÇÃO
-        public async Task<IActionResult> Edit(Guid id)
-        {
-            var instituicao = await _instituicaoService.ObterPorId(id);
-            if (instituicao == null) return NotFound();
 
-            return View(_mapper.Map<InstituicaoViewModel>(instituicao));
-        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

@@ -9,8 +9,9 @@ namespace GuedesTime.Domain.Models
     public class Instituicao : Entity
     {
         public string Nome { get; set; }
-        public string Inep { get; set; }
+        public string CodigoCie { get; set; }
         public string Cnpj { get; set; }
+        public string Avatar { get; set; }
         public Guid UsuarioId { get; set; }
         public Endereco Endereco { get; set; }
         public ICollection<Professor> Professores { get; set; }

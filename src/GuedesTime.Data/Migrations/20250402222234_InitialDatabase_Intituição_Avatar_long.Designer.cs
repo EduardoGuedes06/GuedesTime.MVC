@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuedesTime.Data.Migrations
 {
     [DbContext(typeof(MeuDbContext))]
-    [Migration("20250402174505_InitialDatabase_Intituição_Endereço")]
-    partial class InitialDatabase_Intituição_Endereço
+    [Migration("20250402222234_InitialDatabase_Intituição_Avatar_long")]
+    partial class InitialDatabase_Intituição_Avatar_long
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -115,7 +115,6 @@ namespace GuedesTime.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Complemento")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Estado")
@@ -227,11 +226,14 @@ namespace GuedesTime.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("LONGTEXT");
+
                     b.Property<string>("Cnpj")
                         .HasMaxLength(18)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("Inep")
+                    b.Property<string>("CodigoCie")
                         .IsRequired()
                         .HasMaxLength(8)
                         .HasColumnType("varchar(100)");

@@ -112,7 +112,6 @@ namespace GuedesTime.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Complemento")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Estado")
@@ -224,11 +223,14 @@ namespace GuedesTime.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("Avatar")
+                        .HasColumnType("LONGTEXT");
+
                     b.Property<string>("Cnpj")
                         .HasMaxLength(18)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("Inep")
+                    b.Property<string>("CodigoCie")
                         .IsRequired()
                         .HasMaxLength(8)
                         .HasColumnType("varchar(100)");
