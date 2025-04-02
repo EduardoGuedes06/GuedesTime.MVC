@@ -22,6 +22,11 @@ namespace GuedesTime.Service.Services
         {
             await _instituicaoRepository.ObterPorId(Instituicao.Id);
         }
+        public async Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId)
+        {
+            return await _instituicaoRepository.ObterDadosInstituicoesUsuario(usuarioId);
+        }
+
 
         public async Task Adicionar(Instituicao Instituicao)
         {

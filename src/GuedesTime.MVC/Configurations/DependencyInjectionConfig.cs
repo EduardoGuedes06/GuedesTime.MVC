@@ -42,6 +42,8 @@ namespace GuedesTime.Configurations
             services.AddScoped<IFeriadoService, FeriadoService>();
             services.AddScoped<ITurmaService, TurmaService>();
             services.AddScoped<ILogService, LogService>();
+            services.AddScoped<IInstituicaoService, InstituicaoService>();
+
 
             // Repositories
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
@@ -61,6 +63,7 @@ namespace GuedesTime.Configurations
             services.AddScoped<IFeriadoRepository, FeriadoRepository>();
             services.AddScoped<ITurmaRepository, TurmaRepository>();
             services.AddScoped<ILogRepository, LogRepository>();
+            services.AddScoped<IInstituicaoRepository, InstituicaoRepository>();
 
             return services;
         }

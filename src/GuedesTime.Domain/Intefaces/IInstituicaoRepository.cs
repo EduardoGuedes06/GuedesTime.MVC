@@ -7,5 +7,6 @@ namespace GuedesTime.Domain.Intefaces
 {
     public interface IInstituicaoRepository : IRepository<Instituicao>
     {
+        Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId);
     }
 }

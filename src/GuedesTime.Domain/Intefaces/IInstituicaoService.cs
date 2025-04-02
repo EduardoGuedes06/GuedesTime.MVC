@@ -8,6 +8,7 @@ namespace GuedesTime.Domain.Intefaces
     {
         Task Adicionar(Instituicao instituicao);
         Task Atualizar(Instituicao instituicao);
+        Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId);
         Task ObterPorId(Instituicao instituicao);
         Task ObterTodos();
         Task Remover(Guid id);

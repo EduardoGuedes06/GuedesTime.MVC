@@ -1,8 +1,59 @@
-﻿@{
+﻿@using GuedesTime.MVC.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">BEM VINDO</h1>
-    <p>TELA INICIAL</p>
+<div class="container text-center mt-5">
+    <h1 class="display-4">Bem-vindo ao Sistema de Planejamento Escolar</h1>
+    <p class="lead">Automatize e organize os horários da sua escola de forma simples e eficiente.</p>
+
+    <img src="/assets/imagens/calendario-home.png" class="img-fluid my-4" style="max-width: 20%;" alt="Ilustração do sistema">
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🔹 Gestão de Horários</h5>
+                    <p class="card-text">Crie e gerencie os horários das turmas com facilidade.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🔹 Planejamento Eficiente</h5>
+                    <p class="card-text">Distribua disciplinas e professores de forma otimizada.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">🔹 Controle Personalizado</h5>
+                    <p class="card-text">Defina regras e restrições para atender às necessidades da instituição.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="mt-5">
+        <a href="#" class="btn btn-primary btn-lg">Saiba Mais</a>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-area="" asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                <span><strong>Acessar</strong></span>
+            </a>
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary btn-lg">
+                <span><strong>Login</strong></span>
+            </a>
+        }
+    </div>
+
 </div>
