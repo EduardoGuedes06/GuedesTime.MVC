@@ -3,11 +3,11 @@ using GuedesTime.Domain.Models;
 
 namespace GuedesTime.Service.Services
 {
-    public class RestricaosService : BaseService, IRestricaoService
+    public class RestricaoService : BaseService, IRestricaoService
     {
         private readonly IRestricaoRepository _restricaoRepository;
 
-        public RestricaosService(IRestricaoRepository RestricaoRepository,
+        public RestricaoService(IRestricaoRepository RestricaoRepository,
                               INotificador notificador) : base(notificador)
         {
             _restricaoRepository = RestricaoRepository;

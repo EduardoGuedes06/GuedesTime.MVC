@@ -25,13 +25,38 @@ namespace GuedesTime.Configurations
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
 
+            // Services
             services.AddScoped<IFornecedorService, FornecedorService>();
             services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<ITurmaService, TurmaService>();
+            services.AddScoped<ITarefasService, TarefasService>();
+            services.AddScoped<ISalaService, SalaService>();
+            services.AddScoped<IRestricaoService, RestricaoService>();
+            services.AddScoped<IProfessorService, ProfessorService>();
+            services.AddScoped<IPlanejamentoDeAulaService, PlanejamentoDeAulaService>();
+            services.AddScoped<IHorarioService, HorarioService>();
+            services.AddScoped<IHistoricoExportacaoService, HistoricoExportacaoService>();
+            services.AddScoped<IDisciplinaService, DisciplinaService>();
+            services.AddScoped<IConfiguracoesGenericasService, ConfiguracoesGenericasService>();
+            services.AddScoped<IAtividadesService, AtividadesService>();
+            services.AddScoped<ILogService, LogService>();
 
+            // Repositories
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-
+            services.AddScoped<ITurmaRepository, TurmaRepository>();
+            services.AddScoped<ITarefasRepository, TarefasRepository>();
+            services.AddScoped<ISalaRepository, SalaRepository>();
+            services.AddScoped<IRestricaoRepository, RestricaoRepository>();
+            services.AddScoped<IProfessorRepository, ProfessorRepository>();
+            services.AddScoped<IPlanejamentoDeAulaRepository, PlanejamentoDeAulaRepository>();
+            services.AddScoped<IHorarioRepository, HorarioRepository>();
+            services.AddScoped<IHistoricoExportacaoRepository, HistoricoExportacaoRepository>();
+            services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
+            services.AddScoped<IConfiguracoesGenericasRepository, ConfiguracoesGenericasRepository>();
+            services.AddScoped<IAtividadesRepository, AtividadesRepository>();
+            services.AddScoped<ILogRepository, LogRepository>();
 
             return services;
         }
