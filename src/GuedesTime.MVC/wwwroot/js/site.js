@@ -19,6 +19,21 @@
         });
     });
 }
+function toggleSection(sectionId, button) {
+    var container = document.getElementById(sectionId);
+    var icon = button.querySelector("i");
+
+    if (container.style.display === "none" || container.style.display === "") {
+        container.style.display = "block";
+        icon.classList.remove("fa-chevron-down");
+        icon.classList.add("fa-chevron-up");
+    } else {
+        container.style.display = "none";
+        icon.classList.remove("fa-chevron-up");
+        icon.classList.add("fa-chevron-down");
+    }
+}
+
 
 function bindForm(dialog) {
     $('form', dialog).submit(function () {

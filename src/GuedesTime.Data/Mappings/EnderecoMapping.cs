@@ -25,6 +25,7 @@ namespace GuedesTime.Data.Mappings
                 .HasColumnType("varchar(8)");
 
             builder.Property(c => c.Complemento)
+                .IsRequired(false)
                 .HasColumnType("varchar(250)");
 
             builder.Property(c => c.Bairro)
@@ -38,6 +39,11 @@ namespace GuedesTime.Data.Mappings
             builder.Property(c => c.Estado)
                 .IsRequired()
                 .HasColumnType("varchar(50)");
+
+            builder.HasOne(e => e.Instituicao)
+                .WithOne(i => i.Endereco)
+                .HasForeignKey<Endereco>(e => e.InstituicaoId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.ToTable("Enderecos");
         }

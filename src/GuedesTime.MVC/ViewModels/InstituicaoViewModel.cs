@@ -17,25 +17,25 @@ namespace GuedesTime.MVC.ViewModels
         [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 3)]
         public string Nome { get; set; }
 
+        [DisplayName("INEP")]
+        [Required]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "O INEP deve ter 8 dígitos.")]
+        public string Inep { get; set; }
         [DisplayName("CNPJ")]
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(18, ErrorMessage = "O campo {0} deve ter {1} caracteres")]
-        public string CNPJ { get; set; }
-
-        [DisplayName("Endereço")]
-        [StringLength(200, ErrorMessage = "O campo {0} pode ter no máximo {1} caracteres")]
-        public string Endereco { get; set; }
+        public string? Cnpj { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Usuário Responsável")]
         public Guid UsuarioId { get; set; }
 
-        public ICollection<ProfessorViewModel> Professores { get; set; }
-        public ICollection<TurmaViewModel> Turmas { get; set; }
-        public ICollection<DisciplinaViewModel> Disciplinas { get; set; }
-        public ICollection<SalaViewModel> Salas { get; set; }
-        public ICollection<HorarioViewModel> Horarios { get; set; }
-        public ICollection<FeriadoViewModel> Feriados { get; set; }
+        public EnderecoViewModel Endereco { get; set; }
+        public ICollection<ProfessorViewModel>? Professores { get; set; }
+        public ICollection<TurmaViewModel>? Turmas { get; set; }
+        public ICollection<DisciplinaViewModel>? Disciplinas { get; set; }
+        public ICollection<SalaViewModel>? Salas { get; set; }
+        public ICollection<HorarioViewModel>? Horarios { get; set; }
+        public ICollection<FeriadoViewModel>? Feriados { get; set; }
     }
 
 }

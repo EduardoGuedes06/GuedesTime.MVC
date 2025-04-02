@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GuedesTime.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDatabase_GuedesTime : Migration
+    public partial class InitialDatabase_Intituição_Endereço : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,39 +31,6 @@ namespace GuedesTime.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Disciplinas",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CargaHoraria = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Disciplinas", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Fornecedores",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "varchar(200)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Documento = table.Column<string>(type: "varchar(14)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TipoFornecedor = table.Column<int>(type: "int", nullable: false),
-                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fornecedores", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "HistoricoExportacao",
                 columns: table => new
                 {
@@ -83,16 +50,21 @@ namespace GuedesTime.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Horarios",
+                name: "Instituicoes",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Inicio = table.Column<DateTime>(type: "datetime", nullable: false),
-                    Fim = table.Column<DateTime>(type: "datetime", nullable: false)
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Inep = table.Column<string>(type: "varchar(100)", maxLength: 8, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Cnpj = table.Column<string>(type: "varchar(100)", maxLength: 18, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Horarios", x => x.Id);
+                    table.PrimaryKey("PK_Instituicoes", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -116,48 +88,23 @@ namespace GuedesTime.Data.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Professores",
+                name: "Disciplinas",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Email = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    CargaHoraria = table.Column<int>(type: "int", nullable: false),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Professores", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Salas",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "varchar(100)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Capacidade = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Salas", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Turmas",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "varchar(100)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Ano = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Turmas", x => x.Id);
+                    table.PrimaryKey("PK_Disciplinas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Disciplinas_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -166,7 +113,7 @@ namespace GuedesTime.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    FornecedorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Logradouro = table.Column<string>(type: "varchar(200)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Numero = table.Column<string>(type: "varchar(50)", nullable: false)
@@ -186,36 +133,121 @@ namespace GuedesTime.Data.Migrations
                 {
                     table.PrimaryKey("PK_Enderecos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Enderecos_Fornecedores_FornecedorId",
-                        column: x => x.FornecedorId,
-                        principalTable: "Fornecedores",
+                        name: "FK_Enderecos_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Produtos",
+                name: "Feriados",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    FornecedorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nome = table.Column<string>(type: "varchar(200)", nullable: false)
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descricao = table.Column<string>(type: "varchar(1000)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Imagem = table.Column<string>(type: "varchar(100)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Valor = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    DataCadastro = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Data = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Recorrente = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    InstituicaoId1 = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Produtos", x => x.Id);
+                    table.PrimaryKey("PK_Feriados", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Produtos_Fornecedores_FornecedorId",
-                        column: x => x.FornecedorId,
-                        principalTable: "Fornecedores",
+                        name: "FK_Feriados_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Feriados_Instituicoes_InstituicaoId1",
+                        column: x => x.InstituicaoId1,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Horarios",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Inicio = table.Column<DateTime>(type: "datetime", nullable: false),
+                    Fim = table.Column<DateTime>(type: "datetime", nullable: false),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Horarios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Horarios_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Professores",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Professores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Professores_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Salas",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Nome = table.Column<string>(type: "varchar(100)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Capacidade = table.Column<int>(type: "int", nullable: false),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Salas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Salas_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Turmas",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Nome = table.Column<string>(type: "varchar(100)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ano = table.Column<int>(type: "int", nullable: false),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Turmas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Turmas_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
                         principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -294,6 +326,8 @@ namespace GuedesTime.Data.Migrations
                     SalaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     TurmaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     HorarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    InstituicaoId1 = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     HistoricoExportacaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
@@ -313,6 +347,16 @@ namespace GuedesTime.Data.Migrations
                         name: "FK_PlanejamentoDeAulas_Horarios_HorarioId",
                         column: x => x.HorarioId,
                         principalTable: "Horarios",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PlanejamentoDeAulas_Instituicoes_InstituicaoId",
+                        column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_PlanejamentoDeAulas_Instituicoes_InstituicaoId1",
+                        column: x => x.InstituicaoId1,
+                        principalTable: "Instituicoes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PlanejamentoDeAulas_Professores_ProfessorId",
@@ -338,10 +382,30 @@ namespace GuedesTime.Data.Migrations
                 column: "ProfessorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Enderecos_FornecedorId",
+                name: "IX_Disciplinas_InstituicaoId",
+                table: "Disciplinas",
+                column: "InstituicaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Enderecos_InstituicaoId",
                 table: "Enderecos",
-                column: "FornecedorId",
+                column: "InstituicaoId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feriados_InstituicaoId",
+                table: "Feriados",
+                column: "InstituicaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Feriados_InstituicaoId1",
+                table: "Feriados",
+                column: "InstituicaoId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Horarios_InstituicaoId",
+                table: "Horarios",
+                column: "InstituicaoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlanejamentoDeAulas_DisciplinaId",
@@ -359,6 +423,16 @@ namespace GuedesTime.Data.Migrations
                 column: "HorarioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlanejamentoDeAulas_InstituicaoId",
+                table: "PlanejamentoDeAulas",
+                column: "InstituicaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlanejamentoDeAulas_InstituicaoId1",
+                table: "PlanejamentoDeAulas",
+                column: "InstituicaoId1");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PlanejamentoDeAulas_ProfessorId",
                 table: "PlanejamentoDeAulas",
                 column: "ProfessorId");
@@ -374,9 +448,9 @@ namespace GuedesTime.Data.Migrations
                 column: "TurmaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Produtos_FornecedorId",
-                table: "Produtos",
-                column: "FornecedorId");
+                name: "IX_Professores_InstituicaoId",
+                table: "Professores",
+                column: "InstituicaoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restricoes_ProfessorId",
@@ -384,9 +458,19 @@ namespace GuedesTime.Data.Migrations
                 column: "ProfessorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Salas_InstituicaoId",
+                table: "Salas",
+                column: "InstituicaoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tarefas_ProfessorId",
                 table: "Tarefas",
                 column: "ProfessorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Turmas_InstituicaoId",
+                table: "Turmas",
+                column: "InstituicaoId");
         }
 
         /// <inheritdoc />
@@ -402,13 +486,13 @@ namespace GuedesTime.Data.Migrations
                 name: "Enderecos");
 
             migrationBuilder.DropTable(
+                name: "Feriados");
+
+            migrationBuilder.DropTable(
                 name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "PlanejamentoDeAulas");
-
-            migrationBuilder.DropTable(
-                name: "Produtos");
 
             migrationBuilder.DropTable(
                 name: "Restricoes");
@@ -432,10 +516,10 @@ namespace GuedesTime.Data.Migrations
                 name: "Turmas");
 
             migrationBuilder.DropTable(
-                name: "Fornecedores");
+                name: "Professores");
 
             migrationBuilder.DropTable(
-                name: "Professores");
+                name: "Instituicoes");
         }
     }
 }

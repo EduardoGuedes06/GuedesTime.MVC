@@ -18,10 +18,11 @@ namespace GuedesTime.Service.Services
             await _instituicaoRepository.ObterTodos();
         }
 
-        public async Task ObterPorId(Instituicao Instituicao)
+        public async Task<Instituicao> ObterPorId(Guid instituicaoId)
         {
-            await _instituicaoRepository.ObterPorId(Instituicao.Id);
+            return await _instituicaoRepository.ObterPorId(instituicaoId);
         }
+
         public async Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId)
         {
             return await _instituicaoRepository.ObterDadosInstituicoesUsuario(usuarioId);

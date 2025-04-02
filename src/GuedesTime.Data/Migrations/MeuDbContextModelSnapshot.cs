@@ -119,7 +119,7 @@ namespace GuedesTime.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
-                    b.Property<Guid>("FornecedorId")
+                    b.Property<Guid>("InstituicaoId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Logradouro")
@@ -132,7 +132,7 @@ namespace GuedesTime.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FornecedorId")
+                    b.HasIndex("InstituicaoId")
                         .IsUnique();
 
                     b.ToTable("Enderecos", (string)null);
@@ -168,31 +168,6 @@ namespace GuedesTime.Data.Migrations
                     b.HasIndex("InstituicaoId1");
 
                     b.ToTable("Feriados", (string)null);
-                });
-
-            modelBuilder.Entity("GuedesTime.Domain.Models.Fornecedor", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Documento")
-                        .IsRequired()
-                        .HasColumnType("varchar(14)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<int>("TipoFornecedor")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Fornecedores", (string)null);
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.HistoricoExportacao", b =>
@@ -249,14 +224,13 @@ namespace GuedesTime.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("CNPJ")
-                        .IsRequired()
+                    b.Property<string>("Cnpj")
                         .HasMaxLength(18)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("Endereco")
+                    b.Property<string>("Inep")
                         .IsRequired()
-                        .HasMaxLength(255)
+                        .HasMaxLength(8)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Nome")
@@ -347,43 +321,6 @@ namespace GuedesTime.Data.Migrations
                     b.HasIndex("TurmaId");
 
                     b.ToTable("PlanejamentoDeAulas", (string)null);
-                });
-
-            modelBuilder.Entity("GuedesTime.Domain.Models.Produto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Ativo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Descricao")
-                        .IsRequired()
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<Guid>("FornecedorId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Imagem")
-                        .IsRequired()
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<decimal>("Valor")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FornecedorId");
-
-                    b.ToTable("Produtos", (string)null);
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Professor", b =>
@@ -525,12 +462,12 @@ namespace GuedesTime.Data.Migrations
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Endereco", b =>
                 {
-                    b.HasOne("GuedesTime.Domain.Models.Fornecedor", "Fornecedor")
+                    b.HasOne("GuedesTime.Domain.Models.Instituicao", "Instituicao")
                         .WithOne("Endereco")
-                        .HasForeignKey("GuedesTime.Domain.Models.Endereco", "FornecedorId")
+                        .HasForeignKey("GuedesTime.Domain.Models.Endereco", "InstituicaoId")
                         .IsRequired();
 
-                    b.Navigation("Fornecedor");
+                    b.Navigation("Instituicao");
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Feriado", b =>
@@ -612,16 +549,6 @@ namespace GuedesTime.Data.Migrations
                     b.Navigation("Turma");
                 });
 
-            modelBuilder.Entity("GuedesTime.Domain.Models.Produto", b =>
-                {
-                    b.HasOne("GuedesTime.Domain.Models.Fornecedor", "Fornecedor")
-                        .WithMany("Produtos")
-                        .HasForeignKey("FornecedorId")
-                        .IsRequired();
-
-                    b.Navigation("Fornecedor");
-                });
-
             modelBuilder.Entity("GuedesTime.Domain.Models.Professor", b =>
                 {
                     b.HasOne("GuedesTime.Domain.Models.Instituicao", null)
@@ -668,14 +595,6 @@ namespace GuedesTime.Data.Migrations
                     b.Navigation("PlanejamentosDeAula");
                 });
 
-            modelBuilder.Entity("GuedesTime.Domain.Models.Fornecedor", b =>
-                {
-                    b.Navigation("Endereco")
-                        .IsRequired();
-
-                    b.Navigation("Produtos");
-                });
-
             modelBuilder.Entity("GuedesTime.Domain.Models.HistoricoExportacao", b =>
                 {
                     b.Navigation("PlanejamentosDeAula");
@@ -689,6 +608,9 @@ namespace GuedesTime.Data.Migrations
             modelBuilder.Entity("GuedesTime.Domain.Models.Instituicao", b =>
                 {
                     b.Navigation("Disciplinas");
+
+                    b.Navigation("Endereco")
+                        .IsRequired();
 
                     b.Navigation("Feriados");
 

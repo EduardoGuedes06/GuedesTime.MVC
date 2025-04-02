@@ -1,63 +1,140 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(270deg, #bfb9c5, #f9fafb, #e5e7eb, #f3f4f6, #bfb9c5);
+    background-size: 400% 400%;
+    animation: waveBackground 12s ease-in-out infinite;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+@keyframes waveBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    25% {
+        background-position: 50% 70%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    75% {
+        background-position: 50% 30%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+
+
+
+
+main {
+    flex: 1;
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+footer {
+    background-color: #FFFFFF;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+    margin-top: auto;
 }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+.btn {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+    .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+.form-control {
+    border-radius: 5px;
+/*    border: 1px solid #A78BFA;*/
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
 }
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  /* Set the fixed height of the footer here */
-  height: 60px;
-  line-height: 60px; /* Vertically center the text there */
+    .form-control:focus {
+        border-color: #1E3A8A;
+        box-shadow: 0 0 5px rgba(30, 58, 138, 0.5);
+        outline: none;
+    }
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-top: 20px;
 }
 
-input,
-select,
-file,
-textarea {
-    max-width: 400px;
+.btn {
+    font-size: 14px;
+    padding: 10px 20px;
 }
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+    .form-group input {
+        margin-bottom: 10px;
+    }
+
+h1, h2, h3, h4 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #1E3A8A;
+}
+
+.btn-custom {
+    background-color: #A78BFA;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .btn-custom:hover {
+        background-color: #1E3A8A;
+        transform: scale(1.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #1E3A8A;
+    margin-left: 5px;
+}
+
+    .btn-toggle:focus {
+        outline: none;
+    }

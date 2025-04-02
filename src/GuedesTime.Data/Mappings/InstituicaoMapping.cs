@@ -16,12 +16,19 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasMaxLength(150);
 
-            builder.Property(i => i.CNPJ)
+            builder.Property(i => i.Inep)
                 .IsRequired()
-                .HasMaxLength(18);
+                .HasMaxLength(8);
 
-            builder.Property(i => i.Endereco)
-                .HasMaxLength(255);
+            builder.Property(i => i.Cnpj)
+                .HasMaxLength(18)
+                .IsRequired(false);
+
+            builder.HasOne(i => i.Endereco)
+                .WithOne(e => e.Instituicao)
+                .HasForeignKey<Endereco>(e => e.InstituicaoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.HasMany(i => i.Feriados)
                 .WithOne()
@@ -55,6 +62,7 @@ namespace GuedesTime.Data.Mappings
 
             builder.ToTable("Instituicoes");
         }
+
     }
 
 

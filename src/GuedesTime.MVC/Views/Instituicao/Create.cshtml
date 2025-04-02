@@ -1,5 +1,140 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
+
 @{
+    ViewData["Title"] = "Cadastrar Instituição";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<hr />
+
+<form asp-action="Create">
+    <vc:Summary></vc:Summary>
+
+    <div class="form-group">
+        <label asp-for="Nome" class="control-label"></label>
+        <input asp-for="Nome" class="form-control" id="Nome" />
+        <span asp-validation-for="Nome" class="text-danger" id="name-error"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Inep" class="control-label"></label>
+        <input asp-for="Inep" class="form-control" />
+        <span asp-validation-for="Inep" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Cnpj" class="control-label"></label>
+        <input asp-for="Cnpj" class="form-control" id="Cnpj" />
+        <span asp-validation-for="Cnpj" class="text-danger" id="cnpj-error"></span>
+    </div>
+
+    <h4>
+        Endereço
+        <button type="button" class="btn-toggle" onclick="toggleSection('endereco-container', this)">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h4>
+    <hr />
+
+    <div id="endereco-container" style="display: block;">
+        <partial name="_Endereco" />
+    </div>
+
+
+    <div class="button-container">
+        <button type="submit" class="btn-custom">
+            <i class="fas fa-save"></i> Cadastrar
+        </button>
+        <button type="button" class="btn-custom" onclick="window.location.href='/Instituicao'">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        $(document).ready(function () {
+            $("#Nome").on("input", function () {
+                var nameField = $(this);
+                var nameError = $("#name-error");
+                var nameValue = nameField.val();
+
+                var regex = /^[A-Za-zÀ-ÖØ-öø-ÿ. ]*$/;
+
+                if (!regex.test(nameValue)) {
+                    nameError.text("O nome só pode conter letras e ponto.");
+                    nameField.val(nameValue.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ. ]/g, ""));
+                    return;
+                }
+
+                var correctedName = nameValue.replace(/\b\w/g, function (char) {
+                    return char.toUpperCase();
+                });
+
+                nameField.val(correctedName);
+                nameError.text("");
+            });
+
+            $("#Cnpj").on("blur", function () {
+                var cnpjField = $(this);
+                var cnpjError = $("#cnpj-error");
+                var cnpjValue = cnpjField.val().replace(/\D/g, "");
+
+                if (cnpjValue.length === 0) {
+                    cnpjError.text("");
+                    return;
+                }
+
+                if (cnpjValue.length !== 14 || !validarCNPJ(cnpjValue)) {
+                    cnpjError.text("CNPJ inválido.");
+                } else {
+                    cnpjError.text("");
+                }
+            });
+
+            function validarCNPJ(cnpj) {
+                cnpj = cnpj.replace(/[^\d]+/g, "");
+
+                if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
+
+                var tamanho = cnpj.length - 2,
+                    numeros = cnpj.substring(0, tamanho),
+                    digitos = cnpj.substring(tamanho),
+                    soma = 0,
+                    pos = tamanho - 7;
+
+                for (var i = tamanho; i >= 1; i--) {
+                    soma += numeros.charAt(tamanho - i) * pos--;
+                    if (pos < 2) pos = 9;
+                }
+
+                var resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                if (resultado != digitos.charAt(0)) return false;
+
+                tamanho = tamanho + 1;
+                numeros = cnpj.substring(0, tamanho);
+                soma = 0;
+                pos = tamanho - 7;
+
+                for (var i = tamanho; i >= 1; i--) {
+                    soma += numeros.charAt(tamanho - i) * pos--;
+                    if (pos < 2) pos = 9;
+                }
+
+                resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+                return resultado == digitos.charAt(1);
+            }
+        });
+
+        BuscaCep();
+    </script>
+
 }

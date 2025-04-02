@@ -28,11 +28,7 @@ namespace GuedesTime.Data.Context
         public DbSet<Turma> Turma { get; set; }
         public DbSet<Instituicao> Instituicao { get; set; }
         public DbSet<Feriado> Feriado { get; set; }
-
-        //Tabelas Genericas de Gestão de Produtos
-        public DbSet<Produto> Produtos { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
-        public DbSet<Fornecedor> Fornecedores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

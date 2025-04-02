@@ -24,9 +24,9 @@ namespace GuedesTime.MVC.Configurations
             CreateMap<Instituicao, InstituicaoViewModel>().ReverseMap();
             CreateMap<Feriado, FeriadoViewModel>().ReverseMap();
 
-            CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
+            //CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
             CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
-            CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+            //CreateMap<Produto, ProdutoViewModel>().ReverseMap();
         }
     }
 }

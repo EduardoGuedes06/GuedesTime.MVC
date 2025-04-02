@@ -26,8 +26,8 @@ namespace GuedesTime.Configurations
             services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
 
             // Services
-            services.AddScoped<IFornecedorService, FornecedorService>();
-            services.AddScoped<IProdutoService, ProdutoService>();
+            //services.AddScoped<IFornecedorService, FornecedorService>();
+            //services.AddScoped<IProdutoService, ProdutoService>();
             services.AddScoped<ITurmaService, TurmaService>();
             services.AddScoped<ITarefasService, TarefasService>();
             services.AddScoped<ISalaService, SalaService>();
@@ -46,8 +46,8 @@ namespace GuedesTime.Configurations
 
 
             // Repositories
-            services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+            //services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            //services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
             services.AddScoped<ITurmaRepository, TurmaRepository>();
             services.AddScoped<ITarefasRepository, TarefasRepository>();

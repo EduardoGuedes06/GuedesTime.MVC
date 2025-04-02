@@ -4,6 +4,7 @@ using GuedesTime.MVC.Configurations;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Diagnostics;
 using static GuedesTime.MVC.Configurations.HealthChecksConfig;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,7 +82,6 @@ app.UseHealthChecks("/Saude/system", new HealthCheckOptions()
 
 
 app.UseHealthChecksUI(options => options.UIPath = "/Saude-ui");
-
 
 app.MapRazorPages();
 

@@ -19,15 +19,14 @@ O projeto busca solucionar a dificuldade das escolas em gerenciar e distribuir a
 - Performance otimizada para grandes volumes de dados.
 
 ## Paleta de Cores
-A identidade visual do sistema seguirá uma paleta de cores frias, priorizando modernidade e inovação:
+A identidade visual do sistema seguirá uma paleta de cores frias, priorizando modernidade e inovação.
 
-| Cor           | Hex       |
-|---------------|---------- |
-| Azul-petróleo | ![#1E3A8A](https://www.colorhexa.com/1e3a8a.png) `#1E3A8A` |
-| Lilás         | ![#A78BFA](https://www.colorhexa.com/A78BFA.png) `#A78BFA` |
-| Cinza-claro   | ![#E5E7EB](https://www.colorhexa.com/E5E7EB.png) `#E5E7EB` |
-| Branco        | ![#FFFFFF](https://www.colorhexa.com/FFFFFF.png) `#FFFFFF` |
-
+| Cor           | Exemplo  | Hex       |
+|--------------|----------|-----------|
+| Azul-petróleo | ![#1E3A8A](https://www.colorhexa.com/1e3a8a.png) | `#1E3A8A` |
+| Lilás        | ![#A78BFA](https://www.colorhexa.com/A78BFA.png) | `#A78BFA` |
+| Cinza-claro  | ![#E5E7EB](https://www.colorhexa.com/E5E7EB.png) | `#E5E7EB` |
+| Branco       | ![#FFFFFF](https://www.colorhexa.com/FFFFFF.png) | `#FFFFFF` |
 
 ## Tecnologias Utilizadas
 Para o desenvolvimento da plataforma, foram utilizadas as seguintes tecnologias:
@@ -53,8 +52,27 @@ O sistema seguirá a arquitetura MVC (Model-View-Controller), garantindo a separ
 - **View**: Interface gráfica para interação do usuário.
 - **Controller**: Manipula as requisições e conecta a View ao Model.
 
-## Ferramentas
-- Para edição de texto e desenvolvimento, foi utilizada a IDE Visual Studio.
+## Health Check
+Para garantir a estabilidade e disponibilidade do sistema, foi implementado um **Health Check** que monitora os principais serviços essenciais.
+
+### **Configuração**
+No `Program.cs`, os Health Checks foram configurados para verificar a API e seus serviços dependentes:
+
+```csharp
+app.UseHealthChecksUI(options => options.UIPath = "/Saude-ui");
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+```
+
+### **Acesso**
+- **Endpoint de monitoramento:** `/health`
+- **Interface de visualização:** `/Saude-ui`
+
+Essa funcionalidade ajuda na **observabilidade do sistema**, permitindo identificar falhas antes que impactem os usuários.
 
 ## Banco de Dados
 Para gerenciamento do banco de dados, utilizamos os seguintes comandos:
@@ -83,7 +101,6 @@ O banco de dados do sistema foi projetado com as seguintes tabelas principais:
 - Instituição
 - Feriados
 - Log
-
 
 ## Contato
 Eduardo Guedes  
