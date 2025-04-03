@@ -34,6 +34,8 @@ namespace GuedesTime.MVC.ViewModels
 
         public string? Avatar { get; set; }
 
+        public bool? Ativo { get; set; }
+
         public EnderecoViewModel Endereco { get; set; }
         public ICollection<ProfessorViewModel>? Professores { get; set; }
         public ICollection<TurmaViewModel>? Turmas { get; set; }

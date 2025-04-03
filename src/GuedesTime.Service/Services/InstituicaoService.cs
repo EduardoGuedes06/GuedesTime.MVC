@@ -17,10 +17,11 @@ namespace GuedesTime.Service.Services
             _enderecoRepository = enderecoRepository;
         }
 
-        public async Task ObterTodos()
+        public async Task<PagedResult<Instituicao>> ObterInstituiceosPaginada(Guid usuarioId, string? search, int page, int pageSize, bool ativo)
         {
-            await _instituicaoRepository.ObterTodos();
+            return await _instituicaoRepository.GetPaged(usuarioId, search, pageSize, page, ativo);
         }
+
 
         public async Task<Instituicao> ObterPorId(Guid instituicaoId)
         {

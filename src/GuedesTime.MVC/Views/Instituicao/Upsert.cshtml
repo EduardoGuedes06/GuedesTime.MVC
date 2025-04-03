@@ -1,4 +1,8 @@
-﻿@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
+﻿@using GuedesTime.MVC.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
 
 @{
     ViewData["Title"] = Model.Id == Guid.Empty ? "Cadastrar Instituição" : "Editar Instituição";
@@ -28,6 +32,18 @@
         <input asp-for="Cnpj" class="form-control" id="Cnpj" />
         <span asp-validation-for="Cnpj" class="text-danger"></span>
     </div>
+
+    @if (@Model.Id != Guid.Empty)
+    {
+        <div class="form-group">
+            <label class="form-label">Status</label>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="AtivoSwitch"
+                       name="Ativo" value="true" @(Model.Ativo == true ? "checked" : "")>
+            </div>
+            <span asp-validation-for="Ativo" class="text-danger"></span>
+        </div>
+    }
 
     <h4>
         Endereço
@@ -134,6 +150,17 @@
         });
 
         BuscaCep();
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggle = document.getElementById("AtivoSwitch");
+            const label = document.getElementById("switchLabel");
+
+            toggle.addEventListener("change", function () {
+                label.innerText = this.checked ? "Ligado" : "Desligado";
+            });
+        });
     </script>
 
 }

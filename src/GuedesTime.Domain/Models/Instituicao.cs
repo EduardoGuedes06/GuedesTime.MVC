@@ -12,6 +12,7 @@ namespace GuedesTime.Domain.Models
         public string CodigoCie { get; set; }
         public string Cnpj { get; set; }
         public string Avatar { get; set; }
+        public bool? Ativo { get; set; }
         public Guid UsuarioId { get; set; }
         public Endereco Endereco { get; set; }
         public ICollection<Professor> Professores { get; set; }

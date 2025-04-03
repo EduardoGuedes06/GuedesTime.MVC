@@ -11,7 +11,13 @@ namespace GuedesTime.Data.Repository
 {
     public class InstituicaoRepository : Repository<Instituicao>, IInstituicaoRepository
     {
-        public InstituicaoRepository(MeuDbContext context) : base(context) { }
+        private readonly IPagedResultRepository<Instituicao> _pagedResultRepository;
+
+        public InstituicaoRepository(MeuDbContext context, IPagedResultRepository<Instituicao> pagedResultRepository)
+            : base(context)
+        {
+            _pagedResultRepository = pagedResultRepository;
+        }
         public async Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId)
         {
             return await Db.Instituicao.AsNoTracking()
@@ -31,6 +37,32 @@ namespace GuedesTime.Data.Repository
             return await Db.Instituicao.AsNoTracking()
                 .Include(i => i.Endereco)
                 .FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<IEnumerable<Instituicao>> ObterInstituicoesDoUsuario(Guid usuarioId)
+        {
+            return await Db.Instituicao.AsNoTracking()
+                .Where(i => i.UsuarioId == usuarioId)
+                .Include(i => i.Endereco)
+                .OrderBy(i => i.Nome)
+                .ToListAsync();
+        }
+
+        public async Task<PagedResult<Instituicao>> GetPaged(Guid usuarioId, string? search, int pageSize, int? page = null, bool ativo = true)
+        {
+            IQueryable<Instituicao> query = Db.Instituicao
+                .AsNoTracking()
+                .Where(c => c.Ativo == ativo && c.UsuarioId == usuarioId);
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(c =>
+                    c.Nome.Contains(search) ||
+                    c.Cnpj.Contains(search) ||
+                    c.CodigoCie.Contains(search));
+            }
+
+            return await _pagedResultRepository.GetPagedResult(query, pageSize, page);
         }
 
     }

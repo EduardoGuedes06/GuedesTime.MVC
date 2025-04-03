@@ -28,9 +28,12 @@ namespace GuedesTime.Data.Mappings
                 .HasMaxLength(18)
                 .IsRequired(false);
 
+            builder.Property(p => p.Ativo)
+                .IsRequired()
+                .HasDefaultValue(true);
+
             builder.HasOne(f => f.Endereco)
                 .WithOne(e => e.Instituicao);
-
 
             builder.HasMany(i => i.Feriados)
                 .WithOne()

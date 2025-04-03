@@ -11,8 +11,8 @@ namespace GuedesTime.Domain.Intefaces
         Task<string> ObterAvatarAleatorioAsync();
         Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId);
         Task<Instituicao> ObterInstituicaoComEnderecoPorId(Guid instituicaoId);
+        Task<PagedResult<Instituicao>> ObterInstituiceosPaginada(Guid usuarioId, string? search, int page, int pageSize, bool ativo);
         Task<Instituicao> ObterPorId(Guid instituicaoId);
-        Task ObterTodos();
         Task Remover(Guid id);
     }
 }

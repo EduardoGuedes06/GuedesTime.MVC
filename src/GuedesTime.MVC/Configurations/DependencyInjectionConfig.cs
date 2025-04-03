@@ -2,6 +2,7 @@
 using GuedesTime.Data.Context;
 using GuedesTime.Data.Repository;
 using GuedesTime.Domain.Intefaces;
+using GuedesTime.Domain.Models;
 using GuedesTime.Domain.Notificacoes;
 using GuedesTime.MVC.Extensions;
 using GuedesTime.MVC.Interfaces;
@@ -25,9 +26,8 @@ namespace GuedesTime.Configurations
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
 
-            // Services
-            //services.AddScoped<IFornecedorService, FornecedorService>();
-            //services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<IPagedResultRepository<Instituicao>, PagedResultRepository<Instituicao>>();
+
             services.AddScoped<ITurmaService, TurmaService>();
             services.AddScoped<ITarefasService, TarefasService>();
             services.AddScoped<ISalaService, SalaService>();
@@ -45,9 +45,6 @@ namespace GuedesTime.Configurations
             services.AddScoped<IInstituicaoService, InstituicaoService>();
 
 
-            // Repositories
-            //services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            //services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
             services.AddScoped<ITurmaRepository, TurmaRepository>();
             services.AddScoped<ITarefasRepository, TarefasRepository>();

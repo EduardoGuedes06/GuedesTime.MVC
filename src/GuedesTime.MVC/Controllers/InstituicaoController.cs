@@ -28,13 +28,27 @@ namespace GuedesTime.MVC.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10, bool ativo = true)
         {
             var UserId = Guid.Parse(_userManager.GetUserId(User));
 
-            var instituicoes = await _instituicaoService.ObterDadosInstituicoesUsuario(UserId);
-            return View(instituicoes);
+            var instituicoes = await _instituicaoService.ObterInstituiceosPaginada(UserId, search, page, pageSize, ativo);
+
+            var instituicoesViewModel = _mapper.Map<IEnumerable<InstituicaoViewModel>>(instituicoes.Items);
+
+            var paged = new PagedInstituicoesViewModel
+            {
+                Instituicoes = instituicoesViewModel,
+                Search = search,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)instituicoes.TotalCount / pageSize),
+                TotalItems = instituicoes.TotalCount
+            };
+
+            return View(paged);
         }
+
 
         // DETALHES
         public async Task<IActionResult> Details(Guid id)
@@ -86,6 +100,8 @@ namespace GuedesTime.MVC.Controllers
             {
                 var instituicaoExistente = await _instituicaoService.ObterPorId(instituicaoViewModel.Id);
                 if (instituicaoExistente == null) return NotFound();
+                instituicaoViewModel.Avatar = instituicaoExistente.Avatar;
+
 
                 _mapper.Map(instituicaoViewModel, instituicaoExistente);
                 await _instituicaoService.Atualizar(instituicaoExistente);
