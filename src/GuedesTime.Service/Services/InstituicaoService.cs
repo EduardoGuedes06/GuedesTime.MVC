@@ -37,6 +37,10 @@ namespace GuedesTime.Service.Services
         {
             return await _instituicaoRepository.ObterDadosInstituicoesUsuario(usuarioId);
         }
+        public async Task<Instituicao> ObterDadosInstituicoesPorId(Guid instituicaoId)
+        {
+            return await _instituicaoRepository.ObterDadosInstituicoesPorId(instituicaoId);
+        }
 
 
         public async Task Adicionar(Instituicao Instituicao)

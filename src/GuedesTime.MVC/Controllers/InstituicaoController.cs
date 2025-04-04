@@ -51,10 +51,10 @@ namespace GuedesTime.MVC.Controllers
 
 
         // DETALHES
-        public async Task<IActionResult> Details(Guid id)
+        public async Task<IActionResult> Detalhes(Guid id)
         {
-            var instituicao = await _instituicaoService.ObterPorId(id);
-            var instituicoesViewModel = _mapper.Map<IEnumerable<InstituicaoViewModel>>(instituicao);
+            var instituicao = await _instituicaoService.ObterDadosInstituicoesPorId(id);
+            var instituicoesViewModel = _mapper.Map<InstituicaoViewModel>(instituicao);
 
             if (instituicoesViewModel == null) return NotFound();
             return View(instituicoesViewModel);
@@ -87,9 +87,19 @@ namespace GuedesTime.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(InstituicaoViewModel instituicaoViewModel)
         {
+            instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
+
+            foreach (var modelState in ModelState)
+            {
+                foreach (var error in modelState.Value.Errors)
+                {
+                    Console.WriteLine($"{modelState.Key}: {error.ErrorMessage}");
+                }
+            }
+
+
             if (!ModelState.IsValid) return View(instituicaoViewModel);
 
-            instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
 
             if (instituicaoViewModel.Id == Guid.Empty)
             {
@@ -98,7 +108,7 @@ namespace GuedesTime.MVC.Controllers
             }
             else
             {
-                var instituicaoExistente = await _instituicaoService.ObterPorId(instituicaoViewModel.Id);
+                var instituicaoExistente = await _instituicaoService.ObterPorId((Guid)instituicaoViewModel.Id);
                 if (instituicaoExistente == null) return NotFound();
                 instituicaoViewModel.Avatar = instituicaoExistente.Avatar;
 

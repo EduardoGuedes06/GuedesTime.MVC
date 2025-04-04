@@ -35,3 +35,16 @@ D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime\src\GuedesTime.Domain\obj\Debug\n
 D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime\src\GuedesTime.Domain\obj\Debug\net8.0\refint\GuedesTime.Domain.dll
 D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.pdb
 D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime\src\GuedesTime.Domain\obj\Debug\net8.0\ref\GuedesTime.Domain.dll
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\bin\Debug\net8.0\GuedesTime.Domain.deps.json
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\bin\Debug\net8.0\GuedesTime.Domain.dll
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\bin\Debug\net8.0\GuedesTime.Domain.pdb
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.csproj.AssemblyReference.cache
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.AssemblyInfoInputs.cache
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.AssemblyInfo.cs
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.csproj.CoreCompileInputs.cache
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.sourcelink.json
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.dll
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\refint\GuedesTime.Domain.dll
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.pdb
+D:\AMBIENTE DEV\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\ref\GuedesTime.Domain.dll

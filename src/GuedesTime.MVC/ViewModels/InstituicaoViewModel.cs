@@ -10,7 +10,7 @@ namespace GuedesTime.MVC.ViewModels
     public class InstituicaoViewModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
 
         [DisplayName("Nome da Instituição")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
