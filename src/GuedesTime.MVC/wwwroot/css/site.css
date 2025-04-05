@@ -31,7 +31,6 @@
     }
 }
 
-
 main {
     flex: 1;
 }
@@ -151,4 +150,13 @@ h1, h2, h3, h4 {
 .form-check-label {
     margin-left: 10px;
     font-size: 1rem;
+}
+
+
+
+.instituicao-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
 }

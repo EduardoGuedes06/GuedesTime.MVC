@@ -1,0 +1,37 @@
+﻿.instituicao-container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 12px; /* <-- adiciona isso */
+}
+
+
+.detalhes-instituicao-avatar {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #A78BFA;
+    margin-right: 0 !important;
+}
+
+.detalhes-instituicao-card {
+    width: 100%;
+    max-width: 1000px;
+    background: #FFFFFF;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: none !important;
+    transition: transform 0.3s ease;
+}
+
+    .detalhes-instituicao-card:hover {
+        transform: scale(1.02);
+    }
+
+.info-instituicao {
+    background-color: #FFFFFF;
+    padding: 20px;
+    box-shadow: none !important;
+}

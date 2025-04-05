@@ -51,10 +51,16 @@ namespace GuedesTime.MVC.Controllers
 
 
         // DETALHES
+        [AllowAnonymous]
         public async Task<IActionResult> Detalhes(Guid id)
         {
             var instituicao = await _instituicaoService.ObterDadosInstituicoesPorId(id);
             var instituicoesViewModel = _mapper.Map<InstituicaoViewModel>(instituicao);
+
+            var user = await _userManager.FindByIdAsync(instituicoesViewModel.UsuarioId.ToString());
+            var userName = user?.UserName;
+            ViewBag.Nome = userName;
+
 
             if (instituicoesViewModel == null) return NotFound();
             return View(instituicoesViewModel);

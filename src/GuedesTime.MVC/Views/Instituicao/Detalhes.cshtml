@@ -1,243 +1,187 @@
 ﻿@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
 
+<script src="~/js/site.js" asp-append-version="true"></script>
+<link rel="stylesheet" href="~/css/detalhes.css" asp-append-version="true" />
 
-<style>
-    /* Container principal */
-.container {
-    max-width: 900px;
-    margin: auto;
-    background: #E5E7EB;
-    padding: 30px;
-    border-radius: 12px;
-}
-
-/* Card principal */
-.card {
-    background: #FFFFFF;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Avatar */
-img.avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #A78BFA;
-}
-
-/* Informações principais */
-.text-2xl {
-    font-size: 24px;
-    font-weight: bold;
-    color: #1E3A8A;
-}
-.text-sm {
-    font-size: 14px;
-    color: #555;
-}
-
-/* Títulos das seções */
-h3 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #1E3A8A;
-    margin-bottom: 8px;
-}
-
-/* Listas */
-.list-disc {
-    margin-left: 20px;
-    color: #555;
-}
-
-/* Links */
-a {
-    color: #A78BFA;
-    text-decoration: none;
-    font-weight: bold;
-}
-a:hover {
-    color: #1E3A8A;
-    text-decoration: underline;
-}
-
-/* Layout responsivo */
-.grid {
-    display: grid;
-    gap: 20px;
-}
-
-@media (min-width: 768px) {
-    .grid-cols-2 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-</style>
-
-
-<div class="container py-5">
-    <div class="card shadow rounded-2xl p-6">
-        <div class="flex items-center mb-6">
-            <img src="@(!string.IsNullOrEmpty(Model.Avatar) ? Model.Avatar : "/images/avatar-default.png")" alt="Avatar" class="w-20 h-20 rounded-full mr-4">
-            <div>
-                <h2 class="text-2xl font-bold">@Model.Nome</h2>
-                <p class="text-sm text-gray-500">CNPJ: @Model.Cnpj</p>
-                <p class="text-sm text-gray-500">Código CIE: @Model.CodigoCie</p>
-                <p class="text-sm text-gray-500">Ativo: @(Model.Ativo == true ? "Sim" : "Não")</p>
+<div class="instituicao-container">
+    <div class="w-full max-w-5xl">
+        <div class="info-instituicao">
+            <div class="flex flex-col md:flex-row justify-between items-center w-full gap-6">
+                <div class="text-center md:text-left">
+                    <h2 class="text-2xl font-bold">@Model.Nome</h2>
+                    <img src="@Model.Avatar" alt="Avatar" class="detalhes-instituicao-avatar">
+                    <br />
+                    <br />
+                    <p class="text-sm text-gray-500">CNPJ: @Model.Cnpj</p>
+                    <p class="text-sm text-gray-500">Código CIE: @Model.CodigoCie</p>
+                    <p class="text-sm text-gray-500">Ativo: @(Model.Ativo.HasValue && Model.Ativo.Value ? "Sim" : "Não")</p>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-                <h3 class="text-lg font-semibold">Endereço</h3>
-                <p>@Model.Endereco.Logradouro, @Model.Endereco.Numero @Model.Endereco.Complemento</p>
-                <p>Bairro: @Model.Endereco.Bairro</p>
-                <p>Cidade: @Model.Endereco.Cidade - @Model.Endereco.Estado</p>
-                <p>CEP: @Model.Endereco.Cep</p>
-            </div>
-
-            <div>
-                <h3 class="text-lg font-semibold">Usuário Responsável</h3>
-                <p>ID: @Model.UsuarioId</p>
+        <!-- Endereço -->
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-lg font-semibold mb-2">
+                Endereço
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('endereco-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="endereco-container" style="display: block;">
+                <div class="text-center md:text-left">
+                    <br />
+                    <br />
+                    <p class="text-sm text-gray-500">@Model.Endereco.Logradouro, @Model.Endereco.Numero @Model.Endereco.Complemento</p>
+                    <p class="text-sm text-gray-500">Bairro: @Model.Endereco.Bairro</p>
+                    <p class="text-sm text-gray-500">Cidade: @Model.Endereco.Cidade - @Model.Endereco.Estado</p>
+                    <p class="text-sm text-gray-500">CEP: @Model.Endereco.Cep</p>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <!-- Turmas -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-bold">Turmas</h3>
-                    <a href="@Url.Action("GerenciarTurmas", "Turma", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Gerenciar</a>
+        <!-- Usuário Responsável -->
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-lg font-semibold mb-2">
+                Usuário Responsável
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('usuario-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="usuario-container" style="display: block;">
+                <br />
+                <br />
+                <div class="text-center md:text-left">
+                    <p class="text-sm text-gray-500">Responsável: @ViewBag.Nome</p>
                 </div>
-                @if (Model.Turmas?.Any() == true)
-                {
-                    <ul class="list-disc list-inside">
-                        @foreach (var turma in Model.Turmas)
-                        {
-                            <li>@turma.Nome (@turma.Ano)</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-gray-500">Nenhuma turma cadastrada.</p>
-                    <a href="@Url.Action("Criar", "Turma", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Turmas</a>
-                }
             </div>
+        </div>
 
-            <!-- Professores -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-bold">Professores</h3>
-                    <a href="@Url.Action("Gerenciar", "Professor", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Gerenciar</a>
+        <!-- Turmas -->
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-xl font-bold mb-2">
+                Turmas
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('turmas-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="turmas-container" style="display: block;">
+                <br />
+                <br />
+                <div class="text-center md:text-left">
+                    @if (Model.Turmas?.Any() == true)
+                    {
+                        <ul class="list-disc list-inside">
+                            @foreach (var turma in Model.Turmas)
+                            {
+                                <li>@turma.Nome (@turma.Ano)</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-gray-500">Nenhuma turma cadastrada.</p>
+                        <a href="@Url.Action("Criar", "Turma", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Turmas</a>
+                    }
                 </div>
-                @if (Model.Professores?.Any() == true)
-                {
-                    <ul class="list-disc list-inside">
-                        @foreach (var prof in Model.Professores)
-                        {
-                            <li>@prof.Nome - @prof.Email</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-gray-500">Nenhum professor cadastrado.</p>
-                    <a href="@Url.Action("Criar", "Professor", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Professores</a>
-                }
             </div>
+        </div>
 
-            <!-- Disciplinas -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-bold">Disciplinas</h3>
-                    <a href="@Url.Action("Gerenciar", "Disciplina", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Gerenciar</a>
+
+        <!-- Professores -->
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-xl font-bold mb-2">
+                Professores
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('professores-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="professores-container" style="display: block;">
+                <br />
+                <br />
+                <div class="text-center md:text-left">
+                    @if (Model.Professores?.Any() == true)
+                    {
+                        <ul class="list-disc list-inside">
+                            @foreach (var prof in Model.Professores)
+                            {
+                                <li>@prof.Nome - @prof.Email</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-gray-500">Nenhum professor cadastrado.</p>
+                        <a href="@Url.Action("Criar", "Professor", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Professores</a>
+                    }
                 </div>
-                @if (Model.Disciplinas?.Any() == true)
-                {
-                    <ul class="list-disc list-inside">
-                        @foreach (var disc in Model.Disciplinas)
-                        {
-                            <li>@disc.Nome - @disc.CargaHoraria h</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-gray-500">Nenhuma disciplina cadastrada.</p>
-                    <a href="@Url.Action("Criar", "Disciplina", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a>
-                }
             </div>
+        </div>
 
-            <!-- Salas -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-bold">Salas</h3>
-                    <a href="@Url.Action("Gerenciar", "Sala", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Gerenciar</a>
+
+        <!-- Disciplinas -->
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-xl font-bold mb-2">
+                Disciplinas
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('disciplinas-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="disciplinas-container" style="display: block;">
+                <br />
+                <br />
+                <div class="text-center md:text-left">
+                    @if (Model.Disciplinas?.Any() == true)
+                    {
+                        <ul class="list-disc list-inside">
+                            @foreach (var disc in Model.Disciplinas)
+                            {
+                                <li>@disc.Nome - @disc.CargaHoraria h</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-gray-500">Nenhuma disciplina cadastrada.</p>
+                        <a href="@Url.Action("Criar", "Disciplina", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a>
+                    }
                 </div>
-                @if (Model.Salas?.Any() == true)
-                {
-                    <ul class="list-disc list-inside">
-                        @foreach (var sala in Model.Salas)
-                        {
-                            <li>@sala.Nome - Capacidade: @sala.Capacidade</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-gray-500">Nenhuma sala cadastrada.</p>
-                    <a href="@Url.Action("Criar", "Sala", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Salas</a>
-                }
             </div>
+        </div>
 
-            <!-- Horários -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-bold">Horários</h3>
-                    <a href="@Url.Action("Gerenciar", "Horario", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Gerenciar</a>
-                </div>
-                @if (Model.Horarios?.Any() == true)
-                {
-                    <ul class="list-disc list-inside">
-                        @foreach (var horario in Model.Horarios)
-                        {
-                            <li>@horario.Inicio.ToString("HH:mm") - @horario.Fim.ToString("HH:mm")</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-gray-500">Nenhum horário cadastrado.</p>
-                    <a href="@Url.Action("Criar", "Horario", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Horários</a>
-                }
-            </div>
 
-            <!-- Feriados -->
-            <div>
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xl font-bold">Feriados</h3>
-                    <a href="@Url.Action("Gerenciar", "Feriado", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Gerenciar</a>
+        <!-- Salas -->
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-xl font-bold mb-2">
+                Salas
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('salas-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="salas-container" style="display: block;">
+                <br />
+                <br />
+                <div class="text-center md:text-left">
+                    @if (Model.Salas?.Any() == true)
+                    {
+                        <ul class="list-disc list-inside">
+                            @foreach (var sala in Model.Salas)
+                            {
+                                <li>@sala.Nome - Capacidade: @sala.Capacidade</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-gray-500">Nenhuma sala cadastrada.</p>
+                        <a href="@Url.Action("Criar", "Sala", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Salas</a>
+                    }
                 </div>
-                @if (Model.Feriados?.Any() == true)
-                {
-                    <ul class="list-disc list-inside">
-                        @foreach (var feriado in Model.Feriados)
-                        {
-                            <li>@feriado.Data.ToString("dd/MM") - @feriado.Nome</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <p class="text-gray-500">Nenhum feriado cadastrado.</p>
-                    <a href="@Url.Action("Criar", "Feriado", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Feriados</a>
-                }
             </div>
         </div>
     </div>
