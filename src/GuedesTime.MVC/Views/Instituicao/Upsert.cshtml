@@ -5,7 +5,11 @@
 @model GuedesTime.MVC.ViewModels.InstituicaoViewModel
 
 @{
-    ViewData["Title"] = Model.Id == Guid.Empty ? "Cadastrar Instituição" : "Editar Instituição";
+
+    ViewData["Title"] = (Model.Id == null || Model.Id == Guid.Empty)
+    ? "Cadastrar Instituição"
+    : "Editar Instituição";
+
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -33,7 +37,7 @@
         <span asp-validation-for="Cnpj" class="text-danger"></span>
     </div>
 
-    @if (@Model.Id != Guid.Empty)
+    @if (@Model.Id != null && Model.Id != Guid.Empty)
     {
         <div class="form-group">
             <label class="form-label">Status</label>
@@ -59,7 +63,7 @@
 
     <div class="button-container">
         <button type="submit" class="btn-custom">
-            <i class="fas fa-save"></i> @(@Model.Id == Guid.Empty ? "Cadastrar" : "Atualizar")
+            <i class="fas fa-save"></i> @((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar" : "Atualizar")
         </button>
         <button type="button" class="btn-custom" onclick="window.location.href='/Instituicao'">
             <i class="fas fa-arrow-left"></i> Voltar

@@ -14,29 +14,37 @@ namespace GuedesTime.Data.Mappings
 
             builder.Property(p => p.Nome)
                 .IsRequired()
-                .HasMaxLength(100);  // Nome do professor não pode ser nulo e tem um tamanho máximo de 100 caracteres
+                .HasMaxLength(100);
 
             builder.Property(p => p.Email)
                 .IsRequired()
-                .HasMaxLength(200);  // O email também é obrigatório
+                .HasMaxLength(200);
 
-            // Relacionamento com Tarefas (um para muitos)
+            builder.Property(p => p.Telefone)
+                .IsRequired()
+                .HasMaxLength(20) 
+                .HasColumnType("varchar(20)");
+
             builder.HasMany(p => p.Tarefas)
                 .WithOne(t => t.Professor)
                 .HasForeignKey(t => t.ProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento com Restricoes (um para muitos)
             builder.HasMany(p => p.Restricoes)
                 .WithOne(r => r.Professor)
                 .HasForeignKey(t => t.ProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento com PlanejamentosDeAula (um para muitos)
-            builder.HasMany(p => p.PlanejamentosDeAula)
-                .WithOne(pa => pa.Professor)
-                .HasForeignKey(pa => pa.ProfessorId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(p => p.DisciplinasProfessores)
+                   .WithOne(dp => dp.Professor)
+                   .HasForeignKey(dp => dp.ProfessorId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(p => p.Instituicao)
+                   .WithMany(i => i.Professores)
+                   .HasForeignKey(p => p.InstituicaoId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.ToTable("Professores");
         }

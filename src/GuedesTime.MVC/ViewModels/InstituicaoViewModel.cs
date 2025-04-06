@@ -26,9 +26,8 @@ namespace GuedesTime.MVC.ViewModels
         [StringLength(18, ErrorMessage = "O campo {0} deve ter {1} caracteres")]
         public string? Cnpj { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [DisplayName("Usuário Responsável")]
-        public Guid UsuarioId { get; set; }
+        public Guid? UsuarioId { get; set; }
 
         [DisplayName("Avatar")]
 

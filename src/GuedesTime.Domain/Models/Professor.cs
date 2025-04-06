@@ -10,8 +10,12 @@ namespace GuedesTime.Domain.Models
     {
         public string Nome { get; set; }
         public string Email { get; set; }
+        public string Telefone { get; set; }
+        public Guid InstituicaoId { get; set; }
 
         /* EF Relations */
+        public Instituicao Instituicao { get; set; }
+        public IEnumerable<DisciplinaProfessor> DisciplinasProfessores { get; set; }
         public IEnumerable<Tarefas> Tarefas { get; set; }
         public IEnumerable<Restricao> Restricoes { get; set; }
         public IEnumerable<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }

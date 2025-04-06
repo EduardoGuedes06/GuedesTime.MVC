@@ -12,6 +12,7 @@ namespace GuedesTime.Domain.Models
         public DateTime Fim { get; set; }
 
         /* EF Relations */
-        public IEnumerable<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
+        public ICollection<PlanejamentoDeAulaItem> PlanejamentosDeAulaItens { get; set; }
+
     }
 }

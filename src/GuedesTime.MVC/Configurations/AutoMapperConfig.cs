@@ -23,6 +23,8 @@ namespace GuedesTime.MVC.Configurations
             CreateMap<Log, LogViewModel>().ReverseMap();
             CreateMap<Instituicao, InstituicaoViewModel>().ReverseMap();
             CreateMap<Feriado, FeriadoViewModel>().ReverseMap();
+            CreateMap<DisciplinaProfessor, DisciplinaProfessorViewModel>().ReverseMap();
+            CreateMap<PlanejamentoDeAulaItem, PlanejamentoDeAulaItemViewModel>().ReverseMap();
 
             //CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
             CreateMap<Endereco, EnderecoViewModel>().ReverseMap();

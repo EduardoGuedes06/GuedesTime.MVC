@@ -12,6 +12,7 @@ namespace GuedesTime.Domain.Models
         public int CargaHoraria { get; set; }
 
         /* EF Relations */
-        public IEnumerable<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
+        public ICollection<DisciplinaProfessor> DisciplinasProfessores { get; set; }
+        public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
     }
 }

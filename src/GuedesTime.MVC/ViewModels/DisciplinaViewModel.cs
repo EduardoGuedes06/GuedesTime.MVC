@@ -20,6 +20,9 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public int CargaHoraria { get; set; }
 
-        public IEnumerable<PlanejamentoDeAulaViewModel> PlanejamentosDeAula { get; set; }
+        public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAula { get; set; }
+        public IEnumerable<DisciplinaProfessorViewModel> Professores { get; set; }
+
+
     }
 }

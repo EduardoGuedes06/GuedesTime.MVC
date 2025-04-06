@@ -20,11 +20,11 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasColumnType("int");
 
-            // Relacionamento com PlanejamentoDeAula (um para muitos)
-            builder.HasMany(d => d.PlanejamentosDeAula)
-                .WithOne(pa => pa.Disciplina)
-                .HasForeignKey(pa => pa.DisciplinaId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(d => d.DisciplinasProfessores)
+                   .WithOne(dp => dp.Disciplina)
+                   .HasForeignKey(dp => dp.DisciplinaId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
 
             builder.ToTable("Disciplinas");
         }

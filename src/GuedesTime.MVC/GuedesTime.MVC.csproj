@@ -40,6 +40,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Views\Turma\" />
+	  <Folder Include="Views\Professor\" />
 	  <Folder Include="wwwroot\imagens\" />
 	</ItemGroup>
 

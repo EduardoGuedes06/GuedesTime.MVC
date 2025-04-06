@@ -21,9 +21,15 @@ namespace GuedesTime.MVC.ViewModels
         [EmailAddress(ErrorMessage = "E-mail inválido")]
         public string Email { get; set; }
 
+        [DisplayName("Telefone")]
+        [Required(ErrorMessage = "O campo {0} é obrigatório")]
+        [Phone(ErrorMessage = "Telefone invalido")]
+        public string Telefone { get; set; }
         public IEnumerable<TarefasViewModel> Tarefas { get; set; }
         public IEnumerable<RestricaoViewModel> Restricoes { get; set; }
-        public IEnumerable<PlanejamentoDeAulaViewModel> PlanejamentosDeAula { get; set; }
+        public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAulaItens { get; set; }
         public IEnumerable<AtividadesViewModel> Atividades { get; set; }
+        public IEnumerable<DisciplinaProfessorViewModel> Disciplinas { get; set; }
+
     }
 }

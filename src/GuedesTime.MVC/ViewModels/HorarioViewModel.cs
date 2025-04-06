@@ -20,6 +20,7 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public DateTime Fim { get; set; }
 
-        public IEnumerable<PlanejamentoDeAulaViewModel> PlanejamentosDeAula { get; set; }
+        public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAulaItens { get; set; }
     }
+
 }

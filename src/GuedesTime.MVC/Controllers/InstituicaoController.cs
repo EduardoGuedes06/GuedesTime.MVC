@@ -66,25 +66,20 @@ namespace GuedesTime.MVC.Controllers
             return View(instituicoesViewModel);
         }
 
-        // EXIBIR FORMULÁRIO DE CRIAÇÃO
-        public IActionResult Create()
-        {
-            return View();
-        }
 
         public async Task<IActionResult> Upsert(Guid? id)
         {
             InstituicaoViewModel instituicaoViewModel = new();
 
             if (id.HasValue)
-            {
+            {   
                 var instituicao = await _instituicaoService.ObterInstituicaoComEnderecoPorId(id.Value);
                 if (instituicao == null) return NotFound();
                 instituicaoViewModel = _mapper.Map<InstituicaoViewModel>(instituicao);
 
                 instituicaoViewModel.Endereco.Cep = instituicaoViewModel.Endereco.Cep.Replace("-", "");
 
-            }
+            }else { instituicaoViewModel.UsuarioId = null; }
 
             return View(instituicaoViewModel);
         }
@@ -93,21 +88,13 @@ namespace GuedesTime.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(InstituicaoViewModel instituicaoViewModel)
         {
+            ModelState.Remove(nameof(instituicaoViewModel.UsuarioId));
             instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
-
-            foreach (var modelState in ModelState)
-            {
-                foreach (var error in modelState.Value.Errors)
-                {
-                    Console.WriteLine($"{modelState.Key}: {error.ErrorMessage}");
-                }
-            }
-
 
             if (!ModelState.IsValid) return View(instituicaoViewModel);
 
 
-            if (instituicaoViewModel.Id == Guid.Empty)
+            if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id == null)
             {
                 instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
                 await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
@@ -125,9 +112,6 @@ namespace GuedesTime.MVC.Controllers
 
             return OperacaoValida() ? RedirectToAction(nameof(Index)) : View(instituicaoViewModel);
         }
-
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]

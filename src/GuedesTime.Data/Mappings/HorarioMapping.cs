@@ -21,9 +21,9 @@ namespace GuedesTime.Data.Mappings
                 .HasColumnType("datetime");
 
             // Relacionamento com PlanejamentoDeAula (um para muitos)
-            builder.HasMany(h => h.PlanejamentosDeAula)
-                .WithOne(pa => pa.Horario)
-                .HasForeignKey(pa => pa.HorarioId)
+            builder.HasMany(h => h.PlanejamentosDeAulaItens)
+                .WithOne(i => i.Horario)
+                .HasForeignKey(i => i.HorarioId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.ToTable("Horarios");
