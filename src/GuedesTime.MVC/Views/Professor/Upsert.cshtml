@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
+@model GuedesTime.MVC.ViewModels.ProfessorViewModel
 
 @{
     ViewData["Title"] = (Model.Id == null || Model.Id == Guid.Empty)
@@ -25,15 +25,15 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="CodigoCie" class="control-label"></label>
-        <input asp-for="CodigoCie" class="form-control" />
-        <span asp-validation-for="CodigoCie" class="text-danger"></span>
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Cnpj" class="control-label"></label>
-        <input asp-for="Cnpj" class="form-control" id="Cnpj" />
-        <span asp-validation-for="Cnpj" class="text-danger"></span>
+        <label asp-for="Telefone" class="control-label"></label>
+        <input asp-for="Telefone" class="form-control" id="Cnpj" />
+        <span asp-validation-for="Telefone" class="text-danger"></span>
         <span id="cnpj-error" class="text-danger"></span>
     </div>
 

@@ -8,7 +8,7 @@ namespace GuedesTime.Domain.Intefaces
     {
         Task Adicionar(Professor professor);
         Task Atualizar(Professor professor);
-        Task ObterPorId(Professor professor);
+        Task<Professor> ObterPorId(Guid professorId);
         Task ObterTodos();
         Task Remover(Guid id);
     }

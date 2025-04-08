@@ -22,8 +22,12 @@ namespace GuedesTime.Data.Mappings
 
             builder.Property(p => p.Telefone)
                 .IsRequired()
-                .HasMaxLength(20) 
+                .HasMaxLength(20)
                 .HasColumnType("varchar(20)");
+
+            builder.Property(p => p.Ativo)
+                .IsRequired()
+                .HasDefaultValue(true);
 
             builder.HasMany(p => p.Tarefas)
                 .WithOne(t => t.Professor)

@@ -78,5 +78,11 @@ namespace GuedesTime.Data.Repository
             return await _pagedResultRepository.GetPagedResult(query, pageSize, page);
         }
 
+        public async Task<bool> VerificaUsuarioInstituicao(Guid usuarioId, Guid instituicaoId)
+        {
+            return await Db.Instituicao.AsNoTracking()
+                .AnyAsync(i => i.UsuarioId == usuarioId && i.Id == instituicaoId);
+        }
+
     }
 }

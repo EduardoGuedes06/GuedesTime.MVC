@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
+using GuedesTime.MVC.Models;
 using GuedesTime.MVC.ViewModels;
 using GuedesTime.Service.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -14,10 +15,19 @@ namespace GuedesTime.MVC.Controllers
     public class ProfessorController : BaseController
     {
         private readonly IMapper _mapper;
+        private readonly IProfessorService _professorService;
+        private readonly IInstituicaoService _instituicaoService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProfessorController(IMapper mapper, INotificador notificador) : base(notificador)
+        public ProfessorController(IMapper mapper, INotificador notificador,
+                                    UserManager<ApplicationUser> userManager,
+                                    IProfessorService professorService,
+                                    IInstituicaoService instituicaoService) : base(notificador)
         {
             _mapper = mapper;
+            _professorService = professorService;
+            _userManager = userManager;
+            _instituicaoService = instituicaoService;
         }
 
 
@@ -33,65 +43,73 @@ namespace GuedesTime.MVC.Controllers
             return View();
         }
 
-        //public async Task<IActionResult> Upsert(Guid? id)
-        //{
-        //    ProfessorViewModel professorViewModel = new();
+        public async Task<IActionResult> Upsert(Guid InstituicaoId, Guid? id)
+        {
+            ProfessorViewModel professorViewModel = new();
+            var UserId = Guid.Parse(_userManager.GetUserId(User));
 
-        //    if (id.HasValue)
-        //    {
-        //        var instituicao = await _instituicaoService.ObterInstituicaoComEnderecoPorId(id.Value);
-        //        if (instituicao == null) return NotFound();
-        //        professorViewModel = _mapper.Map<InstituicaoViewModel>(instituicao);
-
-
-        //    }
-        //    else { professorViewModel.UsuarioId = null; }
-
-        //    return View(instituicaoViewModel);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Upsert(InstituicaoViewModel instituicaoViewModel)
-        //{
-        //    ModelState.Remove(nameof(instituicaoViewModel.UsuarioId));
-        //    instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
-
-        //    if (!ModelState.IsValid) return View(instituicaoViewModel);
+            if (await _instituicaoService.VerificaUsuarioInstituicao(UserId, InstituicaoId))
+            {
+                if (id.HasValue)
+                {
+                    var professor = await _professorService.ObterPorId(id.Value);
+                    if (professor == null) return NotFound();
+                    professorViewModel = _mapper.Map<ProfessorViewModel>(professor);
 
 
-        //    if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id == null)
-        //    {
-        //        instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
-        //        await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
-        //    }
-        //    else
-        //    {
-        //        var instituicaoExistente = await _instituicaoService.ObterPorId((Guid)instituicaoViewModel.Id);
-        //        if (instituicaoExistente == null) return NotFound();
-        //        instituicaoViewModel.Avatar = instituicaoExistente.Avatar;
+                }
+                else { professorViewModel = null; }
+
+                return View(professorViewModel);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upsert(ProfessorViewModel professorViewModel)
+        {
+            //ModelState.Remove(nameof(instituicaoViewModel.UsuarioId));
+            //instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
+
+            //if (!ModelState.IsValid) return View(instituicaoViewModel);
 
 
-        //        _mapper.Map(instituicaoViewModel, instituicaoExistente);
-        //        await _instituicaoService.Atualizar(instituicaoExistente);
-        //    }
+            //if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id == null)
+            //{
+            //    instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
+            //    await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
+            //}
+            //else
+            //{
+            //    var instituicaoExistente = await _instituicaoService.ObterPorId((Guid)instituicaoViewModel.Id);
+            //    if (instituicaoExistente == null) return NotFound();
+            //    instituicaoViewModel.Avatar = instituicaoExistente.Avatar;
 
-        //    return OperacaoValida() ? RedirectToAction(nameof(Index)) : View(instituicaoViewModel);
-        //}
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(Guid id, InstituicaoViewModel instituicaoViewModel)
-        //{
-        //    if (id != instituicaoViewModel.Id) return BadRequest();
-        //    if (!ModelState.IsValid) return View(instituicaoViewModel);
+            //    _mapper.Map(instituicaoViewModel, instituicaoExistente);
+            //    await _instituicaoService.Atualizar(instituicaoExistente);
+            //}
 
-        //    await _instituicaoService.Atualizar(_mapper.Map<Instituicao>(instituicaoViewModel));
+            return OperacaoValida() ? RedirectToAction(nameof(Index)) : View(professorViewModel);
+        }
 
-        //    if (!OperacaoValida()) return View(instituicaoViewModel);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, ProfessorViewModel professorViewModel)
+        {
+            //if (id != instituicaoViewModel.Id) return BadRequest();
+            //if (!ModelState.IsValid) return View(instituicaoViewModel);
 
-        //    return RedirectToAction(nameof(Index));
-        //}
+            //await _instituicaoService.Atualizar(_mapper.Map<Instituicao>(instituicaoViewModel));
+
+            //if (!OperacaoValida()) return View(instituicaoViewModel);
+
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: ProfessorController/Delete/5
         public ActionResult Delete(int id)

@@ -11,5 +11,6 @@ namespace GuedesTime.Domain.Intefaces
         Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId);
         Task<Instituicao?> ObterInstituicaoComEnderecoPorId(Guid id);
         Task<IEnumerable<Instituicao>> ObterInstituicoesDoUsuario(Guid usuarioId);
+        Task<bool> VerificaUsuarioInstituicao(Guid usuarioId, Guid instituicaoId);
     }
 }

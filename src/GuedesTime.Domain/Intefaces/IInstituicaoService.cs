@@ -15,5 +15,6 @@ namespace GuedesTime.Domain.Intefaces
         Task<PagedResult<Instituicao>> ObterInstituiceosPaginada(Guid usuarioId, string? search, int page, int pageSize, bool ativo);
         Task<Instituicao> ObterPorId(Guid instituicaoId);
         Task Remover(Guid id);
+        Task<bool> VerificaUsuarioInstituicao(Guid usuarioId, Guid instituicaoId);
     }
 }

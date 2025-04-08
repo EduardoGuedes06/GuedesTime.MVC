@@ -22,7 +22,6 @@ namespace GuedesTime.Service.Services
             return await _instituicaoRepository.GetPaged(usuarioId, search, pageSize, page, ativo);
         }
 
-
         public async Task<Instituicao> ObterPorId(Guid instituicaoId)
         {
             return await _instituicaoRepository.ObterPorId(instituicaoId);
@@ -37,11 +36,16 @@ namespace GuedesTime.Service.Services
         {
             return await _instituicaoRepository.ObterDadosInstituicoesUsuario(usuarioId);
         }
+
         public async Task<Instituicao> ObterDadosInstituicoesPorId(Guid instituicaoId)
         {
             return await _instituicaoRepository.ObterDadosInstituicoesPorId(instituicaoId);
         }
 
+        public async Task<bool> VerificaUsuarioInstituicao(Guid usuarioId, Guid instituicaoId)
+        {
+            return await _instituicaoRepository.VerificaUsuarioInstituicao(usuarioId, instituicaoId);
+        }
 
         public async Task Adicionar(Instituicao Instituicao)
         {
@@ -66,13 +70,12 @@ namespace GuedesTime.Service.Services
 
             await _instituicaoRepository.Atualizar(instituicao);
         }
-
-
-
+        
         public async Task Remover(Guid id)
         {
             await _instituicaoRepository.Remover(id);
         }
+
         public async Task<string> ObterAvatarAleatorioAsync()
         {
             string caminhoAvatares = Path.Combine("wwwroot", "assets", "avatar");
@@ -92,7 +95,6 @@ namespace GuedesTime.Service.Services
 
             return await Task.FromResult("/" + caminhoRelativo.Replace("wwwroot/", ""));
         }
-
 
         public void Dispose()
         {

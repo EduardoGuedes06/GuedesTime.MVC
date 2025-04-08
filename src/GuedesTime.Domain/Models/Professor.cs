@@ -12,6 +12,7 @@ namespace GuedesTime.Domain.Models
         public string Email { get; set; }
         public string Telefone { get; set; }
         public Guid InstituicaoId { get; set; }
+        public bool? Ativo { get; set; }
 
         /* EF Relations */
         public Instituicao Instituicao { get; set; }

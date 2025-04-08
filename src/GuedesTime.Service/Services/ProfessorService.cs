@@ -18,9 +18,9 @@ namespace GuedesTime.Service.Services
             await _professorRepository.ObterTodos();
         }
 
-        public async Task ObterPorId(Professor Professor)
+        public async Task<Professor> ObterPorId(Guid professorId)
         {
-            await _professorRepository.ObterPorId(Professor.Id);
+            return await _professorRepository.ObterPorId(professorId);
         }
 
         public async Task Adicionar(Professor Professor)

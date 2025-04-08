@@ -1,4 +1,9 @@
-﻿@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
+﻿@using GuedesTime.MVC.Models
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@model GuedesTime.MVC.ViewModels.InstituicaoViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <script src="~/js/site.js" asp-append-version="true"></script>
 <link rel="stylesheet" href="~/css/detalhes.css" asp-append-version="true" />
@@ -83,12 +88,14 @@
                     else
                     {
                         <p class="text-gray-500">Nenhuma turma cadastrada.</p>
-                        <a href="@Url.Action("Criar", "Turma", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Turmas</a>
+                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
+                        {
+                            <a href="@Url.Action("Criar", "Turma", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Turmas</a>
+                        }
                     }
                 </div>
             </div>
         </div>
-
 
         <!-- Professores -->
         <div class="info-instituicao">
@@ -126,14 +133,16 @@
                     else
                     {
                         <p class="text-gray-500">Nenhum professor cadastrado.</p>
+                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
+                        {
+                            <br />
+                            <a href="@Url.Action("Upsert", "Professor", new { instituicaoId = Model.Id, id = (Guid?)null })" class="text-blue-600 hover:underline">Cadastrar Professores</a>
+                        }
                     }
 
-                    <br />
-                    <a href="@Url.Action("Upsert", "Professor")" class="text-blue-600 hover:underline">Cadastrar Professores</a>
                 </div>
             </div>
         </div>
-
 
         <!-- Disciplinas -->
         <div class="info-instituicao">
@@ -160,12 +169,14 @@
                     else
                     {
                         <p class="text-gray-500">Nenhuma disciplina cadastrada.</p>
-                        <a href="@Url.Action("Criar", "Disciplina", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a>
+                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
+                        {
+                            <a href="@Url.Action("Criar", "Disciplina", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a>
+                        }
                     }
                 </div>
             </div>
         </div>
-
 
         <!-- Salas -->
         <div class="info-instituicao">
@@ -192,7 +203,10 @@
                     else
                     {
                         <p class="text-gray-500">Nenhuma sala cadastrada.</p>
-                        <a href="@Url.Action("Criar", "Sala", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Salas</a>
+                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
+                        {
+                            <a href="@Url.Action("Criar", "Sala", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">Cadastrar Salas</a>
+                        }
                     }
                 </div>
             </div>

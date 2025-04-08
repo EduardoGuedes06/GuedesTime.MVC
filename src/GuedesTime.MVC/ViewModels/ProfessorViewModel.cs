@@ -25,6 +25,8 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [Phone(ErrorMessage = "Telefone invalido")]
         public string Telefone { get; set; }
+
+        public bool? Ativo { get; set; }
         public IEnumerable<TarefasViewModel> Tarefas { get; set; }
         public IEnumerable<RestricaoViewModel> Restricoes { get; set; }
         public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAulaItens { get; set; }
