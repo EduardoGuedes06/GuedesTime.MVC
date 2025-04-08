@@ -18,11 +18,6 @@ namespace GuedesTime.Service.Services
             await _disciplinaRepository.ObterTodos();
         }
 
-        public async Task ObterPorId(Disciplina Disciplina)
-        {
-            await _disciplinaRepository.ObterPorId(Disciplina.Id);
-        }
-
         public async Task Adicionar(Disciplina Disciplina)
         {
             await _disciplinaRepository.Adicionar(Disciplina);
@@ -41,6 +36,11 @@ namespace GuedesTime.Service.Services
         public void Dispose()
         {
             _disciplinaRepository?.Dispose();
+        }
+
+        public async Task<Disciplina> ObterPorId(Guid DisciplinaId)
+        {
+            return await _disciplinaRepository.ObterPorId(DisciplinaId);
         }
     }
 }

@@ -10,7 +10,8 @@ namespace GuedesTime.MVC.ViewModels
     public class DisciplinaViewModel
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
+        public Guid InstituicaoId { get; set; }
 
         [DisplayName("Nome")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -18,8 +19,9 @@ namespace GuedesTime.MVC.ViewModels
 
         [DisplayName("Carga Horária")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public int CargaHoraria { get; set; }
+        public TimeSpan CargaHoraria { get; set; }
 
+        public bool? Ativo { get; set; }
         public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAula { get; set; }
         public IEnumerable<DisciplinaProfessorViewModel> Professores { get; set; }
 
