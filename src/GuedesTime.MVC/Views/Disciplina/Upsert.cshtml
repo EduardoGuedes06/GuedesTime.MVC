@@ -13,6 +13,8 @@
 <h1>@ViewData["Title"]</h1>
 <hr />
 
+
+
 <form asp-action="Upsert" method="post">
     <input type="hidden" asp-for="Id" />
     <vc:Summary></vc:Summary>
@@ -30,6 +32,7 @@
         <span asp-validation-for="CargaHoraria" class="text-danger"></span>
     </div>
 
+    <input type="hidden" asp-for="InstituicaoId" />
 
     @if (Model.Id != null && Model.Id != Guid.Empty)
     {

@@ -19,6 +19,14 @@ namespace GuedesTime.Data.Mappings
             builder.Property(t => t.Ano)
                 .IsRequired();
 
+            builder.HasOne(t => t.Serie)
+                .WithMany(s => s.Turmas)
+                .HasForeignKey(t => t.SerieId);
+
+            builder.HasOne(t => t.Instituicao)
+                .WithMany(i => i.Turmas)
+                .HasForeignKey(t => t.InstituicaoId);
+
             builder.ToTable("Turmas");
         }
     }

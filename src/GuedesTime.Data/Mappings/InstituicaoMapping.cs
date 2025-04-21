@@ -65,6 +65,11 @@ namespace GuedesTime.Data.Mappings
                 .HasForeignKey("InstituicaoId")
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.HasMany(i => i.Series)
+                .WithOne(s => s.Instituicao)
+                .HasForeignKey(s => s.InstituicaoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.ToTable("Instituicoes");
         }
 

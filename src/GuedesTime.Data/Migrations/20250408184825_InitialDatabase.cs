@@ -79,8 +79,9 @@ namespace GuedesTime.Data.Migrations
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CargaHoraria = table.Column<TimeSpan>(type: "time", nullable: false),
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    InstituicaoId1 = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -88,6 +89,11 @@ namespace GuedesTime.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Disciplinas_Instituicoes_InstituicaoId",
                         column: x => x.InstituicaoId,
+                        principalTable: "Instituicoes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Disciplinas_Instituicoes_InstituicaoId1",
+                        column: x => x.InstituicaoId1,
                         principalTable: "Instituicoes",
                         principalColumn: "Id");
                 })
@@ -465,6 +471,11 @@ namespace GuedesTime.Data.Migrations
                 name: "IX_Disciplinas_InstituicaoId",
                 table: "Disciplinas",
                 column: "InstituicaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Disciplinas_InstituicaoId1",
+                table: "Disciplinas",
+                column: "InstituicaoId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DisciplinasProfessores_ProfessorId",

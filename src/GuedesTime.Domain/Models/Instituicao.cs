@@ -22,6 +22,7 @@ namespace GuedesTime.Domain.Models
         public ICollection<Sala>? Salas { get; set; }
         public ICollection<Horario>? Horarios { get; set; }
         public ICollection<Feriado>? Feriados { get; set; }
+        public ICollection<Serie>? Series { get; set; }
     }
 
 }

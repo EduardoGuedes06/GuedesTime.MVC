@@ -84,7 +84,10 @@ namespace GuedesTime.Data.Migrations
                     b.Property<TimeSpan>("CargaHoraria")
                         .HasColumnType("time");
 
-                    b.Property<Guid?>("InstituicaoId")
+                    b.Property<Guid>("InstituicaoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("InstituicaoId1")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Nome")
@@ -95,6 +98,8 @@ namespace GuedesTime.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InstituicaoId");
+
+                    b.HasIndex("InstituicaoId1");
 
                     b.ToTable("Disciplinas", (string)null);
                 });
@@ -551,7 +556,15 @@ namespace GuedesTime.Data.Migrations
                 {
                     b.HasOne("GuedesTime.Domain.Models.Instituicao", null)
                         .WithMany("Disciplinas")
-                        .HasForeignKey("InstituicaoId");
+                        .HasForeignKey("InstituicaoId")
+                        .IsRequired();
+
+                    b.HasOne("GuedesTime.Domain.Models.Instituicao", "Instituicao")
+                        .WithMany()
+                        .HasForeignKey("InstituicaoId1")
+                        .IsRequired();
+
+                    b.Navigation("Instituicao");
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.DisciplinaProfessor", b =>

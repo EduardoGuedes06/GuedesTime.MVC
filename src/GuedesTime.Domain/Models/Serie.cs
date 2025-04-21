@@ -6,18 +6,14 @@ using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Models
 {
-    public class Turma : Entity
+    public class Serie : Entity
     {
         public string Nome { get; set; }
-        public int Ano { get; set; }
-
         public Guid InstituicaoId { get; set; }
-        public Guid SerieId { get; set; }
 
         public Instituicao Instituicao { get; set; }
-        public Serie Serie { get; set; }
-
-        public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
+        public ICollection<Turma> Turmas { get; set; }
+        public ICollection<DisciplinaSerie> Disciplinas { get; set; }
     }
 
 }
