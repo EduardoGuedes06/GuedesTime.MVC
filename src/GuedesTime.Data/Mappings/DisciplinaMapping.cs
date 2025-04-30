@@ -16,10 +16,6 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasMaxLength(200);
 
-            builder.Property(d => d.CargaHoraria)
-                .IsRequired()
-                .HasColumnType("time");
-
             builder.Property(p => p.Ativo)
                 .IsRequired()
                 .HasDefaultValue(true);
@@ -28,6 +24,11 @@ namespace GuedesTime.Data.Mappings
                    .WithOne(dp => dp.Disciplina)
                    .HasForeignKey(dp => dp.DisciplinaId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(d => d.DisciplinasPorSerie)
+                    .WithOne(dp => dp.Disciplina)
+                    .HasForeignKey(dp => dp.DisciplinaId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(p => p.Instituicao)
                    .WithMany(i => i.Disciplinas)

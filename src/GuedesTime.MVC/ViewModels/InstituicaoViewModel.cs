@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using GuedesTime.Domain.Models;
 using GuedesTime.MVC.Extensions;
 using Microsoft.AspNetCore.Http;
 
@@ -42,6 +43,7 @@ namespace GuedesTime.MVC.ViewModels
         public ICollection<SalaViewModel>? Salas { get; set; }
         public ICollection<HorarioViewModel>? Horarios { get; set; }
         public ICollection<FeriadoViewModel>? Feriados { get; set; }
+        public ICollection<SerieViewModel>? Series { get; set; }
     }
 
 }

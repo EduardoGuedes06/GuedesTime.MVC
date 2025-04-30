@@ -162,7 +162,6 @@
                         <ul class="list-disc list-inside">
                             @foreach (var disc in Model.Disciplinas)
                             {
-                                <li>@disc.Nome - @disc.CargaHoraria h</li>
                                 <div class="space-x-2">
                                     <a href="@Url.Action("Upsert", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
                                        class="text-blue-600 hover:underline">Editar</a>

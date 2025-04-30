@@ -81,9 +81,6 @@ namespace GuedesTime.Data.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(true);
 
-                    b.Property<TimeSpan>("CargaHoraria")
-                        .HasColumnType("time");
-
                     b.Property<Guid>("InstituicaoId")
                         .HasColumnType("char(36)");
 
@@ -122,6 +119,30 @@ namespace GuedesTime.Data.Migrations
                     b.HasIndex("ProfessorId");
 
                     b.ToTable("DisciplinasProfessores", (string)null);
+                });
+
+            modelBuilder.Entity("GuedesTime.Domain.Models.DisciplinaSerie", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<TimeSpan>("CargaHoraria")
+                        .HasColumnType("time(6)");
+
+                    b.Property<Guid>("DisciplinaId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("SerieId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DisciplinaId");
+
+                    b.HasIndex("SerieId");
+
+                    b.ToTable("DisciplinasSeries", (string)null);
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Endereco", b =>
@@ -495,6 +516,27 @@ namespace GuedesTime.Data.Migrations
                     b.ToTable("Salas", (string)null);
                 });
 
+            modelBuilder.Entity("GuedesTime.Domain.Models.Serie", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("InstituicaoId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InstituicaoId");
+
+                    b.ToTable("Series", (string)null);
+                });
+
             modelBuilder.Entity("GuedesTime.Domain.Models.Tarefas", b =>
                 {
                     b.Property<Guid>("Id")
@@ -528,16 +570,21 @@ namespace GuedesTime.Data.Migrations
                     b.Property<int>("Ano")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("InstituicaoId")
+                    b.Property<Guid>("InstituicaoId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
 
+                    b.Property<Guid>("SerieId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InstituicaoId");
+
+                    b.HasIndex("SerieId");
 
                     b.ToTable("Turmas", (string)null);
                 });
@@ -582,6 +629,23 @@ namespace GuedesTime.Data.Migrations
                     b.Navigation("Disciplina");
 
                     b.Navigation("Professor");
+                });
+
+            modelBuilder.Entity("GuedesTime.Domain.Models.DisciplinaSerie", b =>
+                {
+                    b.HasOne("GuedesTime.Domain.Models.Disciplina", "Disciplina")
+                        .WithMany("DisciplinasPorSerie")
+                        .HasForeignKey("DisciplinaId")
+                        .IsRequired();
+
+                    b.HasOne("GuedesTime.Domain.Models.Serie", "Serie")
+                        .WithMany("Disciplinas")
+                        .HasForeignKey("SerieId")
+                        .IsRequired();
+
+                    b.Navigation("Disciplina");
+
+                    b.Navigation("Serie");
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Endereco", b =>
@@ -728,6 +792,16 @@ namespace GuedesTime.Data.Migrations
                         .HasForeignKey("InstituicaoId");
                 });
 
+            modelBuilder.Entity("GuedesTime.Domain.Models.Serie", b =>
+                {
+                    b.HasOne("GuedesTime.Domain.Models.Instituicao", "Instituicao")
+                        .WithMany("Series")
+                        .HasForeignKey("InstituicaoId")
+                        .IsRequired();
+
+                    b.Navigation("Instituicao");
+                });
+
             modelBuilder.Entity("GuedesTime.Domain.Models.Tarefas", b =>
                 {
                     b.HasOne("GuedesTime.Domain.Models.Professor", "Professor")
@@ -740,13 +814,25 @@ namespace GuedesTime.Data.Migrations
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Turma", b =>
                 {
-                    b.HasOne("GuedesTime.Domain.Models.Instituicao", null)
+                    b.HasOne("GuedesTime.Domain.Models.Instituicao", "Instituicao")
                         .WithMany("Turmas")
-                        .HasForeignKey("InstituicaoId");
+                        .HasForeignKey("InstituicaoId")
+                        .IsRequired();
+
+                    b.HasOne("GuedesTime.Domain.Models.Serie", "Serie")
+                        .WithMany("Turmas")
+                        .HasForeignKey("SerieId")
+                        .IsRequired();
+
+                    b.Navigation("Instituicao");
+
+                    b.Navigation("Serie");
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Disciplina", b =>
                 {
+                    b.Navigation("DisciplinasPorSerie");
+
                     b.Navigation("DisciplinasProfessores");
 
                     b.Navigation("PlanejamentosDeAula");
@@ -774,6 +860,8 @@ namespace GuedesTime.Data.Migrations
 
                     b.Navigation("Salas");
 
+                    b.Navigation("Series");
+
                     b.Navigation("Turmas");
                 });
 
@@ -800,6 +888,13 @@ namespace GuedesTime.Data.Migrations
             modelBuilder.Entity("GuedesTime.Domain.Models.Sala", b =>
                 {
                     b.Navigation("PlanejamentosDeAula");
+                });
+
+            modelBuilder.Entity("GuedesTime.Domain.Models.Serie", b =>
+                {
+                    b.Navigation("Disciplinas");
+
+                    b.Navigation("Turmas");
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Turma", b =>

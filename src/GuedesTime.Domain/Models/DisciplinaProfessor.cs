@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Models
 {
-    public class DisciplinaProfessor
+    public class DisciplinaProfessor : Entity
     {
         public Guid DisciplinaId { get; set; }
         public Disciplina Disciplina { get; set; }

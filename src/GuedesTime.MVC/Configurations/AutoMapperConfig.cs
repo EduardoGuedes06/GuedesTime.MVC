@@ -20,15 +20,14 @@ namespace GuedesTime.MVC.Configurations
             CreateMap<Disciplina, DisciplinaViewModel>().ReverseMap();
             CreateMap<ConfiguracoesGenericas, ConfiguracoesGenericasViewModel>().ReverseMap();
             CreateMap<Atividades, AtividadesViewModel>().ReverseMap();
-            CreateMap<Log, LogViewModel>().ReverseMap();
+            CreateMap<Serie, LogViewModel>().ReverseMap();
             CreateMap<Instituicao, InstituicaoViewModel>().ReverseMap();
             CreateMap<Feriado, FeriadoViewModel>().ReverseMap();
             CreateMap<DisciplinaProfessor, DisciplinaProfessorViewModel>().ReverseMap();
             CreateMap<PlanejamentoDeAulaItem, PlanejamentoDeAulaItemViewModel>().ReverseMap();
-
-            //CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap();
+            CreateMap<Serie, SerieViewModel>().ReverseMap();
             CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
-            //CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+            CreateMap<DisciplinaSerie, DisciplinaSerieViewModel>().ReverseMap();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace GuedesTime.Data.Context
         public DbSet<Disciplina> Disciplina { get; set; }
         public DbSet<HistoricoExportacao> HistoricoExportacao { get; set; }
         public DbSet<Horario> Horario { get; set; }
-        public DbSet<Log> Log { get; set; }
+        public DbSet<Serie> Log { get; set; }
         public DbSet<PlanejamentoDeAula> PlanejamentoDeAula { get; set; }
         public DbSet<Professor> Professor { get; set; }
         public DbSet<Restricao> Restricao { get; set; }

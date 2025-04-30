@@ -17,14 +17,9 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Nome { get; set; }
 
-        [DisplayName("Carga Horária")]
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        public TimeSpan CargaHoraria { get; set; }
-
         public bool? Ativo { get; set; }
         public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAula { get; set; }
-        public IEnumerable<DisciplinaProfessorViewModel> Professores { get; set; }
-
-
+        public IEnumerable<DisciplinaProfessorViewModel> DisciplinasProfessores { get; set; }
+        public IEnumerable<DisciplinaSerieViewModel> DisciplinasPorSerie { get; set; }
     }
 }
