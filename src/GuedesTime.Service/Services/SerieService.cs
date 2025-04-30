@@ -5,9 +5,9 @@ namespace GuedesTime.Service.Services
 {
     public class SerieService : BaseService, ISerieService
     {
-        private readonly ISerieService _serieRepository;
+        private readonly ISerieRepository _serieRepository;
 
-        public SerieService(ISerieService SerieRepository,
+        public SerieService(ISerieRepository SerieRepository,
                               INotificador notificador) : base(notificador)
         {
             _serieRepository = SerieRepository;

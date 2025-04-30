@@ -97,9 +97,12 @@
                     return;
                 }
 
-                var correctedName = nameValue.replace(/\b\w/g, function (char) {
-                    return char.toUpperCase();
-                });
+                var correctedName = nameValue
+                    .toLowerCase()
+                    .replace(/(^|[\s.])([a-zà-öø-ÿ])/g, function (_, sep, char) {
+                        return sep + char.toUpperCase();
+                    });
+
 
                 nameField.val(correctedName);
                 nameError.text("");
