@@ -33,8 +33,6 @@ function toggleSection(sectionId, button) {
         icon.classList.add("fa-chevron-down");
     }
 }
-
-
 function bindForm(dialog) {
     $('form', dialog).submit(function () {
         $.ajax({
@@ -44,7 +42,7 @@ function bindForm(dialog) {
             success: function (result) {
                 if (result.success) {
                     $('#myModal').modal('hide');
-                    $('#EnderecoTarget').load(result.url); // Carrega o resultado HTML para a div demarcada
+                    $('#EnderecoTarget').load(result.url);
                 } else {
                     $('#myModalContent').html(result);
                     bindForm(dialog);
@@ -56,7 +54,6 @@ function bindForm(dialog) {
         return false;
     });
 }
-
 function BuscaCep() {
     $(document).ready(function () {
 
@@ -120,7 +117,3 @@ function BuscaCep() {
         });
     });
 }
-
-$(document).ready(function () {
-	$("#msg_box").fadeOut(2500);
-});

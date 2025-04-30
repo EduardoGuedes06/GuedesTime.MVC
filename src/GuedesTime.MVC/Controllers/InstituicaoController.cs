@@ -61,6 +61,11 @@ namespace GuedesTime.MVC.Controllers
             var userName = user?.UserName;
             ViewBag.Nome = userName;
 
+            var mensagens = VerificarDadosInstituicao(instituicoesViewModel);
+            if (mensagens.Any())
+            {
+                TempData["warning"] = string.Join(" | ", mensagens);
+            }
 
             if (instituicoesViewModel == null) return NotFound();
             return View(instituicoesViewModel);
@@ -146,6 +151,42 @@ namespace GuedesTime.MVC.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        // Notificar Dados Faltando
+        private string VerificarDadosInstituicao(InstituicaoViewModel instituicoesViewModel)
+        {
+            var pendencias = new List<string>();
+
+            if (instituicoesViewModel.Series == null || !instituicoesViewModel.Series.Any())
+                pendencias.Add("Séries");
+            if (instituicoesViewModel.Disciplinas == null || !instituicoesViewModel.Disciplinas.Any())
+                pendencias.Add("Disciplinas");
+            if (instituicoesViewModel.Turmas == null || !instituicoesViewModel.Turmas.Any())
+                pendencias.Add("Turmas");
+            if (instituicoesViewModel.Professores == null || !instituicoesViewModel.Professores.Any())
+                pendencias.Add("Professores");
+            if (instituicoesViewModel.Salas == null || !instituicoesViewModel.Salas.Any())
+                pendencias.Add("Salas");
+            if (instituicoesViewModel.Feriados == null || !instituicoesViewModel.Feriados.Any())
+                pendencias.Add("Feriados");
+            if (instituicoesViewModel.Horarios == null || !instituicoesViewModel.Horarios.Any())
+                pendencias.Add("Horários");
+
+            if (pendencias.Any())
+            {
+                if (pendencias.Count > 1)
+                {
+                    var lastItem = pendencias.Last();
+                    pendencias[pendencias.Count - 1] = $"e {lastItem}";
+                }
+
+                return $"Cadastros Pendentes: {string.Join(", ", pendencias)}.";
+            }
+
+            return string.Empty;
+        }
+
+
 
     }
 }
