@@ -87,20 +87,27 @@ Update-Database -Context MeuDbContext
 
 ### Estrutura do Banco de Dados
 O banco de dados do sistema foi projetado com as seguintes tabelas principais:
+- Instituicao
+- Endereco
+- Serie
 - Turma
 - Tarefas
 - Sala
 - Restrição
 - Professor
+- Restricões
+- Horarios
 - Planejamento de Aula
 - Horário
 - Histórico de Exportação
 - Disciplina
 - Configurações Genéricas
 - Atividades
+- HistoricoExportacao
 - Instituição
 - Feriados
 - Log
+
 
 ## Contato
 Eduardo Guedes  
