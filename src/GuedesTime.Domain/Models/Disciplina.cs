@@ -17,6 +17,7 @@ namespace GuedesTime.Domain.Models
         public ICollection<DisciplinaProfessor> DisciplinasProfessores { get; set; }
         public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
         public ICollection<DisciplinaSerie> DisciplinasPorSerie { get; set; }
+        public ICollection<ProfessorDisciplinaTurma> ProfessoresDisciplinasTurmas { get; set; }
 
     }
 

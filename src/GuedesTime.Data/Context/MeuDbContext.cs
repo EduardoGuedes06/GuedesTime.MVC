@@ -30,6 +30,7 @@ namespace GuedesTime.Data.Context
         public DbSet<Feriado> Feriado { get; set; }
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<DisciplinaProfessor> DisciplinaProfessor { get; set; }
+        public DbSet<ProfessorDisciplinaTurma> ProfessorDisciplinaTurma { get; set; }
         public DbSet<PlanejamentoDeAulaItem> PlanejamentoDeAulaItem { get; set; }
         public DbSet<DisciplinaProfessor> Serie { get; set; }
         public DbSet<PlanejamentoDeAulaItem> DisciplinaSerie { get; set; }

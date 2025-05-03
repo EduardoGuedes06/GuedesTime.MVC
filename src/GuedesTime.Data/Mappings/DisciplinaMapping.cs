@@ -35,6 +35,12 @@ namespace GuedesTime.Data.Mappings
                    .HasForeignKey(p => p.InstituicaoId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(d => d.ProfessoresDisciplinasTurmas)
+                   .WithOne(pdt => pdt.Disciplina)
+                   .HasForeignKey(pdt => pdt.DisciplinaId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
+
             builder.ToTable("Disciplinas");
         }
     }

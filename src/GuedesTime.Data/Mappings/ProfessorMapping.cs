@@ -44,6 +44,11 @@ namespace GuedesTime.Data.Mappings
                    .HasForeignKey(dp => dp.ProfessorId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasMany(p => p.ProfessoresDisciplinasTurmas)
+                   .WithOne(pdt => pdt.Professor)
+                   .HasForeignKey(pdt => pdt.ProfessorId)
+                   .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasOne(p => p.Instituicao)
                    .WithMany(i => i.Professores)
                    .HasForeignKey(p => p.InstituicaoId)

@@ -109,6 +109,9 @@ namespace GuedesTime.Data.Migrations
                     b.Property<Guid>("ProfessorId")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Observacao")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -469,6 +472,34 @@ namespace GuedesTime.Data.Migrations
                     b.ToTable("Professores", (string)null);
                 });
 
+            modelBuilder.Entity("GuedesTime.Domain.Models.ProfessorDisciplinaTurma", b =>
+                {
+                    b.Property<Guid>("ProfessorId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("DisciplinaId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("TurmaId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid?>("DisciplinaId1")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("ProfessorId", "DisciplinaId", "TurmaId");
+
+                    b.HasIndex("DisciplinaId");
+
+                    b.HasIndex("DisciplinaId1");
+
+                    b.HasIndex("TurmaId");
+
+                    b.ToTable("ProfessoresDisciplinasTurmas", (string)null);
+                });
+
             modelBuilder.Entity("GuedesTime.Domain.Models.Restricao", b =>
                 {
                     b.Property<Guid>("Id")
@@ -775,6 +806,34 @@ namespace GuedesTime.Data.Migrations
                     b.Navigation("Instituicao");
                 });
 
+            modelBuilder.Entity("GuedesTime.Domain.Models.ProfessorDisciplinaTurma", b =>
+                {
+                    b.HasOne("GuedesTime.Domain.Models.Disciplina", "Disciplina")
+                        .WithMany()
+                        .HasForeignKey("DisciplinaId")
+                        .IsRequired();
+
+                    b.HasOne("GuedesTime.Domain.Models.Disciplina", null)
+                        .WithMany("ProfessoresDisciplinasTurmas")
+                        .HasForeignKey("DisciplinaId1");
+
+                    b.HasOne("GuedesTime.Domain.Models.Professor", "Professor")
+                        .WithMany("ProfessoresDisciplinasTurmas")
+                        .HasForeignKey("ProfessorId")
+                        .IsRequired();
+
+                    b.HasOne("GuedesTime.Domain.Models.Turma", "Turma")
+                        .WithMany("ProfessoresDisciplinasTurmas")
+                        .HasForeignKey("TurmaId")
+                        .IsRequired();
+
+                    b.Navigation("Disciplina");
+
+                    b.Navigation("Professor");
+
+                    b.Navigation("Turma");
+                });
+
             modelBuilder.Entity("GuedesTime.Domain.Models.Restricao", b =>
                 {
                     b.HasOne("GuedesTime.Domain.Models.Professor", "Professor")
@@ -836,6 +895,8 @@ namespace GuedesTime.Data.Migrations
                     b.Navigation("DisciplinasProfessores");
 
                     b.Navigation("PlanejamentosDeAula");
+
+                    b.Navigation("ProfessoresDisciplinasTurmas");
                 });
 
             modelBuilder.Entity("GuedesTime.Domain.Models.Horario", b =>
@@ -880,6 +941,8 @@ namespace GuedesTime.Data.Migrations
 
                     b.Navigation("PlanejamentosDeAula");
 
+                    b.Navigation("ProfessoresDisciplinasTurmas");
+
                     b.Navigation("Restricoes");
 
                     b.Navigation("Tarefas");
@@ -900,6 +963,8 @@ namespace GuedesTime.Data.Migrations
             modelBuilder.Entity("GuedesTime.Domain.Models.Turma", b =>
                 {
                     b.Navigation("PlanejamentosDeAula");
+
+                    b.Navigation("ProfessoresDisciplinasTurmas");
                 });
 #pragma warning restore 612, 618
         }

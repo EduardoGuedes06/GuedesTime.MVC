@@ -273,7 +273,8 @@ namespace GuedesTime.Data.Migrations
                     DisciplinaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Observacao = table.Column<string>(type: "varchar(100)", maxLength: 500, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -423,6 +424,42 @@ namespace GuedesTime.Data.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PlanejamentosDeAula_Turmas_TurmaId",
+                        column: x => x.TurmaId,
+                        principalTable: "Turmas",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "ProfessoresDisciplinasTurmas",
+                columns: table => new
+                {
+                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    DisciplinaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    TurmaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    DisciplinaId1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfessoresDisciplinasTurmas", x => new { x.ProfessorId, x.DisciplinaId, x.TurmaId });
+                    table.ForeignKey(
+                        name: "FK_ProfessoresDisciplinasTurmas_Disciplinas_DisciplinaId",
+                        column: x => x.DisciplinaId,
+                        principalTable: "Disciplinas",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfessoresDisciplinasTurmas_Disciplinas_DisciplinaId1",
+                        column: x => x.DisciplinaId1,
+                        principalTable: "Disciplinas",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfessoresDisciplinasTurmas_Professores_ProfessorId",
+                        column: x => x.ProfessorId,
+                        principalTable: "Professores",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ProfessoresDisciplinasTurmas_Turmas_TurmaId",
                         column: x => x.TurmaId,
                         principalTable: "Turmas",
                         principalColumn: "Id");
@@ -634,6 +671,21 @@ namespace GuedesTime.Data.Migrations
                 column: "InstituicaoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProfessoresDisciplinasTurmas_DisciplinaId",
+                table: "ProfessoresDisciplinasTurmas",
+                column: "DisciplinaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfessoresDisciplinasTurmas_DisciplinaId1",
+                table: "ProfessoresDisciplinasTurmas",
+                column: "DisciplinaId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProfessoresDisciplinasTurmas_TurmaId",
+                table: "ProfessoresDisciplinasTurmas",
+                column: "TurmaId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Restricoes_ProfessorId",
                 table: "Restricoes",
                 column: "ProfessorId");
@@ -693,6 +745,9 @@ namespace GuedesTime.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "PlanejamentoDeAulaItens");
+
+            migrationBuilder.DropTable(
+                name: "ProfessoresDisciplinasTurmas");
 
             migrationBuilder.DropTable(
                 name: "Restricoes");

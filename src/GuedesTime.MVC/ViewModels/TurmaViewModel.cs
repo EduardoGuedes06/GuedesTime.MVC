@@ -29,5 +29,6 @@ namespace GuedesTime.MVC.ViewModels
         public SerieViewModel Serie { get; set; }
 
         public IEnumerable<PlanejamentoDeAulaViewModel> PlanejamentosDeAula { get; set; }
+        public ICollection<ProfessorDisciplinaTurmaViewModel> ProfessoresDisciplinasTurmas { get; set; }
     }
 }

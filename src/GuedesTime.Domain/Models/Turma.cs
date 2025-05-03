@@ -18,6 +18,8 @@ namespace GuedesTime.Domain.Models
         public Serie Serie { get; set; }
 
         public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
+        public ICollection<ProfessorDisciplinaTurma> ProfessoresDisciplinasTurmas { get; set; }
+
     }
 
 }

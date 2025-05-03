@@ -24,6 +24,7 @@ namespace GuedesTime.Data.Repository
                 .Where(i => i.UsuarioId == usuarioId)
                 .Include(i => i.Professores)
                 .Include(i => i.Turmas)
+                .Include(i => i.Series)
                 .Include(i => i.Disciplinas)
                 .Include(i => i.Salas)
                 .Include(i => i.Horarios)
