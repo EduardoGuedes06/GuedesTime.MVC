@@ -10,6 +10,31 @@
 
 <div class="instituicao-container">
     <div class="w-full max-w-5xl">
+
+
+        <div class="progresso-container" style="text-align: center; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 10px;">Progressão do Cadastro</h3>
+
+            <div style="background-color: #e0e0e0; border-radius: 5px; width: 100%; height: 24px; position: relative;">
+                <div style="background-color: #1E3A8A; height: 100%; width: @ViewBag.Progresso%; border-radius: 5px;
+                    position: relative; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: white; font-weight: bold;">@ViewBag.Progresso%</span>
+                </div>
+            </div>
+
+            @if (ViewBag.ProximaEtapa != null)
+            {
+                <p style="margin-top: 12px;">
+                    Para continuar, cadastre as <strong>@ViewBag.ProximaEtapa</strong>.
+                    <a href="@Url.Action((string)ViewBag.ProximaEtapa, "Instituicao", new { id = ViewBag.InstituicaoId })"
+                       style="color: #1E3A8A; font-weight: bold; text-decoration: underline; margin-left: 5px;">
+                        Clique aqui para cadastrar!
+                    </a>
+                </p>
+            }
+        </div>
+
+
         <div class="info-instituicao">
             <div class="flex flex-col md:flex-row justify-between items-center w-full gap-6">
                 <div class="text-center md:text-left">
@@ -45,6 +70,73 @@
                 </div>
             </div>
         </div>
+
+        <!-- Disciplinas -->
+
+        <style>
+            #disciplina-container {
+                display: none;
+                transition: opacity 0.3s ease-in-out;
+            }
+
+                #disciplina-container.show {
+                    display: block;
+                    opacity: 1;
+                }
+
+        </style>
+
+        <div class="info-instituicao">
+            <hr class="divisoria" />
+            <h4 class="flex items-center text-xl font-bold mb-2">
+                Disciplinas
+                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('disciplinas-container', this)">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </h4>
+            <div id="disciplinas-container" style="display: block;">
+                <br />
+                <br />
+                <div class="text-center md:text-left">
+                    @if (Model.Disciplinas?.Any() == true)
+                    {
+                        <ul class="list-disc list-inside">
+                            @foreach (var disc in Model.Disciplinas)
+                            {
+                                <div class="space-x-2">
+                                    <a href="@Url.Action("Upsert", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
+                                       class="text-blue-600 hover:underline">Editar</a>
+                                    <a href="@Url.Action("Delete", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
+                                       class="text-red-600 hover:underline"
+                                       onclick="return confirm('Tem certeza que deseja excluir este professor?');">Excluir</a>
+                                </div>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="text-gray-500">Nenhuma disciplina cadastrada.</p>
+                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
+                        {
+                            @* <a href="@Url.Action("Upsert", "Disciplina", new { instituicaoId = Model.Id, id = (Guid?)null })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a> *@
+                            @* <a href="javascript:void(0);" onclick="openModal()" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a> *@
+                            <a href="javascript:void(0);" onclick="openDisciplinaModal()" class="btn btn-primary">Cadastrar Disciplina</a>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- Incluir a partial view do modal de disciplina -->
+        <div class="modal fade" id="disciplinaModal" tabindex="-1" aria-labelledby="disciplinaModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" id="modal-disciplina-body">
+                    <!-- O conteúdo do modal será injetado aqui -->
+                </div>
+            </div>
+        </div>
+
+
+
 
         <!-- Séries -->
         <div class="info-instituicao">
@@ -172,46 +264,6 @@
             </div>
         </div>
 
-        <!-- Disciplinas -->
-        <div class="info-instituicao">
-            <hr class="divisoria" />
-            <h4 class="flex items-center text-xl font-bold mb-2">
-                Disciplinas
-                <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('disciplinas-container', this)">
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-            </h4>
-            <div id="disciplinas-container" style="display: block;">
-                <br />
-                <br />
-                <div class="text-center md:text-left">
-                    @if (Model.Disciplinas?.Any() == true)
-                    {
-                        <ul class="list-disc list-inside">
-                            @foreach (var disc in Model.Disciplinas)
-                            {
-                                <div class="space-x-2">
-                                    <a href="@Url.Action("Upsert", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
-                                       class="text-blue-600 hover:underline">Editar</a>
-                                    <a href="@Url.Action("Delete", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
-                                       class="text-red-600 hover:underline"
-                                       onclick="return confirm('Tem certeza que deseja excluir este professor?');">Excluir</a>
-                                </div>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <p class="text-gray-500">Nenhuma disciplina cadastrada.</p>
-                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
-                        {
-                            <a href="@Url.Action("Upsert", "Disciplina", new { instituicaoId = Model.Id, id = (Guid?)null })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a>
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-
         <!-- Salas -->
         <div class="info-instituicao">
             <hr class="divisoria" />
@@ -245,5 +297,26 @@
                 </div>
             </div>
         </div>
+
+
+        <script>
+            function openDisciplinaModal() {
+                $.get("/Disciplina/UpsertPartial", { instituicaoId: '@Model.Id' }, function (html) {
+                    $("#modal-disciplina-body").html(html); // Carrega o conteúdo da PartialView
+                    const modal = new bootstrap.Modal(document.getElementById('disciplinaModal')); // Inicializa o modal
+                    modal.show(); // Exibe o modal
+                });
+            }
+
+            function closeModal() {
+                const modalElement = document.getElementById('disciplinaModal');
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) {
+                    modal.hide();
+                }
+            }
+        </script>
+
+
     </div>
 </div>

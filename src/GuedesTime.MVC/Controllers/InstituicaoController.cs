@@ -61,10 +61,17 @@ namespace GuedesTime.MVC.Controllers
             var userName = user?.UserName;
             ViewBag.Nome = userName;
 
-            var mensagens = VerificarDadosInstituicao(instituicoesViewModel);
-            if (mensagens.Any())
+            var progresso = VerificarPendencias(instituicoesViewModel);
+
+            var totalEtapas = 8;
+            var percentual = (progresso.EtapasConcluidas * 100) / totalEtapas;
+            ViewBag.Progresso = percentual;
+            ViewBag.EtapaAtual = progresso.EtapasConcluidas;
+            ViewBag.ProximaEtapa = progresso.ProximaEtapa;
+
+            if (progresso.Pendencias.Any())
             {
-                TempData["warning"] = string.Join(" | ", mensagens);
+                TempData["warning"] = $"Cadastros Pendentes: {string.Join(", ", progresso.Pendencias)}";
             }
 
             if (instituicoesViewModel == null) return NotFound();
@@ -152,39 +159,64 @@ namespace GuedesTime.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Notificar Dados Faltando
-        private string VerificarDadosInstituicao(InstituicaoViewModel instituicoesViewModel)
+        private ProgressoCadastroViewModel VerificarPendencias(InstituicaoViewModel instituicoesViewModel)
         {
             var pendencias = new List<string>();
+            var totalEtapas = 8; // Considerando 8 etapas no total, incluindo a Instituição
+            string proximaEtapa = null;
 
-            if (instituicoesViewModel.Series == null || !instituicoesViewModel.Series.Any())
-                pendencias.Add("Séries");
+            // Verificando cada etapa
             if (instituicoesViewModel.Disciplinas == null || !instituicoesViewModel.Disciplinas.Any())
-                pendencias.Add("Disciplinas");
-            if (instituicoesViewModel.Turmas == null || !instituicoesViewModel.Turmas.Any())
-                pendencias.Add("Turmas");
-            if (instituicoesViewModel.Professores == null || !instituicoesViewModel.Professores.Any())
-                pendencias.Add("Professores");
-            if (instituicoesViewModel.Salas == null || !instituicoesViewModel.Salas.Any())
-                pendencias.Add("Salas");
-            if (instituicoesViewModel.Feriados == null || !instituicoesViewModel.Feriados.Any())
-                pendencias.Add("Feriados");
-            if (instituicoesViewModel.Horarios == null || !instituicoesViewModel.Horarios.Any())
-                pendencias.Add("Horários");
-
-            if (pendencias.Any())
             {
-                if (pendencias.Count > 1)
-                {
-                    var lastItem = pendencias.Last();
-                    pendencias[pendencias.Count - 1] = $"e {lastItem}";
-                }
-
-                return $"Cadastros Pendentes: {string.Join(", ", pendencias)}.";
+                pendencias.Add("Disciplinas");
+                if (proximaEtapa == null) proximaEtapa = "Disciplinas";
+            }
+            if (instituicoesViewModel.Series == null || !instituicoesViewModel.Series.Any())
+            {
+                pendencias.Add("Séries");
+                if (proximaEtapa == null) proximaEtapa = "Séries";
+            }
+            if (instituicoesViewModel.Turmas == null || !instituicoesViewModel.Turmas.Any())
+            {
+                pendencias.Add("Turmas");
+                if (proximaEtapa == null) proximaEtapa = "Turmas";
+            }
+            if (instituicoesViewModel.Professores == null || !instituicoesViewModel.Professores.Any())
+            {
+                pendencias.Add("Professores");
+                if (proximaEtapa == null) proximaEtapa = "Professores";
+            }
+            if (instituicoesViewModel.Salas == null || !instituicoesViewModel.Salas.Any())
+            {
+                pendencias.Add("Salas");
+                if (proximaEtapa == null) proximaEtapa = "Salas";
+            }
+            if (instituicoesViewModel.Feriados == null || !instituicoesViewModel.Feriados.Any())
+            {
+                pendencias.Add("Feriados");
+                if (proximaEtapa == null) proximaEtapa = "Feriados";
+            }
+            if (instituicoesViewModel.Horarios == null || !instituicoesViewModel.Horarios.Any())
+            {
+                pendencias.Add("Horários");
+                if (proximaEtapa == null) proximaEtapa = "Horários";
             }
 
-            return string.Empty;
+            var etapasConcluidas = totalEtapas - pendencias.Count;
+
+            if (etapasConcluidas < 0)
+                etapasConcluidas = 0;
+
+            return new ProgressoCadastroViewModel
+            {
+                EtapasConcluidas = etapasConcluidas,
+                Pendencias = pendencias,
+                ProximaEtapa = proximaEtapa
+            };
         }
+
+
+
 
 
 

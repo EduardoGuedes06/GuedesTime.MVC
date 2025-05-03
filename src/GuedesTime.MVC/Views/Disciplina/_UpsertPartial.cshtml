@@ -1,0 +1,118 @@
+﻿@model GuedesTime.MVC.ViewModels.DisciplinaViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title" id="disciplinaModalLabel">
+        @((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar Disciplina" : "Editar Disciplina")
+    </h5>
+    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<form asp-action="Upsert" method="post" id="formDisciplina" asp-antiforgery="true">
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="InstituicaoId" />
+        <vc:Summary></vc:Summary>
+
+        <div class="form-group">
+            <label asp-for="Nome" class="control-label"></label>
+            <input asp-for="Nome" class="form-control" id="Nome" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+            <span id="name-error" class="text-danger"></span>
+        </div>
+
+        @if (Model.Id != null && Model.Id != Guid.Empty)
+        {
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="AtivoSwitch"
+                           name="Ativo" value="true" @(Model.Ativo == true ? "checked" : "")>
+                    <label class="form-check-label" for="AtivoSwitch" id="switchLabel">
+                        @((Model.Ativo == true) ? "Ligado" : "Desligado")
+                    </label>
+                </div>
+                <span asp-validation-for="Ativo" class="text-danger"></span>
+            </div>
+        }
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">
+            @((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar" : "Atualizar")
+        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Validação de nome
+            $("#Nome").on("input", function () {
+                var nameField = $(this);
+                var nameError = $("#name-error");
+                var nameValue = nameField.val();
+
+                var regex = /^[A-Za-zÀ-ÖØ-öø-ÿ. ]*$/;
+
+                if (!regex.test(nameValue)) {
+                    nameError.text("O nome só pode conter letras e ponto.");
+                    nameField.val(nameValue.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ. ]/g, ""));
+                    return;
+                }
+
+                var correctedName = nameValue.replace(/\b\w/g, function (char) {
+                    return char.toUpperCase();
+                });
+
+                nameField.val(correctedName);
+                nameError.text("");
+            });
+
+            // Alterna entre 'Ligado' e 'Desligado'
+            const toggle = document.getElementById("AtivoSwitch");
+            const label = document.getElementById("switchLabel");
+
+            if (toggle && label) {
+                toggle.addEventListener("change", function () {
+                    label.innerText = this.checked ? "Ligado" : "Desligado";
+                });
+            }
+
+            // Envio do formulário via AJAX
+            $("#formDisciplina").on("submit", function (event) {
+                event.preventDefault();
+
+                var form = $(this);
+                if (form.valid()) {
+                    $.ajax({
+                        url: form.attr("action"),
+                        type: "POST",
+                        data: form.serialize(),
+                        success: function (response) {
+                            if (response.success) {
+                                $('#disciplinaModal').modal('hide');
+                                location.reload();
+                            } else {
+                                if (response.errors) {
+                                    response.errors.forEach(function (error) {
+                                        $('#name-error').text(error);
+                                    });
+                                }
+                                alert('Erro ao salvar os dados!');
+                            }
+                        },
+                        error: function () {
+                            alert('Ocorreu um erro ao salvar a disciplina.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

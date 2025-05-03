@@ -40,7 +40,7 @@ namespace GuedesTime.MVC.Controllers
         }
 
 
-        public async Task<IActionResult> Upsert(Guid instituicaoId, Guid? id)
+        public async Task<IActionResult> UpsertPartial(Guid instituicaoId, Guid? id)
         {
             var userId = Guid.Parse(_userManager.GetUserId(User));
 
@@ -64,6 +64,11 @@ namespace GuedesTime.MVC.Controllers
                 };
             }
 
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_UpsertPartial", disciplinaViewModel);
+            }
+
             return View(disciplinaViewModel);
         }
 
@@ -77,7 +82,14 @@ namespace GuedesTime.MVC.Controllers
             if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, disciplinaViewModel.InstituicaoId))
                 return NotFound();
 
-            if (!ModelState.IsValid) return View(disciplinaViewModel);
+            if (!ModelState.IsValid)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
+                }
+                return View(disciplinaViewModel);
+            }
 
             if (disciplinaViewModel.Id == Guid.Empty || disciplinaViewModel.Id == null)
             {
@@ -92,10 +104,13 @@ namespace GuedesTime.MVC.Controllers
                 await _disciplinaService.Atualizar(disciplinaExistente);
             }
 
-            return OperacaoValida()
-                ? RedirectToAction(nameof(Upsert), new { instituicaoId = disciplinaViewModel.InstituicaoId })
-                : View(disciplinaViewModel);
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return Json(new { success = true });
+            }
+            return RedirectToAction(nameof(Upsert), new { instituicaoId = disciplinaViewModel.InstituicaoId });
         }
+
 
 
         // GET: DisciplinaController/Delete/5
