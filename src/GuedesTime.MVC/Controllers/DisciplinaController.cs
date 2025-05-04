@@ -108,7 +108,7 @@ namespace GuedesTime.MVC.Controllers
             {
                 return Json(new { success = true });
             }
-            return RedirectToAction(nameof(Upsert), new { instituicaoId = disciplinaViewModel.InstituicaoId });
+            return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
         }
 
 

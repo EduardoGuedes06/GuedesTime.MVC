@@ -88,7 +88,7 @@
 
         <div class="info-instituicao">
             <hr class="divisoria" />
-            <h4 class="flex items-center text-xl font-bold mb-2">
+            <h4 class="flex items-center text-lg font-semibold mb-2">
                 Disciplinas
                 <button type="button" class="btn-toggle ml-auto" onclick="toggleSection('disciplinas-container', this)">
                     <i class="fas fa-chevron-down"></i>
@@ -100,32 +100,46 @@
                 <div class="text-center md:text-left">
                     @if (Model.Disciplinas?.Any() == true)
                     {
-                        <ul class="list-disc list-inside">
-                            @foreach (var disc in Model.Disciplinas)
-                            {
-                                <div class="space-x-2">
-                                    <a href="@Url.Action("Upsert", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
-                                       class="text-blue-600 hover:underline">Editar</a>
-                                    <a href="@Url.Action("Delete", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
-                                       class="text-red-600 hover:underline"
-                                       onclick="return confirm('Tem certeza que deseja excluir este professor?');">Excluir</a>
-                                </div>
-                            }
-                        </ul>
+
+                        @foreach (var disc in Model.Disciplinas.Take(10))
+                        {
+
+                            <h5 class="text-sm font-semibold">@disc.Nome</h5>
+                            <div class="space-x-2 mt-2 text-sm">
+                                <a href="@Url.Action("Upsert", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
+                                   class="text-blue-600 hover:underline">Editar</a>
+                                <a href="@Url.Action("Delete", "Professor", new { instituicaoId = Model.Id, id = disc.Id })"
+                                   class="text-red-600 hover:underline"
+                                   onclick="return confirm('Tem certeza que deseja excluir esta disciplina?');">Excluir</a>
+                            </div>
+                            <br />
+                            
+
+                        }
+
+
+                        @if (Model.Disciplinas.Count > 10)
+                        {
+                            <div class="mt-3">
+                                <a href="@Url.Action("Index", "Disciplina", new { instituicaoId = Model.Id })" class="text-blue-600 hover:underline">... Ver todas as Disciplinas</a>
+                            </div>
+                        }
                     }
                     else
                     {
                         <p class="text-gray-500">Nenhuma disciplina cadastrada.</p>
-                        @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.UsuarioId.ToString())
-                        {
-                            @* <a href="@Url.Action("Upsert", "Disciplina", new { instituicaoId = Model.Id, id = (Guid?)null })" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a> *@
-                            @* <a href="javascript:void(0);" onclick="openModal()" class="text-blue-600 hover:underline">Cadastrar Disciplinas</a> *@
-                            <a href="javascript:void(0);" onclick="openDisciplinaModal()" class="btn btn-primary">Cadastrar Disciplina</a>
-                        }
                     }
+
+                    <div class="mt-4">
+                        <a href="javascript:void(0);" onclick="openDisciplinaModal()" class="text-blue-600 hover:underline text-sm">
+                            Cadastrar Disciplina
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+
+
         <!-- Incluir a partial view do modal de disciplina -->
         <div class="modal fade" id="disciplinaModal" tabindex="-1" aria-labelledby="disciplinaModalLabel" aria-hidden="true">
             <div class="modal-dialog">
