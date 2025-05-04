@@ -15,37 +15,39 @@ namespace GuedesTime.Data.Mappings
         {
             builder.HasKey(i => i.Id);
 
-            builder.HasOne(i => i.PlanejamentoDeAula)
+            builder.HasOne(p => p.PlanejamentoDeAula)
                 .WithMany(p => p.Itens)
-                .HasForeignKey(i => i.PlanejamentoDeAulaId)
+                .HasForeignKey(p => p.PlanejamentoDeAulaId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(i => i.Professor)
+            builder.HasOne(p => p.Professor)
                 .WithMany()
-                .HasForeignKey(i => i.ProfessorId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(p => p.ProfessorId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(i => i.Disciplina)
+            builder.HasOne(p => p.Disciplina)
                 .WithMany()
-                .HasForeignKey(i => i.DisciplinaId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(p => p.DisciplinaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(i => i.Sala)
+            builder.HasOne(p => p.Sala)
                 .WithMany()
-                .HasForeignKey(i => i.SalaId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(p => p.SalaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(i => i.Turma)
+            builder.HasOne(p => p.Turma)
                 .WithMany()
-                .HasForeignKey(i => i.TurmaId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(p => p.TurmaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(i => i.Horario)
-                .WithMany()
-                .HasForeignKey(i => i.HorarioId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(p => p.Horario)
+                .WithMany(h => h.PlanejamentosDeAulaItens)
+                .HasForeignKey(p => p.HorarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.ToTable("PlanejamentoDeAulaItens");
         }
     }
+
 }

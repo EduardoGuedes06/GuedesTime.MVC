@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace GuedesTime.Domain.Models
         public bool? Ativo { get; set; }
 
         /* EF Relations */
+
         public Instituicao Instituicao { get; set; }
         public ICollection<DisciplinaProfessor> DisciplinasProfessores { get; set; }
         public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }

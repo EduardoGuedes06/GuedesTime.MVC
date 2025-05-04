@@ -20,11 +20,11 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasColumnType("datetime");
 
-            // Relacionamento com PlanejamentoDeAula (um para muitos)
             builder.HasMany(h => h.PlanejamentosDeAulaItens)
-                .WithOne(i => i.Horario)
-                .HasForeignKey(i => i.HorarioId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithOne(p => p.Horario)
+                .HasForeignKey(p => p.HorarioId)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.ToTable("Horarios");
         }

@@ -22,10 +22,10 @@ namespace GuedesTime.Data.Mappings
             builder.Property(f => f.Recorrente)
                 .IsRequired();
 
-            builder.HasOne<Instituicao>()
-                .WithMany(i => i.Feriados)
-                .HasForeignKey("InstituicaoId")
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(f => f.Instituicao)
+                .WithMany()
+                .HasForeignKey(f => f.InstituicaoId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.ToTable("Feriados");
         }

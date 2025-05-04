@@ -34,7 +34,4 @@ namespace GuedesTime.Data.Mappings
             builder.ToTable("PlanejamentosDeAula");
         }
     }
-
-
-
 }

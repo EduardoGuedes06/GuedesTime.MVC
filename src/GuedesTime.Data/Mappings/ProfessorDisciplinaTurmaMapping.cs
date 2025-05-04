@@ -18,9 +18,10 @@ namespace GuedesTime.Data.Mappings
                    .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(pdt => pdt.Disciplina)
-                   .WithMany()
+                   .WithMany(d => d.ProfessoresDisciplinasTurmas)
                    .HasForeignKey(pdt => pdt.DisciplinaId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .OnDelete(DeleteBehavior.Restrict)
+                   .IsRequired();
 
             builder.HasOne(pdt => pdt.Turma)
                    .WithMany()
