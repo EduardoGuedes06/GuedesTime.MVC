@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GuedesTime.Data.Context;
+using GuedesTime.Data.Repository.Utils;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -77,7 +78,7 @@ namespace GuedesTime.Data.Repository
                     c.CodigoCie.Contains(search));
             }
 
-            return await _pagedResultRepository.GetPagedResult(query, pageSize, page);
+            return await _pagedResultRepository.GetPagedResultAsync(query, pageSize, page);
         }
 
         public async Task<bool> VerificaUsuarioInstituicao(Guid usuarioId, Guid instituicaoId)

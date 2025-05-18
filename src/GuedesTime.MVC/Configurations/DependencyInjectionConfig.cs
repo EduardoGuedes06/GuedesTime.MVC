@@ -1,6 +1,7 @@
 ﻿
 using GuedesTime.Data.Context;
 using GuedesTime.Data.Repository;
+using GuedesTime.Data.Repository.Utils;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using GuedesTime.Domain.Notificacoes;
@@ -25,9 +26,6 @@ namespace GuedesTime.Configurations
             services.AddHttpClient<IAutenticacaoService, AutenticacaoService>();
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
-
-            services.AddScoped<IPagedResultRepository<Instituicao>, PagedResultRepository<Instituicao>>();
-
             services.AddScoped<ITurmaService, TurmaService>();
             services.AddScoped<ITarefasService, TarefasService>();
             services.AddScoped<ISalaService, SalaService>();
@@ -64,6 +62,7 @@ namespace GuedesTime.Configurations
             services.AddScoped<ISerieRepository, SerieRepository>();
             services.AddScoped<IDisciplinaSerieRepository, DisciplinaSerieRepository>();
             services.AddScoped<IDisciplinaProfessorRepository, DisciplinaProfessorRepository>();
+            services.AddScoped(typeof(IPagedResultRepository<>), typeof(PagedResultRepository<>));
 
             return services;
         }

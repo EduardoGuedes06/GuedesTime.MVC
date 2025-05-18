@@ -8,7 +8,7 @@ using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GuedesTime.Data.Repository
+namespace GuedesTime.Data.Repository.Utils
 {
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, new()
     {

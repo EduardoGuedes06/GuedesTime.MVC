@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GuedesTime.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d79cf94ad2161f01f9c5300db3c6027c6fc7046d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d5457af85d5930ef70141278cb97ce1e5ab4f88e")]
 [assembly: System.Reflection.AssemblyProductAttribute("GuedesTime.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GuedesTime.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

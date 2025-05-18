@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GuedesTime.Domain.Models;
 using GuedesTime.MVC.ViewModels;
+using GuedesTime.MVC.ViewModels.Utils;
 using GuedesTime.Service.Models;
 
 namespace GuedesTime.MVC.Configurations
@@ -28,6 +29,7 @@ namespace GuedesTime.MVC.Configurations
             CreateMap<Serie, SerieViewModel>().ReverseMap();
             CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
             CreateMap<DisciplinaSerie, DisciplinaSerieViewModel>().ReverseMap();
+            CreateMap(typeof(PagedResult<>), typeof(PagedViewModel<>));
         }
     }
 }

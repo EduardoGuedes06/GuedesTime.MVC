@@ -3,6 +3,7 @@ using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using GuedesTime.MVC.Models;
 using GuedesTime.MVC.ViewModels;
+using GuedesTime.MVC.ViewModels.Utils;
 using GuedesTime.Service.Services;
 using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authorization;
@@ -34,10 +35,31 @@ namespace GuedesTime.MVC.Controllers
 
 
         // GET: DisciplinaController
-        public ActionResult Index()
+        public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 10)
         {
-            return View();
+
+            var userId = Guid.Parse(_userManager.GetUserId(User));
+
+            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, id))
+                return NotFound();
+
+            var pagedDisciplinas = await _disciplinaService.GetPagedByInstituicaoAsync(id, search, page, pageSize);
+
+            var disciplinaViewModels = _mapper.Map<IEnumerable<DisciplinaViewModel>>(pagedDisciplinas.Items);
+
+            var pagedViewModel = new PagedViewModel<DisciplinaViewModel>
+            {
+                Model = disciplinaViewModels,
+                Search = search,
+                Page = page,
+                PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)pagedDisciplinas.TotalCount / pageSize),
+                TotalItems = pagedDisciplinas.TotalCount
+            };
+
+            return View(pagedViewModel);
         }
+
 
 
         public async Task<IActionResult> UpsertPartial(Guid instituicaoId, Guid? id)
@@ -114,9 +136,19 @@ namespace GuedesTime.MVC.Controllers
 
 
         // GET: DisciplinaController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(Guid id)
         {
-            return View();
+            var client = await _disciplinaService.ObterPorId(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            await _disciplinaService.Remover(id);
+
+            return Ok();
         }
 
         // POST: DisciplinaController/Delete/5

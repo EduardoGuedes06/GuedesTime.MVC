@@ -3,6 +3,8 @@ using GuedesTime.Domain.Models;
 using GuedesTime.Domain.Notificacoes;
 using FluentValidation;
 using FluentValidation.Results;
+using GuedesTime.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace GuedesTime.Service.Services
 {
@@ -39,4 +41,55 @@ namespace GuedesTime.Service.Services
             return false;
         }
     }
+
+    public abstract class BaseService<T> : BaseService where T : Entity
+    {
+        protected readonly MeuDbContext _context;
+        private readonly IPagedResultRepository<T> _pagedRepository;
+
+        protected BaseService(INotificador notificador, MeuDbContext context, IPagedResultRepository<T> pagedRepository)
+            : base(notificador)
+        {
+            _context = context;
+            _pagedRepository = pagedRepository;
+        }
+
+        protected virtual IQueryable<T> ApplySearch(IQueryable<T> query, string? search)
+        {
+            return query;
+        }
+
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize)
+        {
+            IQueryable<T> query = _context.Set<T>().AsNoTracking();
+
+            query = ApplySearch(query, search);
+
+            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
+        }
+
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize)
+        {
+            IQueryable<T> query = _context.Set<T>().AsNoTracking();
+
+            query = query.Where(e => EF.Property<Guid>(e, "InstituicaoId") == instituicaoId);
+
+            query = ApplySearch(query, search);
+
+            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
+        }
+
+
+        public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)
+        {
+            IQueryable<T> query = _context.Set<T>().AsNoTracking();
+
+            query = ApplySearch(query, search);
+
+            var paged = await _pagedRepository.GetPagedResultAsync(query, pageSize, 1);
+            return paged.Items;
+        }
+    }
+
+
 }
