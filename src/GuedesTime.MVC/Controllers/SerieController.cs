@@ -20,7 +20,7 @@
 //        private readonly ISerieService _serieService;
 //        private readonly UserManager<ApplicationUser> _userManager;
 
-//        public SerieController(IMapper mapper, 
+//        public SerieController(IMapper mapper,
 //                                    INotificador notificador,
 //                                    IInstituicaoService instituicaoService,
 //                                    UserManager<ApplicationUser> userManager,

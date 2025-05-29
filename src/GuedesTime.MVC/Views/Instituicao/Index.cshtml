@@ -45,39 +45,49 @@
 
     <div class="instituicao-container">
 
-    @foreach (var instituicao in Model.Instituicoes)
-    {
-        <div class="instituicao-card">
-            <img class="instituicao-avatar" src="@(string.IsNullOrEmpty(instituicao.Avatar) ? "https://via.placeholder.com/80" : instituicao.Avatar)" alt="Avatar">
+        @foreach (var instituicao in Model.Instituicoes)
+        {
+            <div class="instituicao-card">
+                <img class="instituicao-avatar" src="@(string.IsNullOrEmpty(instituicao.Avatar) ? "https://via.placeholder.com/80" : instituicao.Avatar)" alt="Avatar">
 
-            <div class="instituicao-info">
-                <div class="instituicao-name">@instituicao.Nome</div>
-                <div class="instituicao-details">
-                    Professores: @(instituicao.Professores?.Count ?? 0) |
-                    Disciplinas: @(instituicao.Disciplinas?.Count ?? 0) |
-                    Turmas: @(instituicao.Turmas?.Count ?? 0)
+                <div class="instituicao-info">
+                    <div class="instituicao-name">@instituicao.Nome</div>
+                    <div class="instituicao-details">
+                        Professores: @(instituicao.Professores?.Count ?? 0) |
+                        Disciplinas: @(instituicao.Disciplinas?.Count ?? 0) |
+                        Turmas: @(instituicao.Turmas?.Count ?? 0)
+                    </div>
+                    <div class="instituicao-status">
+                        Planejamento: @(instituicao.Ativo == true ? "Em andamento" : "Inativo")
+                    </div>
+
+                    @if (instituicao.Ativo == false)
+                    {
+                        <div class="instituicao-status-inativo">Situação: Instituição Inativa</div>
+                    }
                 </div>
-                <div class="instituicao-status">
-                    Planejamento: @(instituicao.Ativo == true ? "Em andamento" : "Inativo")
+
+                <div class="instituicao-actions">
+                    <form asp-action="Upsert" method="get">
+                        <input type="hidden" name="id" value="@instituicao.Id" />
+                        <button type="submit" class="instituicao-button">Editar</button>
+                    </form>
+
+                    <form asp-action="Detalhes" method="get">
+                        <input type="hidden" name="id" value="@instituicao.Id" />
+                        <button type="submit" class="instituicao-button">Ver Detalhes</button>
+                    </form>
                 </div>
-
-                @if (instituicao.Ativo == false)
-                {
-                    <div class="instituicao-status-inativo">Situação: Instituição Inativa</div>
-                }
             </div>
+        }
+    </div>
 
-            <div class="instituicao-actions">
-                <form asp-action="Upsert" method="get">
-                    <input type="hidden" name="id" value="@instituicao.Id" />
-                    <button type="submit" class="instituicao-button">Editar</button>
-                </form>
 
-                <form asp-action="Detalhes" method="get">
-                    <input type="hidden" name="id" value="@instituicao.Id" />
-                    <button type="submit" class="instituicao-button">Ver Detalhes</button>
-                </form>
-            </div>
+</div>
+
+<div class="modal fade" id="disciplinaModal" tabindex="-1" aria-labelledby="disciplinaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" id="modal-disciplina-body">
         </div>
-    }
+    </div>
 </div>

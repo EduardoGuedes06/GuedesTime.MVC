@@ -43,6 +43,7 @@ namespace GuedesTime.MVC.Controllers
             if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, id))
                 return NotFound();
 
+            ViewBag.InstituicaoId = id;
             var pagedDisciplinas = await _disciplinaService.GetPagedByInstituicaoAsync(id, search, page, pageSize);
 
             var disciplinaViewModels = _mapper.Map<IEnumerable<DisciplinaViewModel>>(pagedDisciplinas.Items);
@@ -56,7 +57,6 @@ namespace GuedesTime.MVC.Controllers
                 TotalPages = (int)Math.Ceiling((double)pagedDisciplinas.TotalCount / pageSize),
                 TotalItems = pagedDisciplinas.TotalCount
             };
-
             return View(pagedViewModel);
         }
 

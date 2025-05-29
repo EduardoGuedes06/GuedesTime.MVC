@@ -75,6 +75,7 @@ namespace GuedesTime.MVC.Controllers
             }
 
             if (instituicoesViewModel == null) return NotFound();
+
             return View(instituicoesViewModel);
         }
 
