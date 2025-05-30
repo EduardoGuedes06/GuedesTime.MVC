@@ -165,82 +165,84 @@ h1, h2, h3, h4 {
 .consulta-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    align-items: center;
     padding: 20px;
-}
-
-.consulta-container {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
-    padding: 20px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .tabela {
-    width: 100% !important;
-    max-width: 1200px !important;
-    border-collapse: collapse !important;
-    background-color: #fff !important;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05) !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
+    width: 100%;
+    max-width: 1200px;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    table-layout: fixed; /* Garante que as colunas se distribuam igualmente */
 }
 
     .tabela thead {
-        background-color: #f3f4f6 !important;
+        background-color: #f3f4f6;
     }
 
-    .tabela th, .tabela td {
-        text-align: left !important;
-        padding: 12px 16px !important;
-        border-bottom: 1px solid #e5e7eb !important;
-        vertical-align: middle !important;
+    .tabela th,
+    .tabela td {
+        text-align: center; /* ← Aqui centraliza tudo */
+        padding: 12px 16px;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+        word-wrap: break-word;
     }
 
     .tabela th {
-        font-weight: 600 !important;
-        color: #374151 !important;
-        white-space: nowrap !important;
+        font-weight: 600;
+        color: #374151;
+        white-space: nowrap;
     }
 
     .tabela td {
-        color: #4b5563 !important;
+        color: #4b5563;
     }
 
     .tabela i {
-        margin-left: 5px !important;
-        color: #9ca3af !important;
+        margin-left: 5px;
+        color: #9ca3af;
     }
 
 .btn-hover:hover {
-    background-color: #f3f4f6 !important;
+    background-color: #f3f4f6;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
-    .tabela, .tabela thead, .tabela tbody, .tabela th, .tabela td, .tabela tr {
-        display: block !important;
-        width: 100% !important;
+    .tabela,
+    .tabela thead,
+    .tabela tbody,
+    .tabela th,
+    .tabela td,
+    .tabela tr {
+        display: block;
+        width: 100%;
     }
 
         .tabela thead {
-            display: none !important;
+            display: none;
         }
 
         .tabela td {
-            padding: 10px !important;
-            text-align: right !important;
-            position: relative !important;
+            padding: 10px;
+            text-align: right;
+            position: relative;
         }
 
             .tabela td::before {
-                content: attr(data-label) !important;
-                position: absolute !important;
-                left: 10px !important;
-                width: 50% !important;
-                text-align: left !important;
-                font-weight: bold !important;
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 50%;
+                text-align: left;
+                font-weight: bold;
             }
 }
-

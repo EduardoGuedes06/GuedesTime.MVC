@@ -35,7 +35,7 @@ namespace GuedesTime.MVC.Controllers
 
 
         // GET: DisciplinaController
-        public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 5)
         {
 
             var userId = Guid.Parse(_userManager.GetUserId(User));
