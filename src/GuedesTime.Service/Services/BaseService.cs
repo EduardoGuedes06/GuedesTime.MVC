@@ -34,7 +34,7 @@ namespace GuedesTime.Service.Services
         {
             var validator = validacao.Validate(entidade);
 
-            if(validator.IsValid) return true;
+            if (validator.IsValid) return true;
 
             Notificar(validator);
 
@@ -59,25 +59,27 @@ namespace GuedesTime.Service.Services
             return query;
         }
 
-        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize)
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize, bool ativo = true)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
             query = ApplySearch(query, search);
 
-            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
+            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page, ativo);
         }
 
-        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize)
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
-
             query = query.Where(e => EF.Property<Guid>(e, "InstituicaoId") == instituicaoId);
-
+            if (typeof(T).GetProperty("Ativo") != null)
+            {
+                query = query.Where(e => EF.Property<bool?>(e, "Ativo") == ativo);
+            }
             query = ApplySearch(query, search);
-
             return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
         }
+
 
 
         public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)

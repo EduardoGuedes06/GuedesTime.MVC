@@ -80,7 +80,7 @@
     <div class="d-flex">
         @if (Model.Page > 1)
         {
-            <a href="@Url.Action("Index", new { instituicaoId = Context.Request.Query["instituicaoId"], search = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })"
+            <a href="@Url.Action("Index", new { id = ViewBag.InstituicaoId, search = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })"
                class="btn btn-secondary text-white btn-hover d-flex align-items-center" style="margin-right: 20px;">
                 <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Anterior
             </a>
@@ -88,13 +88,12 @@
 
         @if (Model.Page < Model.TotalPages)
         {
-            <a href="@Url.Action("Index", new { instituicaoId = Context.Request.Query["instituicaoId"], search = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })"
+            <a href="@Url.Action("Index", new { id = ViewBag.InstituicaoId, search = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })"
                class="btn btn-secondary text-white btn-hover d-flex align-items-center" style="margin-left: 20px;">
                 <i class="fas fa-arrow-right" style="margin-right: 8px;"></i> Próxima
             </a>
         }
     </div>
-
     <div class="position-relative w-100 d-flex align-items-center justify-content-center">
         <span class="position-absolute" style="left: 50%; transform: translateX(-50%);">
             Página @Model.Page de @Model.TotalPages

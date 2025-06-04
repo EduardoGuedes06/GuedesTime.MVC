@@ -35,7 +35,7 @@ namespace GuedesTime.MVC.Controllers
 
 
         // GET: DisciplinaController
-        public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 5, bool ativo = true)
         {
 
             var userId = Guid.Parse(_userManager.GetUserId(User));
@@ -44,7 +44,7 @@ namespace GuedesTime.MVC.Controllers
                 return NotFound();
 
             ViewBag.InstituicaoId = id;
-            var pagedDisciplinas = await _disciplinaService.GetPagedByInstituicaoAsync(id, search, page, pageSize);
+            var pagedDisciplinas = await _disciplinaService.GetPagedByInstituicaoAsync(id, search, page, pageSize, ativo);
 
             var disciplinaViewModels = _mapper.Map<IEnumerable<DisciplinaViewModel>>(pagedDisciplinas.Items);
 
