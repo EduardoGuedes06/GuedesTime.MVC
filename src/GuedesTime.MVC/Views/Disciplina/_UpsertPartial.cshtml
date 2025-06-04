@@ -24,15 +24,26 @@
 
         @if (Model.Id != null && Model.Id != Guid.Empty)
         {
-            <div class="form-group">
-                <label class="form-label">Status</label>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="AtivoSwitch"
-                           name="Ativo" value="true" @(Model.Ativo == true ? "checked" : "")>
-                    <label class="form-check-label" for="AtivoSwitch" id="switchLabel">
-                        @((Model.Ativo == true) ? "Ligado" : "Desligado")
+            <div class="form-group mb-1">
+                <label class="form-label d-block mb-2">Status da Disciplina</label>
+
+                <div class="d-flex align-items-center gap-10 custom-switch">
+                    <input asp-for="Ativo" class="d-none" />
+                    <input type="checkbox" id="customSwitchInput" @(Model.Ativo == true ? "checked" : "") onchange="document.getElementById('Ativo').value = this.checked;" />
+                    <label for="customSwitchInput" class="custom-switch-checkbox">
+                        <div class="custom-switch-inner">
+                            <div class="custom-switch-ball"></div>
+                        </div>
                     </label>
+
+                    <div class="custom-switch-text">
+                        <div class="custom-switch-text-options">
+                            <span class="custom-switch-off">Desligado</span>
+                            <span class="custom-switch-on">Ativo</span>
+                        </div>
+                    </div>
                 </div>
+
                 <span asp-validation-for="Ativo" class="text-danger"></span>
             </div>
         }
@@ -53,7 +64,6 @@
 
     <script>
         $(document).ready(function () {
-            // Validação de nome
             $("#Nome").on("input", function () {
                 var nameField = $(this);
                 var nameError = $("#name-error");

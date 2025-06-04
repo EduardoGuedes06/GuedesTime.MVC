@@ -111,6 +111,7 @@ namespace GuedesTime.MVC.Controllers
             {
                 instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
                 await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
+                TempData["success"] = "Instituição Cadastrada com sucesso!!";
             }
             else
             {
@@ -121,6 +122,7 @@ namespace GuedesTime.MVC.Controllers
 
                 _mapper.Map(instituicaoViewModel, instituicaoExistente);
                 await _instituicaoService.Atualizar(instituicaoExistente);
+                TempData["success"] = "Dados da Instituição alterados com sucesso!!";
             }
 
             return OperacaoValida() ? RedirectToAction(nameof(Index)) : View(instituicaoViewModel);

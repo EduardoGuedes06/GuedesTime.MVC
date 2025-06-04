@@ -21,7 +21,7 @@ namespace GuedesTime.MVC.Controllers
         private readonly IDisciplinaService _disciplinaService;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public DisciplinaController(IMapper mapper, 
+        public DisciplinaController(IMapper mapper,
                                     INotificador notificador,
                                     IInstituicaoService instituicaoService,
                                     UserManager<ApplicationUser> userManager,
@@ -116,6 +116,7 @@ namespace GuedesTime.MVC.Controllers
             if (disciplinaViewModel.Id == Guid.Empty || disciplinaViewModel.Id == null)
             {
                 await _disciplinaService.Adicionar(_mapper.Map<Disciplina>(disciplinaViewModel));
+                TempData["success"] = "Disciplina cadastrada com sucesso!!";
             }
             else
             {
@@ -124,13 +125,24 @@ namespace GuedesTime.MVC.Controllers
 
                 _mapper.Map(disciplinaViewModel, disciplinaExistente);
                 await _disciplinaService.Atualizar(disciplinaExistente);
+                TempData["success"] = "Dados da disciplina alterados com sucesso!!";
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
                 return Json(new { success = true });
             }
-            return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+            else
+            {
+
+                return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
+            }
         }
 
 
@@ -138,32 +150,32 @@ namespace GuedesTime.MVC.Controllers
         // GET: DisciplinaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid instituicaoId, Guid id)
         {
+            var userId = Guid.Parse(_userManager.GetUserId(User));
+            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
+                return NotFound();
+
             var client = await _disciplinaService.ObterPorId(id);
             if (client == null)
             {
+                TempData["warning"] = "Disciplina não encontrada!!";
                 return NotFound();
             }
 
-            await _disciplinaService.Remover(id);
+            var disciplinaExistente = await _disciplinaService.ObterPorId((Guid)id);
+            if (disciplinaExistente == null) return NotFound();
 
+            if(disciplinaExistente.Ativo == true)
+            { disciplinaExistente.Ativo = false; await _disciplinaService.Atualizar(disciplinaExistente);TempData["success"] = "Disciplina desativada com sucesso!!";}
+            else { await _disciplinaService.Remover(id); TempData["success"] = "Disciplina Deletada do sistema com sucesso!!"; }
+
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
             return Ok();
-        }
-
-        // POST: DisciplinaController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

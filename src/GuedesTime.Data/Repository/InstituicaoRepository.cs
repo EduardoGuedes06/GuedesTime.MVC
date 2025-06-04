@@ -34,20 +34,33 @@ namespace GuedesTime.Data.Repository
                 .OrderBy(i => i.Nome)
                 .ToListAsync();
         }
-        public async Task<Instituicao?> ObterDadosInstituicoesPorId(Guid instituicaoId)
+        public async Task<Instituicao?> ObterDadosInstituicoesPorId(Guid instituicaoId, bool? incluirInativos = false)
         {
-            return await Db.Instituicao.AsNoTracking()
+            var instituicao = await Db.Instituicao
+                .AsNoTracking()
                 .Include(i => i.Professores)
                 .Include(i => i.Turmas)
                 .Include(i => i.Series)
-                .Include(i => i.Disciplinas)
                 .Include(i => i.Salas)
                 .Include(i => i.Horarios)
                 .Include(i => i.Feriados)
                 .Include(i => i.Endereco)
-                .OrderBy(i => i.Nome)
+                .Include(i => i.Disciplinas)
                 .FirstOrDefaultAsync(i => i.Id == instituicaoId);
+
+            if (instituicao == null)
+                return null;
+
+            if (incluirInativos is not true)
+            {
+                instituicao.Professores = instituicao.Professores?.Where(p => p.Ativo ?? false).ToList();
+                instituicao.Disciplinas = instituicao.Disciplinas?.Where(d => d.Ativo ?? false).ToList();
+            }
+
+            return instituicao;
         }
+
+
         public async Task<Instituicao?> ObterInstituicaoComEnderecoPorId(Guid id)
         {
             return await Db.Instituicao.AsNoTracking()

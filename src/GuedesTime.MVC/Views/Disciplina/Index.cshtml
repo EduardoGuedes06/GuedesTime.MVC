@@ -60,10 +60,11 @@
                     <td>@item.Nome</td>
                     <td>@(item.Ativo.HasValue && item.Ativo.Value ? "Sim" : "Não")</td>
                     <td>
-                        <a href="@Url.Action("Edit", new { id = item.Id })" class="btn btn-light text-primary btn-hover">
+                        <a href="javascript:void(0);" onclick="openEditDisciplinaModal('@item.Id')" class="btn btn-light text-primary btn-hover">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <form action="@Url.Action("Delete", new { id = item.Id })" method="post" style="display:inline;">
+
+                        <form action="@Url.Action("Delete", new {instituicaoId = ViewBag.InstituicaoId, id = item.Id })" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
                             <button type="submit" class="btn btn-light text-danger btn-hover">
                                 <i class="fas fa-trash-alt"></i> Excluir
@@ -114,8 +115,15 @@
     const instituicaoId = '@ViewBag.InstituicaoId';
 
     function openDisciplinaModal() {
-        debugger
         $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId }, function (html) {
+            $("#modal-disciplina-body").html(html);
+            const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
+            modal.show();
+        });
+    }
+
+    function openEditDisciplinaModal(id) {
+        $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId, id: id }, function (html) {
             $("#modal-disciplina-body").html(html);
             const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
             modal.show();

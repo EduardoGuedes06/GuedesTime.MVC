@@ -1,0 +1,150 @@
+﻿:root {
+    --custom-switch-bg: rgb(220, 220, 220);
+    --custom-switch-green: rgb(242, 149, 255);
+    --custom-switch-easing: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --custom-switch-scale: 1;
+}
+
+.custom-switch *,
+.custom-switch *::before,
+.custom-switch *::after {
+    box-sizing: border-box;
+
+}
+
+.custom-switch {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: transparent;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    position: relative;
+    overflow: visible;
+    transform: scale(var(--custom-switch-scale));
+    transform-origin: left center;
+    max-height: 50px;
+}
+
+    /* Checkbox invisível */
+    .custom-switch input[type="checkbox"] {
+        display: none;
+    }
+
+        .custom-switch input[type="checkbox"]:checked + label.custom-switch-checkbox .custom-switch-inner .custom-switch-ball {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+            transition-delay: 150ms;
+        }
+
+        .custom-switch input[type="checkbox"]:checked ~ .custom-switch-text {
+            opacity: 10;
+        }
+
+            .custom-switch input[type="checkbox"]:checked ~ .custom-switch-text .custom-switch-text-options .custom-switch-off {
+                transform: translateY(150%);
+                opacity: 0;
+            }
+
+            .custom-switch input[type="checkbox"]:checked ~ .custom-switch-text .custom-switch-text-options .custom-switch-on {
+                transform: translateY(0%);
+                opacity: 1;
+            }
+
+/* Botão visual */
+.custom-switch-checkbox {
+    --size: 35px;
+    width: var(--size);
+    height: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: var(--custom-switch-bg);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    margin-left: -0.25rem;
+}
+
+.custom-switch-inner {
+    position: relative;
+    width: calc(40px / 1.75);
+    height: calc(40px / 1.75);
+    border-radius: 50%;
+    background: var(--custom-switch-bg);
+    box-shadow: inset 2px 2px 3px rgba(0, 0, 0, 0.12);
+}
+
+.custom-switch-ball {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--custom-switch-green);
+    box-shadow: 0 0 10px rgba(185, 255, 129, 0.3);
+    transition: transform 250ms var(--custom-switch-easing), opacity 300ms var(--custom-switch-easing);
+    transition-delay: 120ms;
+}
+
+    .custom-switch-ball::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 25%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        width: 35%;
+        height: 15%;
+        filter: blur(4px);
+    }
+
+.custom-switch-text {
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+    color: rgb(33, 37, 41);
+    opacity: 0.5;
+    transition: opacity 250ms var(--custom-switch-easing);
+    transition-delay: 150ms;
+    user-select: none;
+    pointer-events: none;
+    position: relative;
+    min-width: 8.5rem;
+}
+
+.custom-switch-text-options {
+    position: relative;
+    margin: 0 0.5rem;
+    display: inline-block;
+    width: auto;
+    min-width: 7.5rem;
+    height: 4rem;
+    overflow: hidden;
+    text-align: left;
+}
+
+    .custom-switch-text-options span {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        transition: transform 250ms var(--custom-switch-easing), opacity 150ms var(--custom-switch-easing);
+        transition-delay: 150ms;
+        line-height: 4rem;
+    }
+
+
+
+.custom-switch-off {
+    transform: translateY(0%);
+    opacity: 1;
+}
+
+.custom-switch-on {
+    transform: translateY(-150%);
+    opacity: 0;
+}
