@@ -1,6 +1,7 @@
 ﻿using GuedesTime.Data.Repository;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Utils;
 
 namespace GuedesTime.Service.Services
 {
@@ -100,5 +101,34 @@ namespace GuedesTime.Service.Services
         {
             _instituicaoRepository?.Dispose();
         }
+
+        public async Task<Dictionary<Guid, DadosAgregadosInstituicao>> ObterCalculoGeralDosDadosDaInstituicao(List<Guid> instituicaoIds)
+        {
+            var result = new Dictionary<Guid, DadosAgregadosInstituicao>();
+
+            foreach (var id in instituicaoIds)
+            {
+                var instituicao = await _instituicaoRepository.ObterDadosInstituicoesPorId(id, incluirInativos: false);
+
+                if (instituicao == null) continue;
+
+                var dados = new DadosAgregadosInstituicao
+                {
+                    TotalProfessores = instituicao.Professores?.Count ?? 0,
+                    TotalTurmas = instituicao.Turmas?.Count ?? 0,
+                    TotalSeries = instituicao.Series?.Count ?? 0,
+                    TotalDisciplinas = instituicao.Disciplinas?.Count ?? 0,
+                    TotalSalas = instituicao.Salas?.Count ?? 0,
+                    TotalHorarios = instituicao.Horarios?.Count ?? 0,
+                    TotalFeriados = instituicao.Feriados?.Count ?? 0
+                };
+
+                result.Add(id, dados);
+            }
+
+            return result;
+        }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Utils;
 
 namespace GuedesTime.Domain.Intefaces
 {
@@ -12,5 +13,6 @@ namespace GuedesTime.Domain.Intefaces
         Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true);
         Task ObterTodos();
         Task Remover(Guid id);
+        Task<bool> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina);
     }
 }

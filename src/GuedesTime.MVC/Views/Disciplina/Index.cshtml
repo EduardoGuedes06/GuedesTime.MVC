@@ -115,28 +115,37 @@
     const instituicaoId = '@ViewBag.InstituicaoId';
 
     function openDisciplinaModal() {
+        debugger
         $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId }, function (html) {
             $("#modal-disciplina-body").html(html);
             const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
             modal.show();
+            inicializarEventosModal();
         });
     }
 
     function openEditDisciplinaModal(id) {
+        debugger
         $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId, id: id }, function (html) {
             $("#modal-disciplina-body").html(html);
             const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
             modal.show();
+            inicializarEventosModal();
         });
     }
 
     function closeModal() {
-        debugger
         const modalElement = document.getElementById('disciplinaModal');
         const modal = bootstrap.Modal.getInstance(modalElement);
         if (modal) {
             modal.hide();
         }
+    }
+
+    function inicializarEventosModal() {
+        debugger
+        ValidarNome();
+
     }
 </script>
 

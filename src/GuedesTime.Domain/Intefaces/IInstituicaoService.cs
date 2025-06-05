@@ -1,6 +1,7 @@
 ﻿
 
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Utils;
 
 namespace GuedesTime.Domain.Intefaces
 {
@@ -9,6 +10,7 @@ namespace GuedesTime.Domain.Intefaces
         Task Adicionar(Instituicao instituicao);
         Task Atualizar(Instituicao instituicao);
         Task<string> ObterAvatarAleatorioAsync();
+        Task<Dictionary<Guid, DadosAgregadosInstituicao>> ObterCalculoGeralDosDadosDaInstituicao(List<Guid> instituicaoIds);
         Task<Instituicao> ObterDadosInstituicoesPorId(Guid instituicaoId);
         Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId);
         Task<Instituicao> ObterInstituicaoComEnderecoPorId(Guid instituicaoId);

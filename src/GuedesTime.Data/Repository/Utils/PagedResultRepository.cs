@@ -1,6 +1,6 @@
 ﻿using GuedesTime.Data.Context;
 using GuedesTime.Domain.Intefaces;
-using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Utils;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Reflection;

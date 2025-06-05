@@ -3,10 +3,12 @@ using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using GuedesTime.MVC.Models;
 using GuedesTime.MVC.ViewModels;
+using GuedesTime.MVC.ViewModels.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging.Signing;
 
 namespace GuedesTime.MVC.Controllers
 {
@@ -33,7 +35,9 @@ namespace GuedesTime.MVC.Controllers
             var UserId = Guid.Parse(_userManager.GetUserId(User));
 
             var instituicoes = await _instituicaoService.ObterInstituiceosPaginada(UserId, search, page, pageSize, ativo);
-
+            var instituicaoIds = instituicoes.Items.Select(i => i.Id).ToList();
+            var dadosResumo = _mapper.Map<Dictionary<Guid, DadosAgregadosInstituicaoViewModel>>(await _instituicaoService.ObterCalculoGeralDosDadosDaInstituicao(instituicaoIds));
+            ViewBag.ResumoInstituicoes = dadosResumo;
             var instituicoesViewModel = _mapper.Map<IEnumerable<InstituicaoViewModel>>(instituicoes.Items);
 
             var paged = new PagedInstituicoesViewModel

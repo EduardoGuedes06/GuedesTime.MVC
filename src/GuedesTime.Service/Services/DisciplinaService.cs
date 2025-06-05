@@ -19,34 +19,39 @@ namespace GuedesTime.Service.Services
             _disciplinaRepository = disciplinaRepository;
         }
 
-    public async Task ObterTodos()
-    {
-        await _disciplinaRepository.ObterTodos();
-    }
+        public async Task ObterTodos()
+        {
+            await _disciplinaRepository.ObterTodos();
+        }
 
-    public async Task Adicionar(Disciplina Disciplina)
-    {
-        await _disciplinaRepository.Adicionar(Disciplina);
-    }
+        public async Task<bool> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina)
+        {
+            return await _disciplinaRepository.ObterDisciplinaPorNome(instituicaoId, nomeDisciplina);
+        }
 
-    public async Task Atualizar(Disciplina Disciplina)
-    {
-        await _disciplinaRepository.Atualizar(Disciplina);
-    }
+        public async Task Adicionar(Disciplina Disciplina)
+        {
+            await _disciplinaRepository.Adicionar(Disciplina);
+        }
 
-    public async Task Remover(Guid id)
-    {
-        await _disciplinaRepository.Remover(id);
-    }
+        public async Task Atualizar(Disciplina Disciplina)
+        {
+            await _disciplinaRepository.Atualizar(Disciplina);
+        }
 
-    public void Dispose()
-    {
-        _disciplinaRepository?.Dispose();
-    }
+        public async Task Remover(Guid id)
+        {
+            await _disciplinaRepository.Remover(id);
+        }
 
-    public async Task<Disciplina> ObterPorId(Guid DisciplinaId)
-    {
-        return await _disciplinaRepository.ObterPorId(DisciplinaId);
+        public void Dispose()
+        {
+            _disciplinaRepository?.Dispose();
+        }
+
+        public async Task<Disciplina> ObterPorId(Guid DisciplinaId)
+        {
+            return await _disciplinaRepository.ObterPorId(DisciplinaId);
+        }
     }
-}
 }

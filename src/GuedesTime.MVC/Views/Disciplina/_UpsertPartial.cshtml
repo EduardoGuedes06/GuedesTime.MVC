@@ -59,46 +59,14 @@
 </form>
 
 @section Scripts {
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            $("#Nome").on("input", function () {
-                var nameField = $(this);
-                var nameError = $("#name-error");
-                var nameValue = nameField.val();
-
-                var regex = /^[A-Za-zÀ-ÖØ-öø-ÿ. ]*$/;
-
-                if (!regex.test(nameValue)) {
-                    nameError.text("O nome só pode conter letras e ponto.");
-                    nameField.val(nameValue.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ. ]/g, ""));
-                    return;
-                }
-
-                var correctedName = nameValue.replace(/\b\w/g, function (char) {
-                    return char.toUpperCase();
-                });
-
-                nameField.val(correctedName);
-                nameError.text("");
-            });
-
-            // Alterna entre 'Ligado' e 'Desligado'
-            const toggle = document.getElementById("AtivoSwitch");
-            const label = document.getElementById("switchLabel");
-
-            if (toggle && label) {
-                toggle.addEventListener("change", function () {
-                    label.innerText = this.checked ? "Ligado" : "Desligado";
-                });
-            }
-
-            // Envio do formulário via AJAX
             $("#formDisciplina").on("submit", function (event) {
                 event.preventDefault();
-
                 var form = $(this);
                 if (form.valid()) {
                     $.ajax({
@@ -127,3 +95,4 @@
         });
     </script>
 }
+

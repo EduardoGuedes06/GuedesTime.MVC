@@ -1,4 +1,5 @@
-﻿@model GuedesTime.MVC.ViewModels.PagedInstituicoesViewModel
+﻿@using GuedesTime.MVC.ViewModels.Utils
+@model GuedesTime.MVC.ViewModels.PagedInstituicoesViewModel
 
 <link rel="stylesheet" href="~/css/filtragem.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/card_instituicao.css" asp-append-version="true" />
@@ -44,24 +45,34 @@
     </div>
 
     <div class="instituicao-container">
+        @{
+            var resumoInstituicoes = ViewBag.ResumoInstituicoes as Dictionary<Guid, DadosAgregadosInstituicaoViewModel>;
+        }
 
         @foreach (var instituicao in Model.Instituicoes)
         {
+            var id = instituicao.Id ?? Guid.Empty;
+            var resumo = new DadosAgregadosInstituicaoViewModel();
+
+            resumoInstituicoes?.TryGetValue(id, out resumo);
+
             <div class="instituicao-card">
                 <img class="instituicao-avatar" src="@(string.IsNullOrEmpty(instituicao.Avatar) ? "https://via.placeholder.com/80" : instituicao.Avatar)" alt="Avatar">
 
                 <div class="instituicao-info">
                     <div class="instituicao-name">@instituicao.Nome</div>
+
                     <div class="instituicao-details">
-                        Professores: @(instituicao.Professores?.Count ?? 0) |
-                        Disciplinas: @(instituicao.Disciplinas?.Count ?? 0) |
-                        Turmas: @(instituicao.Turmas?.Count ?? 0)
+                        Professores: @resumo.TotalProfessores |
+                        Disciplinas: @resumo.TotalDisciplinas |
+                        Turmas: @resumo.TotalTurmas
                     </div>
+
                     <div class="instituicao-status">
                         Planejamento: @(instituicao.Ativo == true ? "Em andamento" : "Inativo")
                     </div>
 
-                    @if (instituicao.Ativo == false)
+                    @if (instituicao.Ativo != true)
                     {
                         <div class="instituicao-status-inativo">Situação: Instituição Inativa</div>
                     }
@@ -80,9 +91,8 @@
                 </div>
             </div>
         }
+
     </div>
-
-
 </div>
 
 <div class="modal fade" id="disciplinaModal" tabindex="-1" aria-labelledby="disciplinaModalLabel" aria-hidden="true">

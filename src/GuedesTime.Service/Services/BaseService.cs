@@ -5,6 +5,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using GuedesTime.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using GuedesTime.Domain.Models.Utils;
 
 namespace GuedesTime.Service.Services
 {

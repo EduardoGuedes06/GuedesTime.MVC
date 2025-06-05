@@ -1,6 +1,7 @@
 ﻿
 
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Utils;
 
 namespace GuedesTime.Domain.Intefaces
 {

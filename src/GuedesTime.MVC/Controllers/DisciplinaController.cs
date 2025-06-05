@@ -100,9 +100,11 @@ namespace GuedesTime.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(DisciplinaViewModel disciplinaViewModel)
         {
+            var referer = Request.Headers["Referer"].ToString();
             var userId = Guid.Parse(_userManager.GetUserId(User));
             if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, disciplinaViewModel.InstituicaoId))
                 return NotFound();
+
 
             if (!ModelState.IsValid)
             {
@@ -111,6 +113,13 @@ namespace GuedesTime.MVC.Controllers
                     return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
                 }
                 return View(disciplinaViewModel);
+            }
+
+            bool jaExisteDisciplina = await _disciplinaService.ObterDisciplinaPorNome(disciplinaViewModel.InstituicaoId,disciplinaViewModel.Nome);
+            if (jaExisteDisciplina)
+            {
+                TempData["error"] = "Já existe uma Disciplina com esse nome!!";
+                return Redirect(referer);
             }
 
             if (disciplinaViewModel.Id == Guid.Empty || disciplinaViewModel.Id == null)
@@ -133,7 +142,6 @@ namespace GuedesTime.MVC.Controllers
                 return Json(new { success = true });
             }
 
-            var referer = Request.Headers["Referer"].ToString();
             if (!string.IsNullOrEmpty(referer))
             {
                 return Redirect(referer);
