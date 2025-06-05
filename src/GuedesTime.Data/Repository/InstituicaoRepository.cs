@@ -54,23 +54,6 @@ namespace GuedesTime.Data.Repository
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<Instituicao>> GetPaged(Guid usuarioId, string? search, int pageSize, int? page = null, bool ativo = true)
-        {
-            IQueryable<Instituicao> query = Db.Instituicao
-                .AsNoTracking()
-                .Where(c => c.Ativo == ativo && c.UsuarioId == usuarioId);
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                query = query.Where(c =>
-                    c.Nome.Contains(search) ||
-                    c.Cnpj.Contains(search) ||
-                    c.CodigoCie.Contains(search));
-            }
-
-            return await _pagedResultRepository.GetPagedResultAsync(query, pageSize, page);
-        }
-
         public async Task<bool> VerificaUsuarioInstituicao(Guid usuarioId, Guid instituicaoId)
         {
             return await Db.Instituicao.AsNoTracking()

@@ -7,10 +7,10 @@ namespace GuedesTime.Domain.Intefaces
 {
     public interface IDisciplinaService : IDisposable
     {
+        Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true);
         Task Adicionar(Disciplina disciplina);
         Task Atualizar(Disciplina disciplina);
         Task<Disciplina> ObterPorId(Guid DisciplinaId);
-        Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true);
         Task ObterTodos();
         Task Remover(Guid id);
         Task<bool> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina);

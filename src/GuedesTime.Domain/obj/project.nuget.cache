@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "sKv7mLY4WAXBcq5aOfAxWSaGX4ylWCWjLPwuz13/ov7Y2QAxPiXKlFHZEjjRL0Q4sZsqF6X9fpdscJnXJaHWKw==",
+  "dgSpecHash": "+AKUgZzRzdZ6N/PV6X4xu82wA0RlswGZ5+CUkpToctN0PIIXraJCtpyMGRSQY9jYYMNLn60HcgSUA3dTG7nsUA==",
   "success": true,
-  "projectFilePath": "D:\\AMBIENTE DEV\\PROJETO GUEDES TIME\\GuedesTime.MVC\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
+  "projectFilePath": "D:\\AMBIENTE DEV\\C#\\PROJETO GUEDES TIME\\GuedesTime.MVC\\src\\GuedesTime.Domain\\GuedesTime.Domain.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\eduar\\.nuget\\packages\\fluentvalidation\\11.4.0\\fluentvalidation.11.4.0.nupkg.sha512"
   ],

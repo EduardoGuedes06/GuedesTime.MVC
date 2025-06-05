@@ -34,7 +34,7 @@ namespace GuedesTime.MVC.Controllers
         {
             var UserId = Guid.Parse(_userManager.GetUserId(User));
 
-            var instituicoes = await _instituicaoService.ObterInstituiceosPaginada(UserId, search, page, pageSize, ativo);
+            var instituicoes = await _instituicaoService.GetPagedByInstituicaoAsync(UserId, search, page, pageSize, ativo);
             var instituicaoIds = instituicoes.Items.Select(i => i.Id).ToList();
             var dadosResumo = _mapper.Map<Dictionary<Guid, DadosAgregadosInstituicaoViewModel>>(await _instituicaoService.ObterCalculoGeralDosDadosDaInstituicao(instituicaoIds));
             ViewBag.ResumoInstituicoes = dadosResumo;

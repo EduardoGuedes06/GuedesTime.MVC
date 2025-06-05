@@ -1,26 +1,24 @@
-﻿using GuedesTime.Data.Repository;
+﻿using GuedesTime.Data.Context;
+using GuedesTime.Data.Repository;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using GuedesTime.Domain.Models.Utils;
 
 namespace GuedesTime.Service.Services
 {
-    public class InstituicaoService : BaseService, IInstituicaoService
+    public class InstituicaoService : BaseService<Instituicao>, IInstituicaoService
     {
         private readonly IInstituicaoRepository _instituicaoRepository;
         private readonly IEnderecoRepository _enderecoRepository;
 
         public InstituicaoService(IInstituicaoRepository InstituicaoRepository,
-                                IEnderecoRepository enderecoRepository,
-                              INotificador notificador) : base(notificador)
+                                  IEnderecoRepository enderecoRepository,
+                                  INotificador notificador,
+                                  MeuDbContext context,
+                                  IPagedResultRepository<Instituicao> pagedRepository) : base(notificador, context, pagedRepository)
         {
             _instituicaoRepository = InstituicaoRepository;
             _enderecoRepository = enderecoRepository;
-        }
-
-        public async Task<PagedResult<Instituicao>> ObterInstituiceosPaginada(Guid usuarioId, string? search, int page, int pageSize, bool ativo)
-        {
-            return await _instituicaoRepository.GetPaged(usuarioId, search, pageSize, page, ativo);
         }
 
         public async Task<Instituicao> ObterPorId(Guid instituicaoId)
