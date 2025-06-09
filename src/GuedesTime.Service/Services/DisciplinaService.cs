@@ -24,7 +24,7 @@ namespace GuedesTime.Service.Services
             await _disciplinaRepository.ObterTodos();
         }
 
-        public async Task<bool> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina)
+        public async Task<Disciplina> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina)
         {
             return await _disciplinaRepository.ObterDisciplinaPorNome(instituicaoId, nomeDisciplina);
         }

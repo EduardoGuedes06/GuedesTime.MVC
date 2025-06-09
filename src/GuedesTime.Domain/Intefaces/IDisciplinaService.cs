@@ -13,6 +13,6 @@ namespace GuedesTime.Domain.Intefaces
         Task<Disciplina> ObterPorId(Guid DisciplinaId);
         Task ObterTodos();
         Task Remover(Guid id);
-        Task<bool> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina);
+        Task<Disciplina> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina);
     }
 }

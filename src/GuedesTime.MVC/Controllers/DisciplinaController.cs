@@ -102,39 +102,52 @@ namespace GuedesTime.MVC.Controllers
         {
             var referer = Request.Headers["Referer"].ToString();
             var userId = Guid.Parse(_userManager.GetUserId(User));
+
             if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, disciplinaViewModel.InstituicaoId))
                 return NotFound();
-
 
             if (!ModelState.IsValid)
             {
                 if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
+                    return Json(new
+                    {
+                        success = false,
+                        errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+                    });
                 }
+
                 return View(disciplinaViewModel);
             }
 
-            bool jaExisteDisciplina = await _disciplinaService.ObterDisciplinaPorNome(disciplinaViewModel.InstituicaoId,disciplinaViewModel.Nome);
-            if (jaExisteDisciplina)
+            var disciplinaComMesmoNome = await _disciplinaService.ObterDisciplinaPorNome(
+                disciplinaViewModel.InstituicaoId,
+                disciplinaViewModel.Nome
+            );
+
+            if (disciplinaComMesmoNome != null &&
+                (disciplinaViewModel.Id == null || disciplinaComMesmoNome.Id != disciplinaViewModel.Id) &&
+                disciplinaComMesmoNome.Ativo == disciplinaViewModel.Ativo)
             {
-                TempData["error"] = "Já existe uma Disciplina com esse nome!!";
+                TempData["error"] = "Já existe uma disciplina com esse nome!";
                 return Redirect(referer);
             }
 
-            if (disciplinaViewModel.Id == Guid.Empty || disciplinaViewModel.Id == null)
+            if (disciplinaViewModel.Id == null || disciplinaViewModel.Id == Guid.Empty)
             {
-                await _disciplinaService.Adicionar(_mapper.Map<Disciplina>(disciplinaViewModel));
-                TempData["success"] = "Disciplina cadastrada com sucesso!!";
+                var novaDisciplina = _mapper.Map<Disciplina>(disciplinaViewModel);
+                await _disciplinaService.Adicionar(novaDisciplina);
+                TempData["success"] = "Disciplina cadastrada com sucesso!";
             }
             else
             {
-                var disciplinaExistente = await _disciplinaService.ObterPorId((Guid)disciplinaViewModel.Id);
-                if (disciplinaExistente == null) return NotFound();
+                var disciplinaExistente = await _disciplinaService.ObterPorId(disciplinaViewModel.Id.Value);
+                if (disciplinaExistente == null)
+                    return NotFound();
 
                 _mapper.Map(disciplinaViewModel, disciplinaExistente);
                 await _disciplinaService.Atualizar(disciplinaExistente);
-                TempData["success"] = "Dados da disciplina alterados com sucesso!!";
+                TempData["success"] = "Dados da disciplina alterados com sucesso!";
             }
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
@@ -146,12 +159,10 @@ namespace GuedesTime.MVC.Controllers
             {
                 return Redirect(referer);
             }
-            else
-            {
 
-                return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
-            }
+            return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
         }
+
 
 
 
@@ -174,8 +185,8 @@ namespace GuedesTime.MVC.Controllers
             var disciplinaExistente = await _disciplinaService.ObterPorId((Guid)id);
             if (disciplinaExistente == null) return NotFound();
 
-            if(disciplinaExistente.Ativo == true)
-            { disciplinaExistente.Ativo = false; await _disciplinaService.Atualizar(disciplinaExistente);TempData["success"] = "Disciplina desativada com sucesso!!";}
+            if (disciplinaExistente.Ativo == true)
+            { disciplinaExistente.Ativo = false; await _disciplinaService.Atualizar(disciplinaExistente); TempData["success"] = "Disciplina desativada com sucesso!!"; }
             else { await _disciplinaService.Remover(id); TempData["success"] = "Disciplina Deletada do sistema com sucesso!!"; }
 
             var referer = Request.Headers["Referer"].ToString();

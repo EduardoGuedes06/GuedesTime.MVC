@@ -101,24 +101,27 @@
                 <div class="text-center md:text-left">
                     @if (Model.Disciplinas?.Any() == true)
                     {
-
                         @foreach (var disc in Model.Disciplinas.Take(10))
                         {
 
                             <h5 class="text-sm font-semibold">@disc.Nome</h5>
                             <div class="space-x-2 mt-2 text-sm">
-                                <a href="@Url.Action("Upsert", "Disciplina", new { instituicaoId = Model.Id, id = disc.Id })"
-                                   class="text-blue-600 hover:underline">Editar</a>
-                                <a href="@Url.Action("Delete", "Disciplina", new { instituicaoId = Model.Id, id = disc.Id })"
-                                   class="text-red-600 hover:underline"
-                                   onclick="return confirm('Tem certeza que deseja excluir esta disciplina?');">Excluir</a>
+                                <a href="javascript:void(0);" onclick="openEditDisciplinaModal('@Model.Id', '@disc.Id')" class="btn btn-light text-primary btn-hover">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+
+                                <form action="@Url.Action("Delete", "Disciplina", new { instituicaoId = Model.Id, id = disc.Id })" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-light text-danger btn-hover" onclick="return confirm('Tem certeza que deseja excluir esta disciplina?');">
+                                        <i class="fas fa-trash-alt"></i> Excluir
+                                    </button>
+                                </form>
                             </div>
+
                             <br />
                             
 
                         }
-
-
                         @if (Model.Disciplinas.Count > 10)
                         {
                             <div class="mt-3">
@@ -311,9 +314,20 @@
         <script>
             function openDisciplinaModal() {
                 $.get("/Disciplina/UpsertPartial", { instituicaoId: '@Model.Id' }, function (html) {
-                    $("#modal-disciplina-body").html(html); // Carrega o conteúdo da PartialView
-                    const modal = new bootstrap.Modal(document.getElementById('disciplinaModal')); // Inicializa o modal
-                    modal.show(); // Exibe o modal
+                    $("#modal-disciplina-body").html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
+                    modal.show();
+                    inicializarEventosModal();
+                });
+            }
+
+            function openEditDisciplinaModal(instituicaoId, disciplinaId) {
+                debugger
+                $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId, id: disciplinaId }, function (html) {
+                    $("#modal-disciplina-body").html(html);
+                    const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
+                    modal.show();
+                    inicializarEventosModal();
                 });
             }
 
@@ -323,6 +337,12 @@
                 if (modal) {
                     modal.hide();
                 }
+            }
+
+            function inicializarEventosModal() {
+
+                ValidarNome();
+
             }
         </script>
 

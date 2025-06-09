@@ -29,7 +29,6 @@ namespace GuedesTime.MVC.Controllers
             _userManager = userManager;
         }
 
-
         public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10, bool ativo = true)
         {
             var UserId = Guid.Parse(_userManager.GetUserId(User));
@@ -52,7 +51,6 @@ namespace GuedesTime.MVC.Controllers
 
             return View(paged);
         }
-
 
         // DETALHES
         [AllowAnonymous]
@@ -82,7 +80,6 @@ namespace GuedesTime.MVC.Controllers
 
             return View(instituicoesViewModel);
         }
-
 
         public async Task<IActionResult> Upsert(Guid? id)
         {
@@ -146,33 +143,12 @@ namespace GuedesTime.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // EXCLUIR INSTITUIÇÃO
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var instituicao = await _instituicaoService.ObterPorId(id);
-            if (instituicao == null) return NotFound();
-
-            return View(_mapper.Map<InstituicaoViewModel>(instituicao));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            await _instituicaoService.Remover(id);
-
-            if (!OperacaoValida()) return View();
-
-            return RedirectToAction(nameof(Index));
-        }
-
         private ProgressoCadastroViewModel VerificarPendencias(InstituicaoViewModel instituicoesViewModel)
         {
             var pendencias = new List<string>();
-            var totalEtapas = 8; // Considerando 8 etapas no total, incluindo a Instituição
+            var totalEtapas = 8;
             string proximaEtapa = null;
 
-            // Verificando cada etapa
             if (instituicoesViewModel.Disciplinas == null || !instituicoesViewModel.Disciplinas.Any())
             {
                 pendencias.Add("Disciplinas");
@@ -221,11 +197,5 @@ namespace GuedesTime.MVC.Controllers
                 ProximaEtapa = proximaEtapa
             };
         }
-
-
-
-
-
-
     }
 }

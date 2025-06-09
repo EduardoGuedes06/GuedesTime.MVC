@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using GuedesTime.Data.Context;
 using GuedesTime.Data.Repository.Utils;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
-using GuedesTime.Domain.Models.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuedesTime.Data.Repository
@@ -24,18 +19,16 @@ namespace GuedesTime.Data.Repository
 
         public async Task<IEnumerable<Instituicao>> ObterDadosInstituicoesUsuario(Guid usuarioId)
         {
-            return await FiltrarComRelacionamentos(i => i.UsuarioId == usuarioId)
+            return await Db.Instituicao.AsNoTracking()
+                .Where(i => i.UsuarioId == usuarioId)
+                .Include(i => i.Endereco)
                 .OrderBy(i => i.Nome)
                 .ToListAsync();
         }
 
         public async Task<Instituicao?> ObterDadosInstituicoesPorId(Guid instituicaoId, bool? incluirInativos = false)
         {
-            var instituicao = await FiltrarComRelacionamentos(i => i.Id == instituicaoId).FirstOrDefaultAsync();
-
-            if (instituicao == null) return null;
-
-            return FiltrarInativos(instituicao, incluirInativos);
+            return await BuscarInstituicaoCompletaAsync(i => i.Id == instituicaoId, 5, incluirInativos);
         }
 
         public async Task<Instituicao?> ObterInstituicaoComEnderecoPorId(Guid id)
@@ -62,31 +55,73 @@ namespace GuedesTime.Data.Repository
 
         #region Utils
 
-        private IQueryable<Instituicao> FiltrarComRelacionamentos(Expression<Func<Instituicao, bool>> predicate)
+        private async Task<Instituicao?> BuscarInstituicaoCompletaAsync(Expression<Func<Instituicao, bool>> filtro, int top = 5, bool? incluirInativos = false)
         {
-            return IncluirRelacionamentos(Db.Instituicao.AsNoTracking().Where(predicate));
+            var instituicao = await Db.Instituicao
+                .AsNoTracking()
+                .FirstOrDefaultAsync(filtro);
+
+            if (instituicao == null)
+                return null;
+
+            await CarregarTopRelacionamentosAsync(instituicao, top);
+            return FiltrarInativos(instituicao, incluirInativos);
         }
 
-        private IQueryable<Instituicao> IncluirRelacionamentos(IQueryable<Instituicao> query)
+        private async Task CarregarTopRelacionamentosAsync(Instituicao instituicao, int top)
         {
-            return query
-                .Include(i => i.Professores)
-                .Include(i => i.Turmas)
-                .Include(i => i.Series)
-                .Include(i => i.Disciplinas)
-                .Include(i => i.Salas)
-                .Include(i => i.Horarios)
-                .Include(i => i.Feriados)
-                .Include(i => i.Endereco);
+            var id = instituicao.Id;
+
+            instituicao.Professores = await Db.Professor
+                .Where(p => p.InstituicaoId == id)
+                .OrderBy(p => p.Nome)
+                .Take(top).ToListAsync();
+
+            instituicao.Turmas = await Db.Turma
+                .Where(t => t.InstituicaoId == id)
+                .OrderBy(t => t.Nome)
+                .Take(top).ToListAsync();
+
+            instituicao.Series = await Db.Serie
+                .Where(s => s.InstituicaoId == id)
+                .OrderBy(s => s.Nome)
+                .Take(top).ToListAsync();
+
+            instituicao.Disciplinas = await Db.Disciplina
+                .Where(d => d.InstituicaoId == id)
+                .OrderBy(d => d.Nome)
+                .Take(top).ToListAsync();
+
+            instituicao.Salas = await Db.Sala
+                .Where(s => s.InstituicaoId == id)
+                .OrderBy(s => s.Nome)
+                .Take(top).ToListAsync();
+
+            instituicao.Horarios = await Db.Horario
+                .Where(h => h.InstituicaoId == id)
+                .OrderBy(h => h.Inicio)
+                .Take(top).ToListAsync();
+
+            instituicao.Feriados = await Db.Feriado
+                .Where(f => f.InstituicaoId == id)
+                .OrderBy(f => f.Data)
+                .Take(top).ToListAsync();
+
+            instituicao.Endereco = await Db.Endereco
+                .FirstOrDefaultAsync(f => f.InstituicaoId == id);
         }
 
         private Instituicao FiltrarInativos(Instituicao instituicao, bool? incluirInativos)
         {
             if (incluirInativos is not true)
             {
-                instituicao.Professores = instituicao.Professores?.Where(p => p.Ativo ?? false).ToList();
-                instituicao.Disciplinas = instituicao.Disciplinas?.Where(d => d.Ativo ?? false).ToList();
+                instituicao.Professores = instituicao.Professores?
+                    .Where(p => p.Ativo ?? false).ToList();
+
+                instituicao.Disciplinas = instituicao.Disciplinas?
+                    .Where(d => d.Ativo ?? false).ToList();
             }
+
             return instituicao;
         }
 
