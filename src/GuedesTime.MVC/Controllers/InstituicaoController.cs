@@ -38,7 +38,6 @@ namespace GuedesTime.MVC.Controllers
             var dadosResumo = _mapper.Map<Dictionary<Guid, DadosAgregadosInstituicaoViewModel>>(await _instituicaoService.ObterCalculoGeralDosDadosDaInstituicao(instituicaoIds));
             ViewBag.ResumoInstituicoes = dadosResumo;
             var instituicoesViewModel = _mapper.Map<IEnumerable<InstituicaoViewModel>>(instituicoes.Items);
-
             var paged = new PagedInstituicoesViewModel
             {
                 Instituicoes = instituicoesViewModel,
@@ -48,11 +47,9 @@ namespace GuedesTime.MVC.Controllers
                 TotalPages = (int)Math.Ceiling((double)instituicoes.TotalCount / pageSize),
                 TotalItems = instituicoes.TotalCount
             };
-
             return View(paged);
         }
 
-        // DETALHES
         [AllowAnonymous]
         public async Task<IActionResult> Detalhes(Guid id)
         {

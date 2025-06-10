@@ -41,6 +41,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Views\Series\" />
 	  <Folder Include="Views\Turma\" />
 	  <Folder Include="wwwroot\imagens\" />
 	</ItemGroup>

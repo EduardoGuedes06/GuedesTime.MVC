@@ -33,8 +33,6 @@ namespace GuedesTime.MVC.Controllers
             _disciplinaService = idisciplinaService;
         }
 
-
-        // GET: DisciplinaController
         public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 5, bool ativo = true)
         {
 
@@ -59,8 +57,6 @@ namespace GuedesTime.MVC.Controllers
             };
             return View(pagedViewModel);
         }
-
-
 
         public async Task<IActionResult> UpsertPartial(Guid instituicaoId, Guid? id)
         {
@@ -94,8 +90,6 @@ namespace GuedesTime.MVC.Controllers
             return View(disciplinaViewModel);
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(DisciplinaViewModel disciplinaViewModel)
@@ -120,10 +114,7 @@ namespace GuedesTime.MVC.Controllers
                 return View(disciplinaViewModel);
             }
 
-            var disciplinaComMesmoNome = await _disciplinaService.ObterDisciplinaPorNome(
-                disciplinaViewModel.InstituicaoId,
-                disciplinaViewModel.Nome
-            );
+            var disciplinaComMesmoNome = await _disciplinaService.ObterDisciplinaPorNome(disciplinaViewModel.InstituicaoId, disciplinaViewModel.Nome);
 
             if (disciplinaComMesmoNome != null &&
                 (disciplinaViewModel.Id == null || disciplinaComMesmoNome.Id != disciplinaViewModel.Id) &&
@@ -163,10 +154,6 @@ namespace GuedesTime.MVC.Controllers
             return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
         }
 
-
-
-
-        // GET: DisciplinaController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid instituicaoId, Guid id)
