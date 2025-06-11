@@ -18,7 +18,8 @@ namespace GuedesTime.MVC.ViewModels
         public string Nome { get; set; }
         public Guid InstituicaoId { get; set; }
 
-        public InstituicaoViewModel Instituicao { get; set; }
+		public bool? Ativo { get; set; }
+		public InstituicaoViewModel Instituicao { get; set; }
         public ICollection<TurmaViewModel> Turmas { get; set; }
         public ICollection<DisciplinaSerie> Disciplinas { get; set; }
     }

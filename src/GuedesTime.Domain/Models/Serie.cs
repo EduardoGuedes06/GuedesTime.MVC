@@ -10,8 +10,8 @@ namespace GuedesTime.Domain.Models
     {
         public string Nome { get; set; }
         public Guid InstituicaoId { get; set; }
-
-        public Instituicao Instituicao { get; set; }
+		public bool? Ativo { get; set; }
+		public Instituicao Instituicao { get; set; }
         public ICollection<Turma> Turmas { get; set; }
         public ICollection<DisciplinaSerie> Disciplinas { get; set; }
     }

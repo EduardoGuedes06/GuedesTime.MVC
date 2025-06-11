@@ -4,17 +4,14 @@ using GuedesTime.Domain.Models;
 
 namespace GuedesTime.Service.Services
 {
-
     public class DisciplinaService : BaseService<Disciplina>, IDisciplinaService
     {
         private readonly IDisciplinaRepository _disciplinaRepository;
 
-        public DisciplinaService(
-            IDisciplinaRepository disciplinaRepository,
-            INotificador notificador,
-            MeuDbContext context,
-            IPagedResultRepository<Disciplina> pagedRepository)
-            : base(notificador, context, pagedRepository)
+        public DisciplinaService( IDisciplinaRepository disciplinaRepository,
+                            INotificador notificador,
+                            MeuDbContext context,
+                            IPagedResultRepository<Disciplina> pagedRepository) : base(notificador, context, pagedRepository)
         {
             _disciplinaRepository = disciplinaRepository;
         }
@@ -28,13 +25,30 @@ namespace GuedesTime.Service.Services
         {
             return await _disciplinaRepository.ObterDisciplinaPorNome(instituicaoId, nomeDisciplina);
         }
-
-        public async Task Adicionar(Disciplina Disciplina)
+		public async Task<(bool Existe, List<string> NomesExistentes)> VerificarDisciplinasExistentesPorNomes(Guid instituicaoId, List<string> nomes)
+		{
+			return await _disciplinaRepository.VerificarDisciplinasExistentesPorNomes(instituicaoId, nomes);
+		}
+		public async Task Adicionar(Disciplina Disciplina)
         {
             await _disciplinaRepository.Adicionar(Disciplina);
         }
 
-        public async Task Atualizar(Disciplina Disciplina)
+		public async Task AdicionarDisciplinas(Guid InstituicaoId, List<string> listaDeDisciplinas)
+		{
+			var disciplinas = listaDeDisciplinas
+				.Where(nome => !string.IsNullOrWhiteSpace(nome))
+				.Select(nome => new Disciplina
+				{
+					Nome = nome.Trim(),
+					InstituicaoId = InstituicaoId,
+					Ativo = true,
+				}).ToList();
+
+			await _disciplinaRepository.AdicionarLista(disciplinas);
+		}
+
+		public async Task Atualizar(Disciplina Disciplina)
         {
             await _disciplinaRepository.Atualizar(Disciplina);
         }

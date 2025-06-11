@@ -1,16 +1,20 @@
-﻿using GuedesTime.Domain.Intefaces;
+﻿using GuedesTime.Data.Context;
+using GuedesTime.Data.Repository;
+using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 
 namespace GuedesTime.Service.Services
 {
-    public class SerieService : BaseService, ISerieService
+    public class SerieService : BaseService<Serie>, ISerieService
     {
         private readonly ISerieRepository _serieRepository;
 
-        public SerieService(ISerieRepository SerieRepository,
-                              INotificador notificador) : base(notificador)
-        {
-            _serieRepository = SerieRepository;
+        public SerieService(ISerieRepository serieRepository,
+                              INotificador notificador,
+							  MeuDbContext context,
+							  IPagedResultRepository<Serie> pagedRepository) : base(notificador, context, pagedRepository)
+		{
+            _serieRepository = serieRepository;
         }
 
         public async Task ObterTodos()
@@ -18,12 +22,14 @@ namespace GuedesTime.Service.Services
             await _serieRepository.ObterTodos();
         }
 
-        public async Task ObterPorId(Guid id)
-        {
-            await _serieRepository.ObterPorId(id);
-        }
+		public async Task<Serie> ObterPorId(Guid id) => await _serieRepository.ObterPorId(id);
 
-        public async Task Adicionar(Serie Serie)
+		public async Task<Serie> ObterSeriePorNome(Guid instituicaoId, string nomeSerie)
+		{
+			return await _serieRepository.ObterSeriePorNome(instituicaoId, nomeSerie);
+		}
+
+		public async Task Adicionar(Serie Serie)
         {
             await _serieRepository.Adicionar(Serie);
         }

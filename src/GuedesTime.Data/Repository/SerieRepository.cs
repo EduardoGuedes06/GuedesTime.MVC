@@ -13,6 +13,11 @@ namespace GuedesTime.Data.Repository
     public class SerieRepository : Repository<Serie>, ISerieRepository
     {
         public SerieRepository(MeuDbContext context) : base(context) { }
-
-    }
+		public async Task<Serie> ObterSeriePorNome(Guid instituicaoId, string serieNome)
+		{
+			return await Db.Serie
+				.AsNoTracking()
+				.FirstOrDefaultAsync(i => i.InstituicaoId == instituicaoId && i.Nome == serieNome);
+		}
+	}
 }

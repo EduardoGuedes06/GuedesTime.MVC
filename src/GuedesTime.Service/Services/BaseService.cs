@@ -1,11 +1,13 @@
-﻿using GuedesTime.Domain.Intefaces;
-using GuedesTime.Domain.Models;
-using GuedesTime.Domain.Notificacoes;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using GuedesTime.Data.Context;
-using Microsoft.EntityFrameworkCore;
+using GuedesTime.Domain.Enums;
+using GuedesTime.Domain.Intefaces;
+using GuedesTime.Domain.Models;
 using GuedesTime.Domain.Models.Utils;
+using GuedesTime.Domain.Notificacoes;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace GuedesTime.Service.Services
 {
@@ -55,12 +57,31 @@ namespace GuedesTime.Service.Services
             _pagedRepository = pagedRepository;
         }
 
-        protected virtual IQueryable<T> ApplySearch(IQueryable<T> query, string? search)
-        {
-            return query;
-        }
+		protected virtual IQueryable<T> ApplySearch(IQueryable<T> query, string? search)
+		{
+			if (string.IsNullOrWhiteSpace(search))
+				return query;
 
-        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize, bool ativo = true)
+			var parameter = Expression.Parameter(typeof(T), "e");
+			Expression? predicate = null;
+			foreach (var prop in typeof(T).GetProperties().Where(p => p.PropertyType == typeof(string)))
+			{
+				var propertyAccess = Expression.Property(parameter, prop);
+				var searchTerm = Expression.Constant(search, typeof(string));
+				var notNull = Expression.NotEqual(propertyAccess, Expression.Constant(null, typeof(string)));
+				var contains = Expression.Call(propertyAccess, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, searchTerm);
+				var condition = Expression.AndAlso(notNull, contains);
+
+				predicate = predicate == null ? condition : Expression.OrElse(predicate, condition);
+			}
+			if (predicate == null)
+				return query;
+
+			var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
+			return query.Where(lambda);
+		}
+
+		public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize, bool ativo = true)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
@@ -69,8 +90,7 @@ namespace GuedesTime.Service.Services
             return await _pagedRepository.GetPagedResultAsync(query, pageSize, page, ativo);
         }
 
-        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(
-            Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true)
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
@@ -88,7 +108,6 @@ namespace GuedesTime.Service.Services
             return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
         }
 
-
         public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
@@ -98,7 +117,11 @@ namespace GuedesTime.Service.Services
             var paged = await _pagedRepository.GetPagedResultAsync(query, pageSize, 1);
             return paged.Items;
         }
-    }
+
+		#region Utils
+		
+		#endregion
+	}
 
 
 }

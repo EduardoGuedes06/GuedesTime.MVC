@@ -89,78 +89,98 @@ namespace GuedesTime.MVC.Controllers
             return View(serieViewModel);
         }
 
-        public async Task<IActionResult> Upsert(Guid instituicaoId, Guid? id)
-        {
-            var userId = Guid.Parse(_userManager.GetUserId(User));
-
-            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
-                return NotFound();
-
-            SerieViewModel SerieViewModel;
-
-            if (id.HasValue)
-            {
-                var Serie = await _serieService.ObterPorId(id.Value);
-                if (Serie == null) return NotFound();
-
-                SerieViewModel = _mapper.Map<SerieViewModel>(Serie);
-            }
-            else
-            {
-                SerieViewModel = new SerieViewModel
-                {
-                    InstituicaoId = instituicaoId
-                };
-            }
-
-            return View(SerieViewModel);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(SerieViewModel SerieViewModel)
+        public async Task<IActionResult> Upsert(SerieViewModel serieViewModel)
         {
-            var userId = Guid.Parse(_userManager.GetUserId(User));
-            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, SerieViewModel.InstituicaoId))
-                return NotFound();
+			var referer = Request.Headers["Referer"].ToString();
+			var userId = Guid.Parse(_userManager.GetUserId(User));
+			if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, serieViewModel.InstituicaoId))
+				return NotFound();
 
-            if (!ModelState.IsValid) return View(SerieViewModel);
+			if (!ModelState.IsValid)
+			{
+				if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+				{
+					return Json(new
+					{
+						success = false,
+						errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+					});
+				}
 
-            if (SerieViewModel.Id == Guid.Empty || SerieViewModel.Id == null)
-            {
-                await _serieService.Adicionar(_mapper.Map<Serie>(SerieViewModel));
-            }
-            else
-            {
-                var SerieExistente = await _serieService.ObterPorId((Guid)SerieViewModel.Id);
-                if (SerieExistente == null) return NotFound();
+				return View(serieViewModel);
+			}
 
-                _mapper.Map(SerieViewModel, SerieExistente);
-                await _serieService.Atualizar(SerieExistente);
-            }
+			var serieComMesmoNome = await _serieService.ObterSeriePorNome(serieViewModel.InstituicaoId, serieViewModel.Nome);
 
-            return OperacaoValida()
-                ? RedirectToAction(nameof(Upsert), new { instituicaoId = SerieViewModel.InstituicaoId })
-                : View(SerieViewModel);
-        }
 
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+			if (serieComMesmoNome != null &&
+				(serieViewModel.Id == null || serieComMesmoNome.Id != serieViewModel.Id) &&
+				serieComMesmoNome.Ativo == serieViewModel.Ativo)
+			{
+				TempData["error"] = "Já existe uma serie com esse nome!";
+				return Redirect(referer);
+			}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+			if (serieViewModel.Id == null || serieViewModel.Id == Guid.Empty)
+			{
+				var novaserie = _mapper.Map<Serie>(serieViewModel);
+				await _serieService.Adicionar(novaserie);
+				TempData["success"] = "serie cadastrada com sucesso!";
+			}
+			else
+			{
+				var serieExistente = await _serieService.ObterPorId(serieViewModel.Id);
+				if (serieExistente == null)
+					return NotFound();
+
+				_mapper.Map(serieViewModel, serieExistente);
+				await _serieService.Atualizar(serieExistente);
+				TempData["success"] = "Dados da serie alterados com sucesso!";
+			}
+
+			if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+			{
+				return Json(new { success = true });
+			}
+
+			if (!string.IsNullOrEmpty(referer))
+			{
+				return Redirect(referer);
+			}
+
+			return RedirectToAction("Detalhes", "Instituicao", new { id = serieViewModel.InstituicaoId });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Delete(Guid instituicaoId, Guid id)
+		{
+			var userId = Guid.Parse(_userManager.GetUserId(User));
+			if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
+				return NotFound();
+
+			var client = await _serieService.ObterPorId(id);
+			if (client == null)
+			{
+				TempData["warning"] = "Serie não encontrada!!";
+				return NotFound();
+			}
+
+			var serieExistente = await _serieService.ObterPorId((Guid)id);
+			if (serieExistente == null) return NotFound();
+
+			if (serieExistente.Ativo == true)
+			{ serieExistente.Ativo = false; await _serieService.Atualizar(serieExistente); TempData["success"] = "Serie desativada com sucesso!!"; }
+			else { await _serieService.Remover(id); TempData["success"] = "Serie Deletada do sistema com sucesso!!"; }
+
+			var referer = Request.Headers["Referer"].ToString();
+			if (!string.IsNullOrEmpty(referer))
+			{
+				return Redirect(referer);
+			}
+			return Ok();
+		}
+	}
 }

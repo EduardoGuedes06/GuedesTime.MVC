@@ -149,6 +149,30 @@ function ValidarNome() {
     });
 }
 
+function ValidarNomesMultiplos() {
+    $(document).ready(function () {
+        $("#Nomes").on("input", function () {
+            var nomesField = $(this);
+            var nomesValue = nomesField.val();
+
+            var regex = /[^A-Za-zÀ-ÖØ-öø-ÿ. ]/g;
+
+            var nomes = nomesValue.split(',').map(function (nome) {
+                nome = nome.trim().replace(regex, "");
+
+                return nome
+                    .toLowerCase()
+                    .replace(/(^|[\s.])([a-zà-öø-ÿ])/g, function (_, sep, char) {
+                        return sep + char.toUpperCase();
+                    });
+            });
+
+            nomesField.val(nomes.join(", "));
+        });
+    });
+}
+
+
 function ValidarCnpj() {
     $(document).ready(function () {
         $("#Cnpj").mask("00.000.000/0000-00");

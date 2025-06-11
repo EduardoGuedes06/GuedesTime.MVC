@@ -41,8 +41,13 @@ namespace GuedesTime.Data.Repository.Utils
             DbSet.Add(entity);
             await SaveChanges();
         }
+		public virtual async Task AdicionarLista(IEnumerable<TEntity> entities)
+		{
+			DbSet.AddRange(entities);
+			await SaveChanges();
+		}
 
-        public virtual async Task Atualizar(TEntity entity)
+		public virtual async Task Atualizar(TEntity entity)
         {
             DbSet.Update(entity);
             await SaveChanges();

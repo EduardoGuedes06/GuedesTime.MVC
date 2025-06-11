@@ -18,6 +18,13 @@ O projeto busca solucionar a dificuldade das escolas em gerenciar e distribuir a
 - Segurança no armazenamento e manipulação dos dados.
 - Performance otimizada para grandes volumes de dados.
 
+## Inspirações
+|------------------|----------|
+| Ideias           |Behance   |
+| Paleta de cores  |Coolors.co|
+| Ilustrações      |Undraw    |
+| Teste com Usuario|Maze      |
+
 ## Paleta de Cores
 A identidade visual do sistema seguirá uma paleta de cores frias, priorizando modernidade e inovação.
 

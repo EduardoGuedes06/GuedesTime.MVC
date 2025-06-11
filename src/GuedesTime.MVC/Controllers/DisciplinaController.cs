@@ -92,69 +92,51 @@ namespace GuedesTime.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(DisciplinaViewModel disciplinaViewModel)
-        {
-            var referer = Request.Headers["Referer"].ToString();
-            var userId = Guid.Parse(_userManager.GetUserId(User));
+		public async Task<IActionResult> Upsert(DisciplinaViewModel disciplinaViewModel)
+		{
+			var referer = Request.Headers["Referer"].ToString();
+			var userId = Guid.Parse(_userManager.GetUserId(User));
 
-            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, disciplinaViewModel.InstituicaoId))
-                return NotFound();
+			if (!await UsuarioTemAcessoInstituicao(userId, disciplinaViewModel.InstituicaoId))
+				return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
-                    });
-                }
+			if (!ModelState.IsValid)
+				return TratarModelStateInvalido(referer);
 
-                return View(disciplinaViewModel);
-            }
+			if (disciplinaViewModel.Id == null || disciplinaViewModel.Id == Guid.Empty)
+			{
+				if (await TentarAdicionarDisciplinasMultiplas(disciplinaViewModel, referer))
+					return Redirect(referer);
+				if (await ExisteDisciplinaComMesmoNome(disciplinaViewModel))
+				{
+					TempData["error"] = "Essa Disciplina já existe!";
+					return Redirect(referer);
+				}
 
-            var disciplinaComMesmoNome = await _disciplinaService.ObterDisciplinaPorNome(disciplinaViewModel.InstituicaoId, disciplinaViewModel.Nome);
+				await CriarNovaDisciplina(disciplinaViewModel);
+			}
+			else
+			{
+				if (await ExisteDisciplinaComMesmoNome(disciplinaViewModel))
+				{
+					TempData["error"] = "Essa Disciplina já existe!";
+					return Redirect(referer);
+				}
 
-            if (disciplinaComMesmoNome != null &&
-                (disciplinaViewModel.Id == null || disciplinaComMesmoNome.Id != disciplinaViewModel.Id) &&
-                disciplinaComMesmoNome.Ativo == disciplinaViewModel.Ativo)
-            {
-                TempData["error"] = "Já existe uma disciplina com esse nome!";
-                return Redirect(referer);
-            }
+				await AtualizarDisciplinaExistente(disciplinaViewModel);
+			}
 
-            if (disciplinaViewModel.Id == null || disciplinaViewModel.Id == Guid.Empty)
-            {
-                var novaDisciplina = _mapper.Map<Disciplina>(disciplinaViewModel);
-                await _disciplinaService.Adicionar(novaDisciplina);
-                TempData["success"] = "Disciplina cadastrada com sucesso!";
-            }
-            else
-            {
-                var disciplinaExistente = await _disciplinaService.ObterPorId(disciplinaViewModel.Id.Value);
-                if (disciplinaExistente == null)
-                    return NotFound();
+			if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+				return Json(new { success = true });
 
-                _mapper.Map(disciplinaViewModel, disciplinaExistente);
-                await _disciplinaService.Atualizar(disciplinaExistente);
-                TempData["success"] = "Dados da disciplina alterados com sucesso!";
-            }
+			if (!string.IsNullOrEmpty(referer))
+				return Redirect(referer);
 
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                return Json(new { success = true });
-            }
+			return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
+		}
 
-            if (!string.IsNullOrEmpty(referer))
-            {
-                return Redirect(referer);
-            }
 
-            return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
-        }
-
-        [HttpPost]
+		[HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid instituicaoId, Guid id)
         {
@@ -183,5 +165,93 @@ namespace GuedesTime.MVC.Controllers
             }
             return Ok();
         }
-    }
+
+		#region Funções de Apoio
+
+		private async Task<bool> UsuarioTemAcessoInstituicao(Guid userId, Guid instituicaoId)
+		{
+			return await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId);
+		}
+
+		private async Task<bool> TentarAdicionarDisciplinasMultiplas(DisciplinaViewModel vm, string referer)
+		{
+			var nomesMultiplos = Request.Form["Nomes"].ToString();
+
+			if (!string.IsNullOrWhiteSpace(vm.Nome) || string.IsNullOrWhiteSpace(nomesMultiplos))
+				return false;
+
+			if (!ValidarNomesMultiplos(nomesMultiplos))
+				return false;
+
+			var listaNomes = nomesMultiplos
+				.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+				.ToList();
+
+			var (existe, nomesExistentes) = await _disciplinaService.VerificarDisciplinasExistentesPorNomes(vm.InstituicaoId, listaNomes);
+
+			if (existe)
+			{
+				TempData["error"] = $"As seguintes disciplinas já existem: {string.Join(", ", nomesExistentes)}";
+				return true;
+			}
+
+			try
+			{
+				await _disciplinaService.AdicionarDisciplinas(vm.InstituicaoId, listaNomes);
+				TempData["success"] = "Disciplinas adicionadas com sucesso!";
+				return true;
+			}
+			catch (Exception ex)
+			{
+				TempData["error"] = $"Erro ao adicionar disciplinas: {ex.Message}";
+				return true;
+			}
+		}
+
+		private IActionResult TratarModelStateInvalido(string referer)
+		{
+			if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+			{
+				return Json(new
+				{
+					success = false,
+					errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+				});
+			}
+
+			TempData["error"] = "Estado da página inválido! Recarregue a página!";
+			if (!string.IsNullOrEmpty(referer))
+				return Redirect(referer);
+
+			return Ok();
+		}
+
+		private async Task<bool> ExisteDisciplinaComMesmoNome(DisciplinaViewModel disciplinaViewModel)
+		{
+			var disciplinaComMesmoNome = await _disciplinaService.ObterDisciplinaPorNome(disciplinaViewModel.InstituicaoId, disciplinaViewModel.Nome);
+			return disciplinaComMesmoNome != null &&
+				   (disciplinaViewModel.Id == null || disciplinaComMesmoNome.Id != disciplinaViewModel.Id) &&
+				   disciplinaComMesmoNome.Ativo == disciplinaViewModel.Ativo;
+		}
+
+		private async Task CriarNovaDisciplina(DisciplinaViewModel vm)
+		{
+			var novaDisciplina = _mapper.Map<Disciplina>(vm);
+			await _disciplinaService.Adicionar(novaDisciplina);
+			TempData["success"] = "Disciplina cadastrada com sucesso!";
+		}
+
+		private async Task AtualizarDisciplinaExistente(DisciplinaViewModel vm)
+		{
+			var disciplinaExistente = await _disciplinaService.ObterPorId(vm.Id.Value);
+			if (disciplinaExistente == null)
+				throw new Exception("Disciplina não encontrada.");
+
+			_mapper.Map(vm, disciplinaExistente);
+			await _disciplinaService.Atualizar(disciplinaExistente);
+			TempData["success"] = "Dados da disciplina alterados com sucesso!";
+		}
+
+		#endregion
+	}
 }

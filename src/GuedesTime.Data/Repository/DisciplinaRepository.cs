@@ -19,6 +19,18 @@ namespace GuedesTime.Data.Repository
                 .AsNoTracking()
                 .FirstOrDefaultAsync(i => i.InstituicaoId == instituicaoId && i.Nome == disciplinaNome);
         }
+		public async Task<(bool Existe, List<string> NomesExistentes)> VerificarDisciplinasExistentesPorNomes(Guid instituicaoId, List<string> nomes)
+		{
+			var nomesExistentes = await Db.Disciplina
+				.AsNoTracking()
+				.Where(d => d.InstituicaoId == instituicaoId && nomes.Contains(d.Nome))
+				.Select(d => d.Nome)
+				.ToListAsync();
 
-    }
+			bool existe = nomesExistentes.Any();
+
+			return (existe, nomesExistentes);
+		}
+
+	}
 }
