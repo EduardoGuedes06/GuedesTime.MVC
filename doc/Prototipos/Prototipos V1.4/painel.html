@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Time - Painel de Controle</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <h1 class="logo">Health Time</h1>
+            <div class="sidebar-user-profile">
+                <div class="sidebar-user-avatar" id="sidebar-user-avatar">
+                </div>
+                <div class="user-details">
+                    <span class="user-name" id="sidebar-user-name"></span>
+                    <span class="user-role" id="sidebar-user-role"></span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-section="dashboard" class="active"><i class="fas fa-home"></i>Painel</a></li>
+                    <li><a href="#" data-section="teachers"><i class="fas fa-chalkboard-teacher"></i>Professores</a>
+                    </li>
+                    <li><a href="#" data-section="subjects"><i class="fas fa-book-open"></i>Disciplinas</a></li>
+                    <li><a href="#" data-section="series"><i class="fas fa-graduation-cap"></i>Séries</a></li>
+                    <li><a href="#" data-section="classes"><i class="fas fa-users"></i>Turmas</a></li>
+                    <li><a href="#" data-section="classrooms"><i class="fas fa-building"></i>Salas de Aula</a></li>
+                    <li><a href="#" data-section="time-slots"><i class="fas fa-clock"></i>Horários</a></li>
+                    <li><a href="#" data-section="holidays"><i class="fas fa-calendar-alt"></i>Feriados</a></li>
+                    <li><a href="#" data-section="lesson-plans"><i class="fas fa-calendar-check"></i>Planos de Aula</a>
+                    </li>
+                    <li><a href="#" data-section="teacher-review"><i class="fas fa-user-check"></i>Revisão do
+                            Professor</a></li>
+                    <li><a href="#" data-section="configuracoes"><i class="fas fa-cog"></i>Configurações</a></li>
+                </ul>
+            </nav>
+            <a href="login.html" class="btn danger-btn" style="width: 100%; margin-top: 24px;"><i
+                    class="fas fa-sign-out-alt"></i>Sair</a>
+        </aside>
+
+        <div class="main-content">
+            <header class="mobile-header">
+                <button id="sidebar-toggle" class="sidebar-toggle-btn"><i class="fas fa-bars"></i></button>
+                <h2 class="mobile-header-title">Health Time</h2>
+            </header>
+
+            <section id="profile" class="content-section hidden">
+                <h2 class="section-title">Perfil do Usuário</h2>
+                <div class="profile-grid">
+                    <div class="card">
+                        <h3 class="card-title">Dados Pessoais</h3>
+
+                        <div class="profile-picture-area">
+                            <div class="profile-avatar-control">
+
+                                <div class="profile-avatar-wrapper" id="profile-picture-container">
+                                    <img src="/imagens/userPlaceholder.png" alt="Foto do Perfil"
+                                        id="profile-picture-img">
+                                </div>
+
+                                <input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+
+                                <div class="profile-avatar-actions">
+                                    <button class="avatar-action-btn" id="btn-view-photo" title="Visualizar Foto">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <label for="profile-picture-input" class="avatar-action-btn" title="Editar Foto">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-details">
+                            <div class="detail-item">
+                                <span>Nome Completo</span>
+                                <strong id="profile-user-name"></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Endereço de E-mail</span>
+                                <strong id="profile-user-email"></strong>
+                            </div>
+                            <div class="detail-item">
+                                <span>Tipo da Conta</span>
+                                <span id="profile-user-role-badge"></span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Membro Desde</span>
+                                <strong id="profile-member-since"></strong>
+                            </div>
+                        </div>
+                        <div class="modal-actions" style="border-top: none; padding-top: 0; margin-top: 16px;">
+                            <button class="btn secondary-btn">Editar Dados</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">Alterar Senha</h3>
+                        <form id="form-change-password">
+                            <div class="form-group">
+                                <label for="current-password">Senha Atual</label>
+                                <input type="password" id="current-password" value="123456" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password">Nova Senha</label>
+                                <input type="password" id="new-password">
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password">Confirmar Nova Senha</label>
+                                <input type="password" id="confirm-password">
+                            </div>
+                            <div class="modal-actions">
+                                <button type="submit" class="btn primary-btn">Salvar Nova Senha</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 24px;">
+                    <h3 class="card-title">Instituições Relacionadas</h3>
+                    <div id="profile-institutions-list" class="entity-list-grid" style="grid-template-columns: 1fr;">
+                    </div>
+                </div>
+            </section>
+
+            <section id="dashboard" class="content-section active">
+                <h2 class="section-title">Painel</h2>
+                <div class="dashboard-grid">
+                    <div class="card status-card">
+                        <h3 class="card-title">Status do Planejamento</h3>
+                        <div class="status-item">
+                            <span class="status-indicator yellow"></span>
+                            <span>Pendente: <span class="font-semibold" id="status-pending">2</span></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator green"></span>
+                            <span>Aprovado: <span class="font-semibold" id="status-approved">5</span></span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator red"></span>
+                            <span>Conflito: <span class="font-semibold" id="status-conflicted">1</span></span>
+                        </div>
+                    </div>
+
+                    <div class="card progress-card">
+                        <h3 class="card-title">Progresso da Geração de Horários</h3>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progress-bar-fill" style="width: 75%;"></div>
+                        </div>
+                        <p class="progress-text"><span id="progress-percent">75</span>% Concluído</p>
+                    </div>
+
+                    <div class="card quick-access-card">
+                        <h3 class="card-title">Acesso Rápido</h3>
+                        <div class="quick-access-grid">
+                            <button class="quick-access-btn" data-section="teachers">Professores (<span
+                                    id="count-teachers">0</span>)</button>
+                            <button class="quick-access-btn" data-section="classes">Turmas (<span
+                                    id="count-classes">0</span>)</button>
+                            <button class="quick-access-btn" data-section="subjects">Disciplinas (<span
+                                    id="count-subjects">0</span>)</button>
+                            <button class="quick-access-btn" data-section="classrooms">Salas de Aula (<span
+                                    id="count-classrooms">0</span>)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card lesson-plans-calendar-card">
+                    <h3 class="card-title">Últimos Planos de Aula</h3>
+                    <div id="latest-lesson-plans-calendar" class="calendar-placeholder">
+                        Visualização de Calendário/Linha do Tempo em breve!
+                    </div>
+                </div>
+            </section>
+
+            <section id="teachers" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Professores</h2>
+                    <button id="add-teacher-btn" class="btn primary-btn"><i class="fas fa-plus"></i>Adicionar
+                        Professor</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="teacher-search" placeholder="Buscar professores..." class="search-input">
+                    <select id="teacher-filter-subject" class="filter-select">
+                        <option value="">Filtrar por Disciplina</option>
+                    </select>
+                </div>
+                <div id="teachers-list" class="entity-list-grid">
+                </div>
+                <div id="teachers-pagination" class="pagination-controls"></div>
+            </section>
+
+            <section id="subjects" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Disciplinas</h2>
+                    <button id="add-subject-btn" class="btn primary-btn"><i class="fas fa-plus"></i>Adicionar
+                        Disciplina</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="subject-search" placeholder="Buscar disciplinas..." class="search-input">
+                    <select id="subject-filter-teacher" class="filter-select">
+                        <option value="">Filtrar por Professor</option>
+                    </select>
+                    <select id="subject-filter-series" class="filter-select">
+                        <option value="">Filtrar por Série</option>
+                    </select>
+                </div>
+                <div id="subjects-list" class="entity-list-grid">
+                </div>
+                <div id="subjects-pagination" class="pagination-controls"></div>
+            </section>
+
+            <section id="series" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Séries</h2>
+                    <button id="add-series-btn" class="btn primary-btn"><i class="fas fa-plus"></i>Adicionar
+                        Série</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="series-search" placeholder="Buscar séries..." class="search-input">
+                </div>
+                <div id="series-list" class="entity-list-grid">
+                </div>
+                <div id="series-pagination" class="pagination-controls"></div>
+            </section>
+
+            <section id="classes" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Turmas</h2>
+                    <button id="add-class-btn" class="btn primary-btn"><i class="fas fa-plus"></i>Adicionar
+                        Turma</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="class-search" placeholder="Buscar turmas..." class="search-input">
+                    <select id="class-filter-series" class="filter-select">
+                        <option value="">Filtrar por Série</option>
+                    </select>
+                    <select id="class-filter-shift" class="filter-select">
+                        <option value="">Filtrar por Turno</option>
+                        <option value="Morning">Manhã</option>
+                        <option value="Afternoon">Tarde</option>
+                        <option value="Evening">Noite</option>
+                    </select>
+                </div>
+                <div id="classes-list" class="entity-list-grid">
+                </div>
+                <div id="classes-pagination" class="pagination-controls"></div>
+            </section>
+
+            <section id="classrooms" class="content-section hidden">
+                <div class="section-header">
+                    <h2 class="section-title">Salas de Aula</h2>
+                    <button id="add-classroom-btn" class="btn primary-btn"><i class="fas fa-plus"></i>Adicionar Sala de
+                        Aula</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" id="classroom-search" placeholder="Buscar salas de aula..." class="search-input">
+                </div>
+                <div id="classrooms-list" class="entity-list-grid">
+                </div>
+                <div id="classrooms-pagination" class="pagination-controls"></div>
+            </section>
+
+            <section id="time-slots" class="content-section hidden">
+                <h2 class="section-title">Horários</h2>
+                <div class="card">
+                    <button id="add-time-slot-btn" class="btn primary-btn mb-4"><i class="fas fa-plus"></i>Adicionar
+                        Horário</button>
+                    <div id="time-slots-table" class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Dia</th>
+                                    <th>Hora de Início</th>
+                                    <th>Hora de Fim</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="time-slots-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="holidays" class="content-section hidden">
+                <h2 class="section-title">Feriados</h2>
+                <div class="card">
+                    <button id="add-holiday-btn" class="btn primary-btn mb-4"><i class="fas fa-plus"></i>Adicionar
+                        Feriado</button>
+                    <div id="holiday-calendar" class="calendar-placeholder mb-6">
+                        Calendário Interativo em breve!
+                    </div>
+                    <div id="holidays-list" class="list-items-container">
+                    </div>
+                </div>
+            </section>
+
+            <section id="lesson-plans" class="content-section hidden">
+                <h2 class="section-title">Planos de Aula</h2>
+                <div class="card">
+                    <div class="toolbar">
+                        <h3 class="card-title">Histórico de Versões</h3>
+                        <div class="toolbar-actions">
+                            <button class="btn success-btn"><i class="fas fa-magic"></i>Gerar Novo Plano</button>
+                            <button class="btn secondary-btn"><i class="fas fa-copy"></i>Usar Anterior como
+                                Modelo</button>
+                            <button class="btn primary-btn"><i class="fas fa-file-pdf"></i>Exportar PDF</button>
+                            <button class="btn primary-btn"><i class="fas fa-envelope"></i>Enviar aos
+                                Professores</button>
+                        </div>
+                    </div>
+                    <div id="lesson-plan-versions-list" class="list-items-container mb-6">
+                    </div>
+                    <h3 class="card-title">Grade de Horários Semanal (Plano Atual)</h3>
+                    <div id="weekly-schedule-grid" class="calendar-placeholder">
+                        Grade de Horários Detalhada em breve!
+                    </div>
+                </div>
+            </section>
+
+            <section id="teacher-review" class="content-section hidden">
+                <h2 class="section-title">Revisão de Horários do Professor</h2>
+                <div class="card">
+                    <h3 class="card-title">Revisar Horário para [Nome do Professor]</h3>
+                    <div id="teacher-schedule-view" class="calendar-placeholder mb-6">
+                        Visualização (Apenas Leitura) do Horário do Professor
+                    </div>
+                    <div class="review-actions">
+                        <button id="accept-schedule-btn" class="btn success-btn"><i
+                                class="fas fa-check-circle"></i>Aceitar Horário</button>
+                        <button id="report-conflict-btn" class="btn danger-btn"><i
+                                class="fas fa-exclamation-triangle"></i>Relatar Conflito</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="configuracoes" class="content-section hidden">
+                <h2 class="section-title">Configurações do Sistema</h2>
+                <p class="section-subtitle" style="margin-top: -16px; margin-bottom: 24px;">Selecione uma categoria para
+                    gerenciar as configurações da instituição.</p>
+                <div class="settings-grid">
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Horários Padrão</h3>
+                            <p>Defina o início e o fim do expediente padrão da instituição.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-horarios">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Notificações</h3>
+                            <p>Controle o envio de e-mails e edite os modelos de mensagem.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-notificacoes">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-palette"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Aparência</h3>
+                            <p>Personalize a cor principal e outros aspectos visuais do sistema.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-aparencia">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-users-cog"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Funções e Permissões</h3>
+                            <p>Gerencie os perfis de acesso de administradores e professores.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-funcoes">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Integrações</h3>
+                            <p>Conecte o Health Time a outros sistemas e plataformas.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-integracoes">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-database"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Backup e Exportação</h3>
+                            <p>Realize cópias de segurança e exporte dados da instituição.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-backup">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-globe-americas"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Formato de Datas e Região</h3>
+                            <p>Ajuste o fuso horário, idioma e formatos de data e hora.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-regiao">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Segurança</h3>
+                            <p>Defina políticas de senha e tempo de sessão para os usuários.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-seguranca">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-toggle-on"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Módulos do Sistema</h3>
+                            <p>Ative ou desative funcionalidades específicas do painel.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-modulos">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-code"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">API e Webhooks</h3>
+                            <p>Acesse chaves de API para integrações personalizadas.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-api">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-file-contract"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Termos e Privacidade</h3>
+                            <p>Edite os links para os termos de uso e política de privacidade.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-termos">Configurar</button>
+                    </div>
+                    <div class="card setting-card">
+                        <div class="setting-card-icon"><i class="fas fa-cogs"></i></div>
+                        <div class="setting-card-content">
+                            <h3 class="card-title">Gerais</h3>
+                            <p>Defina regras do sistema, como o máximo de versões de planos.</p>
+                        </div>
+                        <button class="btn secondary-btn" id="btn-config-gerais">Configurar</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="modal-image-viewer" class="modal-overlay image-viewer">
+        <div class="image-viewer-content">
+            <img src="" id="image-viewer-src" alt="Pré-visualização da Imagem">
+        </div>
+        <div class="image-viewer-actions">
+            <button id="btn-trigger-upload" class="btn primary-btn"><i class="fas fa-camera"></i> Alterar Foto</button>
+            <button id="btn-remove-photo" class="btn danger-btn"><i class="fas fa-trash"></i> Remover Foto</button>
+            <button class="btn secondary-btn btn-modal-cancel"><i class="fas fa-times"></i> Fechar</button>
+        </div>
+    </div>
+
+    <div id="modal-crop-image" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <h3 class="modal-title">Ajustar Imagem do Perfil</h3>
+            <div class="cropper-container">
+                <img id="image-to-crop" src="">
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn secondary-btn btn-modal-cancel">Cancelar</button>
+                <button type="button" id="crop-and-save-btn" class="btn primary-btn">Confirmar e Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-horarios" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">Configurar Horários Padrão</h3>
+            <form id="form-horarios">
+                <div class="form-grid-2">
+                    <div class="form-group"><label for="config-start-time">Início do Expediente:</label><input
+                            type="time" id="config-start-time"></div>
+                    <div class="form-group"><label for="config-end-time">Fim do Expediente:</label><input type="time"
+                            id="config-end-time"></div>
+                </div>
+                <div class="modal-actions"><button type="button"
+                        class="btn secondary-btn btn-modal-cancel">Cancelar</button><button type="submit"
+                        class="btn primary-btn">Salvar</button></div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-notificacoes" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title">Configurar Notificações</h3>
+            <form id="form-notificacoes">
+                <div class="form-group"><label for="config-email-template">Template de E-mail:</label><textarea
+                        id="config-email-template" rows="4"></textarea></div>
+                <div class="toggle-switch-group">
+                    <label for="inputEnableEmail">Habilitar envio de e-mails</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="inputEnableEmail" checked>
+                        <label class="toggle-slider" for="inputEnableEmail"></label>
+                    </div>
+                </div>
+                <div class="modal-actions"><button type="button"
+                        class="btn secondary-btn btn-modal-cancel">Cancelar</button><button type="submit"
+                        class="btn primary-btn">Salvar</button></div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-aparencia" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <h3 class="modal-title">Configurar Aparência</h3>
+
+            <div class="modal-tabs">
+                <a href="#" class="modal-tab-link active" data-tab="temas">Temas Pré-definidos</a>
+                <a href="#" class="modal-tab-link" data-tab="cores">Cores Personalizadas</a>
+            </div>
+
+            <form id="form-aparencia">
+                <div id="tab-temas" class="modal-tab-content active">
+                    <p class="section-subtitle" style="margin-bottom: 16px;">Selecione um tema para aplicar
+                        instantaneamente em toda a plataforma.</p>
+                    <div class="theme-selector-grid">
+                        <div class="theme-card" data-theme-name="default">
+                            <div class="theme-preview">
+                                <span style="background-color: #1E3A8A;"></span>
+                                <span style="background-color: #FFFFFF;"></span>
+                                <span style="background-color: #A78BFA;"></span>
+                                <span style="background-color: #E5E7EB;"></span>
+                            </div>
+                            <h4>Health Time (Padrão)</h4>
+                        </div>
+
+                        <div class="theme-card" data-theme-name="dark">
+                            <div class="theme-preview">
+                                <span style="background-color: #1E3A8A;"></span>
+                                <span style="background-color: #A78BFA;"></span>
+                                <span style="background-color: #15161a;"></span>
+                                <span style="background-color: #e9c6ff;"></span>
+                            </div>
+                            <h4>Noturno (Deep Dive)</h4>
+                        </div>
+
+                        <div class="theme-card" data-theme-name="soft">
+                            <div class="theme-preview">
+                                <span style="background-color: #4A919E;"></span>
+                                <span style="background-color: #F8F9FA;"></span>
+                                <span style="background-color: #BCA7E8;"></span>
+                                <span style="background-color: #DEE2E6;"></span>
+                            </div>
+                            <h4>Suave (Soft Mint)</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-cores" class="modal-tab-content">
+                    <p class="section-subtitle" style="margin-bottom: 16px;">Ajuste fino das cores do sistema. As
+                        alterações são aplicadas em tempo real.</p>
+                    <div class="color-picker-grid">
+                        <div class="form-group">
+                            <label for="color-petroleum-blue">Principal</label>
+                            <input type="color" id="color-petroleum-blue" data-variable="--petroleum-blue">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-lilac">Interação</label>
+                            <input type="color" id="color-lilac" data-variable="--lilac">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-dark-text">PlaceHolder 1</label>
+                            <input type="color" id="color-dark-text" data-variable="--dark-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-light-text">PlaceHolder 2</label>
+                            <input type="color" id="color-light-text" data-variable="--light-text">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-white">Fundo dos Cards</label>
+                            <input type="color" id="color-white" data-variable="--white">
+                        </div>
+                        <div class="form-group">
+                            <label for="color-light-gray">Fundo Geral</label>
+                            <input type="color" id="color-light-gray" data-variable="--light-gray">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary-btn btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Salvar Aparência</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-gerais" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <h3 class="modal-title">Configurações Gerais</h3>
+            <form id="form-gerais">
+                <div class="form-group">
+                    <label for="config-max-versions">Máximo de Versões do Planejamento:</label>
+                    <input type="number" id="config-max-versions" min="1">
+                    <small>Define quantos históricos de planos de aula serão mantidos.</small>
+                </div>
+
+                <hr style="margin: 32px 0;">
+
+                <h4 class="card-title" style="margin-bottom: 0;">Outras Configurações</h4>
+                <p class="section-subtitle" style="margin-top: 16px; margin-bottom: 24px;">Ative ou desative
+                    funcionalidades da plataforma.</p>
+
+
+                <div class="settings-boolean-grid">
+                    <div class="toggle-switch-group">
+                        <label for="config-allow-teacher-availability">Permitir que professores definam sua
+                            disponibilidade</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-allow-teacher-availability">
+                            <label class="toggle-slider" for="config-allow-teacher-availability"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-auto-resolve-conflicts">Habilitar resolução automática de conflitos</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-auto-resolve-conflicts" checked>
+                            <label class="toggle-slider" for="config-auto-resolve-conflicts"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-import-holidays">Importar feriados nacionais automaticamente</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-import-holidays" checked>
+                            <label class="toggle-slider" for="config-import-holidays"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-enable-substitutions">Ativar modo de substituição de professores</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-enable-substitutions">
+                            <label class="toggle-slider" for="config-enable-substitutions"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-enforce-capacity">Forçar verificação de capacidade da sala</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-enforce-capacity" checked>
+                            <label class="toggle-slider" for="config-enforce-capacity"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-notify-on-change">Notificar professor em qualquer alteração de
+                            horário</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-notify-on-change">
+                            <label class="toggle-slider" for="config-notify-on-change"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-enable-teacher-review">Habilitar módulo de revisão de horários</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-enable-teacher-review" checked>
+                            <label class="toggle-slider" for="config-enable-teacher-review"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-allow-weekend">Permitir agendamento nos finais de semana</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-allow-weekend">
+                            <label class="toggle-slider" for="config-allow-weekend"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-maintenance-mode">Ativar modo de manutenção</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-maintenance-mode">
+                            <label class="toggle-slider" for="config-maintenance-mode"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="config-suggest-template">Sugerir plano anterior como modelo</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="config-suggest-template" checked>
+                            <label class="toggle-slider" for="config-suggest-template"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary-btn btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-modulos" class="modal-overlay">
+        <div class="modal-content large-modal">
+            <h3 class="modal-title">Módulos do Sistema</h3>
+            <form id="form-modulos">
+                <p class="section-subtitle" style="margin-top: -16px; margin-bottom: 24px;">Ative ou desative as
+                    principais seções do painel para simplificar a interface.</p>
+
+                <div class="settings-boolean-grid">
+                    <div class="toggle-switch-group">
+                        <label for="module-teachers">Professores</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-teachers">
+                            <label class="toggle-slider" for="module-teachers"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-subjects">Disciplinas</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-subjects">
+                            <label class="toggle-slider" for="module-subjects"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-series">Séries</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-series">
+                            <label class="toggle-slider" for="module-series"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-classes">Turmas</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-classes">
+                            <label class="toggle-slider" for="module-classes"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-classrooms">Salas de Aula</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-classrooms">
+                            <label class="toggle-slider" for="module-classrooms"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-time-slots">Horários</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-time-slots">
+                            <label class="toggle-slider" for="module-time-slots"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-holidays">Feriados</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-holidays">
+                            <label class="toggle-slider" for="module-holidays"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-lesson-plans">Planos de Aula</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-lesson-plans">
+                            <label class="toggle-slider" for="module-lesson-plans"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-teacher-review">Revisão do Professor</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-teacher-review">
+                            <label class="toggle-slider" for="module-teacher-review"></label>
+                        </div>
+                    </div>
+                    <div class="toggle-switch-group">
+                        <label for="module-settings">Configurações</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="module-settings">
+                            <label class="toggle-slider" for="module-settings"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn secondary-btn btn-modal-cancel">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Salvar Módulos</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-placeholder" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="modal-title" id="placeholder-modal-title">Funcionalidade Futura</h3>
+            <p id="placeholder-modal-text">Esta funcionalidade será implementada em breve.</p>
+            <div class="modal-actions"><button type="button" class="btn secondary-btn btn-modal-cancel">Fechar</button>
+            </div>
+        </div>
+    </div>
+    <div id="teacher-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="modal-title" id="teacher-modal-title">Adicionar Novo Professor</h3>
+            <form id="teacher-form">
+                <input type="hidden" id="teacher-id">
+                <div class="form-group">
+                    <label for="teacher-full-name">Nome Completo:</label>
+                    <input type="text" id="teacher-full-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="teacher-email">E-mail:</label>
+                    <input type="email" id="teacher-email" required>
+                </div>
+                <div class="form-group">
+                    <label>Upload de Documento (Opcional)</label>
+                    <div class="file-uploader" id="teacher-doc-uploader" data-upload-type="document">
+                        <input type="file" id="teacher-document-upload" accept=".pdf,.doc,.docx">
+                        <div class="file-uploader-ui">
+                            <div class="file-icon"></div>
+                            <p class="main-text">Arraste um documento ou clique para selecionar</p>
+                            <p class="sub-text">PDF, DOC, DOCX</p>
+                            <p class="file-name" id="teacher-doc-filename"></p>
+                        </div>
+                        <a href="#" target="_blank" class="file-preview-btn" id="teacher-doc-preview"
+                            title="Visualizar Arquivo">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Disciplinas Associadas:</label>
+                    <div class="multi-select-container" id="teacher-subjects-multi-select">
+                        <div class="selected-items-container" id="teacher-selected-subjects-container">
+                        </div>
+                        <input type="text" class="multi-select-search" id="teacher-subject-search-input"
+                            placeholder="Buscar disciplinas...">
+                        <div class="available-items-list" id="teacher-available-subjects-list">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-teacher-btn" class="btn secondary-btn">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Salvar Professor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="subject-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="modal-title" id="subject-modal-title">Adicionar Nova Disciplina</h3>
+            <form id="subject-form">
+                <input type="hidden" id="subject-id">
+                <div class="form-group">
+                    <label for="subject-name">Nome da Disciplina:</label>
+                    <input type="text" id="subject-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject-code">Código da Disciplina (Opcional):</label>
+                    <input type="text" id="subject-code">
+                </div>
+                <div class="form-group">
+                    <label for="subject-workload-hours">Carga Horária:</label>
+                    <input type="number" id="subject-workload-hours" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Séries Relacionadas:</label>
+                    <div class="multi-select-container" id="subject-series-multi-select">
+                        <div class="selected-items-container" id="subject-selected-series-container"></div>
+                        <input type="text" class="multi-select-search" id="subject-series-search-input"
+                            placeholder="Buscar séries...">
+                        <div class="available-items-list" id="subject-available-series-list"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Professores Associados:</label>
+                    <div class="multi-select-container" id="subject-teachers-multi-select">
+                        <div class="selected-items-container" id="subject-selected-teachers-container"></div>
+                        <input type="text" class="multi-select-search" id="subject-teacher-search-input"
+                            placeholder="Buscar professores...">
+                        <div class="available-items-list" id="subject-available-teachers-list"></div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-subject-btn" class="btn secondary-btn">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Salvar Disciplina</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="class-modal" class="modal-overlay hidden">
+        <div class="modal-content large-modal">
+            <h3 class="modal-title" id="class-modal-title">Adicionar Nova Turma</h3>
+            <form id="class-form">
+                <input type="hidden" id="class-id">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="class-name">Nome da Turma:</label>
+                        <input type="text" id="class-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="class-year">Ano:</label>
+                        <input type="number" id="class-year" min="1900" max="2100" required>
+                    </div>
+                </div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label for="class-shift">Turno:</label>
+                        <select id="class-shift" required>
+                            <option value="">Selecione o Turno</option>
+                            <option value="Morning">Manhã</option>
+                            <option value="Afternoon">Tarde</option>
+                            <option value="Evening">Noite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="class-series">Série:</label>
+                        <select id="class-series" required>
+                            <option value="">Selecione a Série</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Disciplinas e Professores Associados:</label>
+                    <div class="table-responsive class-pairing-grid">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th class="w-half">Disciplina</th>
+                                    <th class="w-half">Professor Designado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="class-pairing-grid-body">
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="button" id="add-subject-to-class-pairing" class="btn secondary-btn mt-4"><i
+                            class="fas fa-plus"></i>Adicionar Disciplina</button>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" id="cancel-class-btn" class="btn secondary-btn">Cancelar</button>
+                    <button type="submit" class="btn primary-btn">Salvar Turma</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
