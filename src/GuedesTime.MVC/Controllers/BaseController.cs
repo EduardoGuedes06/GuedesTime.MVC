@@ -2,6 +2,7 @@
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GuedesTime.MVC.Controllers
 {
@@ -19,7 +20,23 @@ namespace GuedesTime.MVC.Controllers
             return !_notificador.TemNotificacao();
         }
 
-        internal bool ResponsePossuiErros(ResponseResult resposta)
+		public override void OnActionExecuting(ActionExecutingContext context)
+		{
+			var controllerName = context.RouteData.Values["controller"].ToString();
+			var controllersPermitidos = new[] { "Instituicao", "Home", "Account" };
+
+			if (User.Identity.IsAuthenticated && !controllersPermitidos.Contains(controllerName))
+			{
+				var instituicaoId = context.HttpContext.Session.GetString("InstituicaoId");
+				if (string.IsNullOrEmpty(instituicaoId))
+				{
+					context.Result = new RedirectToActionResult("SelecionarInstituicao", "Instituicao", null);
+				}
+			}
+			base.OnActionExecuting(context);
+		}
+
+		internal bool ResponsePossuiErros(ResponseResult resposta)
         {
             if (resposta != null && resposta.Errors.Mensagens.Any())
             {

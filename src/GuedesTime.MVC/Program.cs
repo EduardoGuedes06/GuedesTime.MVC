@@ -27,19 +27,15 @@ builder.Services.AddDbContext<MeuDbContext>(options =>
            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
 );
 
-
-//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.AddRazorPages();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMvcConfiguration();
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddSession();
 builder.Services.AddHealthChecksConfig(builder.Configuration);
 
 var app = builder.Build();
 
-// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -55,6 +51,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Health Time</title>
+    <link rel="stylesheet" href="~/styles/main.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body style="background-color: var(--light-gray);">
+    @RenderBody()
+    <partial name="_ToastNotificationPartial" />
+    <script type="module" src="~/js/selecaoInstituicao.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

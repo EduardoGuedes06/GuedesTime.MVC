@@ -1,0 +1,52 @@
+﻿@using GuedesTime.MVC.Extensions
+@model GuedesTime.MVC.ViewModels.PainelViewModel
+
+@{
+    ViewData["Title"] = "Painel de Controle";
+}
+
+<section id="dashboard" class="content-section active">
+    <h2 class="section-title">Painel</h2>
+    <div class="dashboard-grid">
+        <div class="card status-card">
+            <h3 class="card-title">Status do Planejamento</h3>
+            <div class="status-item">
+                <span class="status-indicator yellow"></span>
+                <span>Pendente: <span class="font-semibold" id="status-pending">@Model.PlanosPendentes</span></span>
+            </div>
+            <div class="status-item">
+                <span class="status-indicator green"></span>
+                <span>Aprovado: <span class="font-semibold" id="status-approved">@Model.PlanosAprovados</span></span>
+            </div>
+            <div class="status-item">
+                <span class="status-indicator red"></span>
+                <span>Conflito: <span class="font-semibold" id="status-conflicted">@Model.PlanosComConflito</span></span>
+            </div>
+        </div>
+
+        <div class="card progress-card">
+            <h3 class="card-title">Progresso da Geração de Horários</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progress-bar-fill" style="width: @Model.ProgressoPercentual%;"></div>
+            </div>
+            <p class="progress-text"><span id="progress-percent">@Model.ProgressoPercentual</span>% Concluído</p>
+        </div>
+
+        <div class="card quick-access-card">
+            <h3 class="card-title">Acesso Rápido</h3>
+            <div class="quick-access-grid">
+                <a asp-controller="Professores" asp-action="Index" class="quick-access-btn">Professores (<span id="count-teachers">@Model.TotalProfessores</span>)</a>
+                <a asp-controller="Turmas" asp-action="Index" class="quick-access-btn">Turmas (<span id="count-classes">@Model.TotalTurmas</span>)</a>
+                <a asp-controller="Disciplinas" asp-action="Index" class="quick-access-btn">Disciplinas (<span id="count-subjects">@Model.TotalDisciplinas</span>)</a>
+                <a asp-controller="Salas" asp-action="Index" class="quick-access-btn">Salas (<span id="count-classrooms">@Model.TotalSalas</span>)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card lesson-plans-calendar-card">
+        <h3 class="card-title">Últimos Planos de Aula</h3>
+        <div id="latest-lesson-plans-calendar" class="calendar-placeholder">
+            Visualização de Calendário/Linha do Tempo em breve!
+        </div>
+    </div>
+</section>

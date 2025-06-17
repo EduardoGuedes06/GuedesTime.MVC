@@ -1,0 +1,49 @@
+﻿@using GuedesTime.MVC.ViewModels.Utils
+@model IEnumerable<GuedesTime.MVC.ViewModels.InstituicaoViewModel>
+@{
+    ViewData["Title"] = "Minhas Instituições";
+    Layout = "_LayoutSimples";
+
+    var resumos = ViewBag.ResumoInstituicoes as Dictionary<Guid, DadosAgregadosInstituicaoViewModel>;
+}
+
+<div class="page-container">
+    <header class="page-header">
+        <h1 class="section-title">Minhas Instituições</h1>
+        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
+             <button type="submit" class="btn danger-btn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </form>
+    </header>
+    
+    <div class="card">
+        <h3 class="card-title">Selecione uma instituição para gerenciar</h3>
+        <div class="entity-list-grid" style="grid-template-columns: 1fr;">
+            @foreach (var instituicao in Model)
+            {
+                <a asp-action="Definir" asp-route-id="@instituicao.Id" class="institution-card">
+                    <div class="institution-info">
+                        <h3><i class="fas fa-school"></i> @instituicao.Nome</h3>
+                        
+                        @if (resumos != null && resumos.ContainsKey(instituicao.Id.Value))
+                        {
+                            var resumo = resumos[instituicao.Id.Value];
+                            <p>@resumo.TotalTurmas turmas e @resumo.TotalProfessores professores cadastrados.</p>
+                        }
+                    </div>
+                    <span class="btn secondary-btn">Gerenciar <i class="fas fa-arrow-right"></i></span>
+                </a>
+            }
+            
+        </div>
+        <hr style="margin: 32px 0;">
+        <h3 class="card-title">Ou crie uma nova</h3>
+       
+        <form asp-action="Criar" method="post">
+            @Html.AntiForgeryToken()
+            <div class="filter-bar" style="margin-bottom: 0;">
+                <input name="Nome" placeholder="Nome da Nova Instituição" class="search-input" required>
+                <button type="submit" class="btn primary-btn"><i class="fas fa-plus"></i> Criar e Gerenciar</button>
+            </div>
+        </form>
+    </div>
+</div>
