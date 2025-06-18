@@ -27,6 +27,15 @@
         });
 }
 
+export function handleAtivoToggle(checkboxVisual) {
+    const formGroup = checkboxVisual.closest('.form-group');
+    if (!formGroup) return;
+
+    const hiddenInput = formGroup.querySelector('#hidden-ativo-value');
+    if (!hiddenInput) return;
+    hiddenInput.value = checkboxVisual.checked;
+}
+
 function validarCNPJ(cnpj) {
     if (!cnpj || cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
 
@@ -109,3 +118,4 @@ function handleNumeroInput(numeroInput) {
     numeroInput.value = valor;
 }
 export { handleCepInput, handleCnpjInput, handleNomeInput, handleNumeroInput };
+

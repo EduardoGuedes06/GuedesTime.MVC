@@ -32,3 +32,8 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+    .pagination-controls button i {
+        margin: 0 4px;
+        font-size: 0.9em;
+    }

@@ -27,30 +27,6 @@ namespace GuedesTime.MVC.Controllers
 			_userManager = userManager;
 		}
 
-		//public async Task<IActionResult> SelecionarInstituicao()
-		//{
-		//	var instituicoes = new List<InstituicaoViewModel>
-		//		{
-		//			new() { Id = Guid.NewGuid(), Nome = "Escola Modelo Padrão" },
-		//			new() { Id = Guid.NewGuid(), Nome = "Colégio Avançado Integral" }
-		//		};
-
-		//	var resumos = new Dictionary<Guid, DadosAgregadosInstituicaoViewModel>();
-
-		//	foreach (var instituicao in instituicoes)
-		//	{
-
-		//		resumos[instituicao.Id.Value] = new DadosAgregadosInstituicaoViewModel
-		//		{
-		//			TotalTurmas = 12,
-		//			TotalProfessores = 45,
-		//			TotalDisciplinas = 30
-		//		};
-		//	}
-
-		//	ViewBag.ResumoInstituicoes = resumos;
-		//	return View(instituicoes);
-		//}
 		public IActionResult Definir(Guid id)
 		{
 			if (id == Guid.Empty) return NotFound();
@@ -125,6 +101,9 @@ namespace GuedesTime.MVC.Controllers
 				{
 					instituicaoViewModel.Endereco.Cep = instituicaoViewModel.Endereco.Cep.Replace("-", "");
 				}
+
+				ViewBag.EstadoInicialAtivo = instituicaoViewModel.Ativo.GetValueOrDefault(true);
+
 			}
 
 			return PartialView("_Upsert", instituicaoViewModel);
@@ -136,6 +115,9 @@ namespace GuedesTime.MVC.Controllers
 		{
 			ModelState.Remove(nameof(instituicaoViewModel.UsuarioId));
 			instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
+
+			bool? estadoDoToggleEnviado = instituicaoViewModel.Ativo;
+
 
 			if (!ModelState.IsValid)
 			{

@@ -171,4 +171,26 @@
 		background-color: var(--light-gray);
 	}
 
+.filter-group {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 16px;
+	align-items: center;
+	margin-bottom: 24px;
+}
+
+	.filter-group .search-input {
+		flex-grow: 1;
+		min-width: 250px;
+	}
+
+	.filter-group .filter-select {
+		flex-shrink: 0;
+		min-width: 150px;
+	}
+
+	.filter-group .btn {
+		flex-shrink: 0;
+	}
+
 

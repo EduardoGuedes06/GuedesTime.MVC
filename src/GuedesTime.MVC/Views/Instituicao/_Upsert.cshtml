@@ -31,6 +31,23 @@
             <span asp-validation-for="Cnpj" class="text-danger"></span>
             <span id="cnpj-error" class="text-danger"></span>
         </div>
+        @if (Model.Id != null && Model.Id != Guid.Empty)
+        {
+            <div class="form-group">
+                <div class="toggle-switch-group">
+                    <label class="control-label">Instituição Ativa</label>
+
+                    <div class="toggle-switch">
+                        <input type="checkbox"
+                               id="ativo-checkbox-visual"
+                               class="campo-ativo-toggle"
+                               data-initial-value="@ViewBag.EstadoInicialAtivo.ToString().ToLower()" />
+                        <label class="toggle-slider" for="ativo-checkbox-visual"></label>
+                    </div>
+                </div>
+                <input type="hidden" name="Ativo" id="hidden-ativo-value" />
+            </div>
+        }
         <partial name="_Endereco" />
     </div>
     <div class="modal-footer">
