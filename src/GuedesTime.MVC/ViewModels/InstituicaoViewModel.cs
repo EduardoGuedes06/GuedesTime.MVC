@@ -19,8 +19,8 @@ namespace GuedesTime.MVC.ViewModels
         public string Nome { get; set; }
 
         [DisplayName("Codigo INEP / Codigo CIE")]
-        [Required]
-        [StringLength(8, MinimumLength = 8, ErrorMessage = "O INEP deve ter 8 dígitos.")]
+		[Required(ErrorMessage = "O campo {0} é obrigatório")]
+		[StringLength(8, MinimumLength = 8, ErrorMessage = "O INEP deve ter 8 dígitos.")]
 
         public string CodigoCie { get; set; }
         [DisplayName("CNPJ")]

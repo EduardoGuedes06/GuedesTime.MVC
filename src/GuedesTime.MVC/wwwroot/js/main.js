@@ -56,9 +56,10 @@ function loadPageSpecificScripts() {
     for (const id in pageModules) {
         if (document.getElementById(id)) {
             const moduleInfo = pageModules[id];
-            console.log(`Página ${id} detectada. Carregando ${moduleInfo.path}...`);
             import(moduleInfo.path).then(module => {
-                module[moduleInfo.init]();
+                if (typeof module[moduleInfo.init] === 'function') {
+                    module[moduleInfo.init]();
+                }
             }).catch(err => console.error(`Falha ao carregar o módulo para ${id}:`, err));
         }
     }
@@ -79,4 +80,5 @@ document.addEventListener('DOMContentLoaded', () => {
         if (infoMessage) uiModule.showToast(infoMessage, 'info');
         if (warningMessage) uiModule.showToast(warningMessage, 'warning');
     });
+
 });

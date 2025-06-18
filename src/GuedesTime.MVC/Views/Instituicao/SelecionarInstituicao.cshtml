@@ -1,49 +1,102 @@
 ﻿@using GuedesTime.MVC.ViewModels.Utils
-@model IEnumerable<GuedesTime.MVC.ViewModels.InstituicaoViewModel>
+@model GuedesTime.MVC.ViewModels.PagedInstituicoesViewModel
 @{
-    ViewData["Title"] = "Minhas Instituições";
-    Layout = "_LayoutSimples";
-
-    var resumos = ViewBag.ResumoInstituicoes as Dictionary<Guid, DadosAgregadosInstituicaoViewModel>;
+	ViewData["Title"] = "Minhas Instituições";
+	Layout = "_LayoutSimples";
+	var resumos = ViewBag.ResumoInstituicoes as Dictionary<Guid, DadosAgregadosInstituicaoViewModel>;
 }
 
 <div class="page-container">
-    <header class="page-header">
-        <h1 class="section-title">Minhas Instituições</h1>
-        <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
-             <button type="submit" class="btn danger-btn"><i class="fas fa-sign-out-alt"></i> Sair</button>
-        </form>
-    </header>
-    
-    <div class="card">
-        <h3 class="card-title">Selecione uma instituição para gerenciar</h3>
-        <div class="entity-list-grid" style="grid-template-columns: 1fr;">
-            @foreach (var instituicao in Model)
-            {
-                <a asp-action="Definir" asp-route-id="@instituicao.Id" class="institution-card">
-                    <div class="institution-info">
-                        <h3><i class="fas fa-school"></i> @instituicao.Nome</h3>
-                        
-                        @if (resumos != null && resumos.ContainsKey(instituicao.Id.Value))
-                        {
-                            var resumo = resumos[instituicao.Id.Value];
-                            <p>@resumo.TotalTurmas turmas e @resumo.TotalProfessores professores cadastrados.</p>
-                        }
-                    </div>
-                    <span class="btn secondary-btn">Gerenciar <i class="fas fa-arrow-right"></i></span>
-                </a>
-            }
-            
-        </div>
-        <hr style="margin: 32px 0;">
-        <h3 class="card-title">Ou crie uma nova</h3>
-       
-        <form asp-action="Criar" method="post">
-            @Html.AntiForgeryToken()
-            <div class="filter-bar" style="margin-bottom: 0;">
-                <input name="Nome" placeholder="Nome da Nova Instituição" class="search-input" required>
-                <button type="submit" class="btn primary-btn"><i class="fas fa-plus"></i> Criar e Gerenciar</button>
-            </div>
-        </form>
-    </div>
+	<header class="page-header">
+		<h1 class="section-title">Minhas Instituições</h1>
+		<form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home")" method="post">
+			<button type="submit" class="btn danger-btn"><i class="fas fa-sign-out-alt"></i> Sair</button>
+		</form>
+	</header>
+	@{
+		var resumoInstituicoes = ViewBag.ResumoInstituicoes as Dictionary<Guid, DadosAgregadosInstituicaoViewModel>;
+	}
+	<div class="card">
+		<h3 class="card-title">Selecione uma instituição para gerenciar</h3>
+		<div class="pagination-container">
+
+			<nav aria-label="Paginação das instituições">
+				<form asp-action="SelecionarInstituicao" method="get" style="display: flex; gap: 10px; margin: 15px 0;">
+					<input type="text" name="search" value="@Model.Search" placeholder="Buscar por nome..." style="flex-grow: 1; padding: 5px;" />
+					<button type="submit" class="btn primary-btn">Buscar</button>
+				</form>
+				<ul style="list-style: none; display: flex; gap: 10px; padding: 0; justify-content: center; margin-top: 20px;">
+
+					@if (Model.Page > 1)
+					{
+						<li>
+							<a asp-action="SelecionarInstituicao"
+							   asp-route-page="@(Model.Page - 1)"
+							   asp-route-pageSize="@Model.PageSize"
+							   asp-route-search="@Model.Search">Anterior</a>
+						</li>
+					}
+
+					@for (var i = 1; i <= Model.TotalPages; i++)
+					{
+						<li style="@(i == Model.Page ? "font-weight: bold;" : "")">
+							@if (i == Model.Page)
+							{
+								<span>@i</span>
+							}
+							else
+							{
+								<a asp-action="SelecionarInstituicao"
+								   asp-route-page="@i"
+								   asp-route-pageSize="@Model.PageSize"
+								   asp-route-search="@Model.Search">@i</a>
+							}
+						</li>
+					}
+
+					@if (Model.Page < Model.TotalPages)
+					{
+						<li>
+							<a asp-action="SelecionarInstituicao"
+							   asp-route-page="@(Model.Page + 1)"
+							   asp-route-pageSize="@Model.PageSize"
+							   asp-route-search="@Model.Search">Próxima</a>
+						</li>
+					}
+				</ul>
+			</nav>
+
+		</div>
+		<div class="entity-list-grid" style="grid-template-columns: 1fr;">
+			@foreach (var instituicao in Model.Instituicoes)
+			{
+				var id = instituicao.Id ?? Guid.Empty;
+				var resumo = new DadosAgregadosInstituicaoViewModel();
+				resumoInstituicoes?.TryGetValue(id, out resumo);
+				<a asp-action="Definir" asp-route-id="@instituicao.Id" class="institution-card">
+					<div class="institution-info">
+						<h3><i class="fas fa-school"></i> @instituicao.Nome</h3>
+
+						@if (resumoInstituicoes != null && instituicao.Id.HasValue && resumos.ContainsKey(instituicao.Id.Value))
+						{
+							var resumo = resumos[instituicao.Id.Value];
+
+							<p>Total de @resumo.TotalDisciplinas Diciplinas ativas, @resumo.TotalTurmas turmas e @resumo.TotalProfessores professores cadastrados.</p>
+						}
+					</div>
+					<span class="btn secondary-btn">Gerenciar <i class="fas fa-arrow-right"></i></span>
+				</a>
+			}
+		</div>
+		<hr style="margin: 32px 0;">
+		<h3 class="card-title">Ou crie uma nova</h3>
+
+		<div class="filter-bar" style="margin-bottom: 0;">
+			<button type="button" class="btn primary-btn" style="width: 100%;"
+					data-modal-url="@Url.Action("Upsert", "Instituicao")"
+					data-modal-title="Adicionar Nova Instituição">
+				<i class="fas fa-plus"></i> Criar Nova Instituição
+			</button>
+		</div>
+	</div>
 </div>

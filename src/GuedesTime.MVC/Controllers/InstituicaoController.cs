@@ -27,30 +27,30 @@ namespace GuedesTime.MVC.Controllers
 			_userManager = userManager;
 		}
 
-		public async Task<IActionResult> SelecionarInstituicao()
-		{
-			var instituicoes = new List<InstituicaoViewModel>
-				{
-					new() { Id = Guid.NewGuid(), Nome = "Escola Modelo Padrão" },
-					new() { Id = Guid.NewGuid(), Nome = "Colégio Avançado Integral" }
-				};
+		//public async Task<IActionResult> SelecionarInstituicao()
+		//{
+		//	var instituicoes = new List<InstituicaoViewModel>
+		//		{
+		//			new() { Id = Guid.NewGuid(), Nome = "Escola Modelo Padrão" },
+		//			new() { Id = Guid.NewGuid(), Nome = "Colégio Avançado Integral" }
+		//		};
 
-			var resumos = new Dictionary<Guid, DadosAgregadosInstituicaoViewModel>();
+		//	var resumos = new Dictionary<Guid, DadosAgregadosInstituicaoViewModel>();
 
-			foreach (var instituicao in instituicoes)
-			{
+		//	foreach (var instituicao in instituicoes)
+		//	{
 
-				resumos[instituicao.Id.Value] = new DadosAgregadosInstituicaoViewModel
-				{
-					TotalTurmas = 12,
-					TotalProfessores = 45,
-					TotalDisciplinas = 30
-				};
-			}
+		//		resumos[instituicao.Id.Value] = new DadosAgregadosInstituicaoViewModel
+		//		{
+		//			TotalTurmas = 12,
+		//			TotalProfessores = 45,
+		//			TotalDisciplinas = 30
+		//		};
+		//	}
 
-			ViewBag.ResumoInstituicoes = resumos;
-			return View(instituicoes);
-		}
+		//	ViewBag.ResumoInstituicoes = resumos;
+		//	return View(instituicoes);
+		//}
 		public IActionResult Definir(Guid id)
 		{
 			if (id == Guid.Empty) return NotFound();
@@ -61,25 +61,11 @@ namespace GuedesTime.MVC.Controllers
 			return RedirectToAction("Index", "Painel");
 		}
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Criar(InstituicaoViewModel viewModel)
-		{
-			if (!ModelState.IsValid)
-			{
-				var instituicoesExistentes = new List<InstituicaoViewModel>();
-				return View("SelecionarInstituicao", instituicoesExistentes);
-			}
-
-			TempData["success"] = "Instituição criada e selecionada com sucesso!";
-			return RedirectToAction("Index", "Painel");
-		}
-
-		public async Task<IActionResult> Index(string? search, int page = 1, int pageSize = 10, bool ativo = true)
+		public async Task<IActionResult> SelecionarInstituicao(string? search, int? page = 1, bool? ativo = true)
 		{
 			var UserId = Guid.Parse(_userManager.GetUserId(User));
 
-			var instituicoes = await _instituicaoService.GetPagedByInstituicaoAsync(UserId, search, page, pageSize, ativo);
+			var instituicoes = await _instituicaoService.GetPagedByInstituicaoAsync(UserId, search, page.Value, 5, ativo.Value);
 			var instituicaoIds = instituicoes.Items.Select(i => i.Id).ToList();
 			var dadosResumo = _mapper.Map<Dictionary<Guid, DadosAgregadosInstituicaoViewModel>>(await _instituicaoService.ObterCalculoGeralDosDadosDaInstituicao(instituicaoIds));
 			ViewBag.ResumoInstituicoes = dadosResumo;
@@ -88,9 +74,9 @@ namespace GuedesTime.MVC.Controllers
 			{
 				Instituicoes = instituicoesViewModel,
 				Search = search,
-				Page = page,
-				PageSize = pageSize,
-				TotalPages = (int)Math.Ceiling((double)instituicoes.TotalCount / pageSize),
+				Page = page.Value,
+				PageSize = 5,
+				TotalPages = (int)Math.Ceiling((double)instituicoes.TotalCount / 5),
 				TotalItems = instituicoes.TotalCount
 			};
 			return View(paged);
@@ -124,22 +110,24 @@ namespace GuedesTime.MVC.Controllers
 			return View(instituicoesViewModel);
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> Upsert(Guid? id)
 		{
-			InstituicaoViewModel instituicaoViewModel = new();
+			var instituicaoViewModel = new InstituicaoViewModel();
 
 			if (id.HasValue)
 			{
 				var instituicao = await _instituicaoService.ObterInstituicaoComEnderecoPorId(id.Value);
 				if (instituicao == null) return NotFound();
+
 				instituicaoViewModel = _mapper.Map<InstituicaoViewModel>(instituicao);
-
-				instituicaoViewModel.Endereco.Cep = instituicaoViewModel.Endereco.Cep.Replace("-", "");
-
+				if (instituicaoViewModel.Endereco?.Cep != null)
+				{
+					instituicaoViewModel.Endereco.Cep = instituicaoViewModel.Endereco.Cep.Replace("-", "");
+				}
 			}
-			else { instituicaoViewModel.UsuarioId = null; }
 
-			return View(instituicaoViewModel);
+			return PartialView("_Upsert", instituicaoViewModel);
 		}
 
 		[HttpPost]
@@ -149,28 +137,38 @@ namespace GuedesTime.MVC.Controllers
 			ModelState.Remove(nameof(instituicaoViewModel.UsuarioId));
 			instituicaoViewModel.UsuarioId = Guid.Parse(_userManager.GetUserId(User));
 
-			if (!ModelState.IsValid) return View(instituicaoViewModel);
+			if (!ModelState.IsValid)
+			{
+				var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+				return Json(new { success = false, errors });
+			}
 
-
-			if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id == null)
+			if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id==null)
 			{
 				instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
-				await _instituicaoService.Adicionar(_mapper.Map<Instituicao>(instituicaoViewModel));
+				var instituicao = _mapper.Map<Instituicao>(instituicaoViewModel);
+				await _instituicaoService.Adicionar(instituicao);
 				TempData["success"] = "Instituição Cadastrada com sucesso!!";
 			}
 			else
 			{
 				var instituicaoExistente = await _instituicaoService.ObterPorId((Guid)instituicaoViewModel.Id);
-				if (instituicaoExistente == null) return NotFound();
+				if (instituicaoExistente == null)
+				{
+					return Json(new { success = false, errors = new[] { "Instituição não encontrada." } });
+				}
 				instituicaoViewModel.Avatar = instituicaoExistente.Avatar;
-
-
 				_mapper.Map(instituicaoViewModel, instituicaoExistente);
 				await _instituicaoService.Atualizar(instituicaoExistente);
 				TempData["success"] = "Dados da Instituição alterados com sucesso!!";
 			}
 
-			return OperacaoValida() ? RedirectToAction(nameof(Index)) : View(instituicaoViewModel);
+			if (!OperacaoValida())
+			{
+				return Json(new { success = false, errors = ObterErrosDeNegocio() });
+			}
+
+			return Json(new { success = true, url = Url.Action("SelecionarInstituicao", "Instituicao") });
 		}
 
 		[HttpPost]

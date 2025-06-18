@@ -10,7 +10,8 @@
 <body style="background-color: var(--light-gray);">
     @RenderBody()
     <partial name="_ToastNotificationPartial" />
-    <script type="module" src="~/js/selecaoInstituicao.js" asp-append-version="true"></script>
+    <partial name="_ModalSkeletons" />
+    <script type="module" src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

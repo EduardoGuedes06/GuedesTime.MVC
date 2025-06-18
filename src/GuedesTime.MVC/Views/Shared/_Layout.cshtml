@@ -80,7 +80,9 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script type="module" src="~/js/main.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     <partial name="_ToastNotificationPartial" />
+    <partial name="_ModalSkeletons" />
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

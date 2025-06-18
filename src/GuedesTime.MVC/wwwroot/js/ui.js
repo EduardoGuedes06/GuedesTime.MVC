@@ -1,7 +1,6 @@
 
 const toastContainer = document.getElementById('toast-container');
 export function showToast(message, type = 'success') {
-    debugger
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer || !message) return;
 
@@ -14,7 +13,18 @@ export function showToast(message, type = 'success') {
     else if (type === 'warning') icon = '<i class="fas fa-exclamation-triangle"></i>';
     else if (type === 'info') icon = '<i class="fas fa-info-circle"></i>';
 
-    toast.innerHTML = `${icon}<span>${message}</span>`;
+    const isMultiline = message.includes('<ul>') || message.length > 100;
+
+    if (isMultiline) {
+        toast.innerHTML = `
+            <div class="toast-content">
+                <div class="toast-icon">${icon}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+        `;
+    } else {
+        toast.innerHTML = `<span class="toast-icon">${icon}</span>${message}`;
+    }
     toastContainer.appendChild(toast);
 
     setTimeout(() => toast.classList.add('show'), 100);
