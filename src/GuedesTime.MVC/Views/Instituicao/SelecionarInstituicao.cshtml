@@ -24,7 +24,6 @@
 			<input type="text" name="search" value="@Model.Search" placeholder="Buscar por nome..." class="search-input" />
 
 			<select name="ativo" onchange="this.form.submit()" class="filter-select" aria-label="Filtrar por status">
-				<option value="">Todas</option>
 				<option value="true" selected="@(Context.Request.Query["ativo"] == "true" ? "selected" : null)">Ativas</option>
 				<option value="false" selected="@(Context.Request.Query["ativo"] == "false" ? "selected" : null)">Inativas</option>
 			</select>
@@ -38,7 +37,6 @@
 				var id = instituicao.Id ?? Guid.Empty;
 				var resumo = new DadosAgregadosInstituicaoViewModel();
 				resumoInstituicoes?.TryGetValue(id, out resumo);
-
 				<a asp-action="Definir" asp-route-id="@id" class="institution-card">
 					<div class="institution-info">
 						<h3><i class="fas fa-school"></i> @instituicao.Nome</h3>
