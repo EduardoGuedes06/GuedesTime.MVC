@@ -13,10 +13,10 @@ a.institution-card {
     color: inherit;
 }
 
-a.institution-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
-}
+    a.institution-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
 
 .institution-info h3 {
     color: var(--petroleum-blue);
@@ -29,4 +29,60 @@ a.institution-card:hover {
 .institution-info p {
     color: var(--light-text);
     font-size: 14px;
+}
+
+.institution-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    padding: 24px;
+    border: 1px solid transparent;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+    .institution-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        border-color: var(--light-gray);
+    }
+
+    .institution-card .institution-info h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--petroleum-blue);
+        margin-bottom: 8px;
+    }
+
+        .institution-card .institution-info h3 i {
+            margin-right: 12px;
+            color: var(--lilac);
+        }
+
+    .institution-card .institution-info p {
+        color: #666;
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+
+.filters-and-search {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+    .filters-and-search .search-input {
+        flex-grow: 1;
+        min-width: 250px;
+    }
+
+    .filters-and-search .filter-select {
+        min-width: 150px;
+    }
+
+.pagination-controls button i {
+    margin: 0 4px;
 }
