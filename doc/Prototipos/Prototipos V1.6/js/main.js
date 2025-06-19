@@ -1,6 +1,7 @@
 import { appData } from './state.js';
 import { showToast, openModal, closeModal } from './ui.js';
 import { initTheme, applyTheme } from './theme.js';
+import { initInstituicao, renderInstituicao } from './modules/instituicao.js';
 import { initTeachers, renderTeachers } from './modules/teachers.js';
 import { initSubjects, renderSubjects } from './modules/subjects.js';
 import { initClasses, renderClasses } from './modules/classes.js';
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         switch (sectionId) {
+            case 'instituicao': renderInstituicao(); break;
             case 'teachers': renderTeachers(); break;
             case 'subjects': renderSubjects(); break;
             case 'series': renderSeries(); break;
