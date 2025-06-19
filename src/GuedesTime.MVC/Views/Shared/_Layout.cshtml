@@ -16,6 +16,7 @@
 
 </head>
 <body>
+    <partial name="_LayoutCarregamento" />
     <div class="container">
         <aside class="sidebar" id="sidebar">
             <h1 class="logo">Health Time</h1>
@@ -26,6 +27,9 @@
                 <ul>
                     <li>
                         <a class="@ViewHelper.IsActive(ViewContext, "Painel")" asp-controller="Painel" asp-action="Index"><i class="fas fa-home"></i>Painel</a>
+                    </li>
+                    <li>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Instituicao")" asp-controller="Instituicao" asp-action="Index"><i class="fas fa-university"></i>Instituição</a>
                     </li>
                     <li>
                         <a class="@ViewHelper.IsActive(ViewContext, "Professores")" asp-controller="Professores" asp-action="Index"><i class="fas fa-chalkboard-teacher"></i>Professores</a>
@@ -80,7 +84,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
     <script type="module" src="~/js/main.js" asp-append-version="true"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     <partial name="_ToastNotificationPartial" />
     <partial name="_ModalSkeletons" />
     @await RenderSectionAsync("Scripts", required: false)

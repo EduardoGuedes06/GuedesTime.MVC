@@ -53,7 +53,7 @@
 					</div>
 
 					<div class="actions">
-						<span class="btn secondary-btn" onclick="openModalFromButton(event)" data-modal-url="@Url.Action("Upsert", "Instituicao", new { id = id })" data-modal-title="Editar Instituição">
+						<span class="btn secondary-btn" data-modal-url="@Url.Action("Upsert", "Instituicao", new { id = id })" data-modal-title="Editar Instituição">
 							Editar <i class="fas fa-pencil-alt"></i>
 						</span>
 						<span class="btn secondary-btn" onclick="navigateTo(event)" data-redirect-url="@Url.Action("Definir", "Instituicao", new { id = id })">

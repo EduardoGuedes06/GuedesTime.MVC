@@ -1,7 +1,6 @@
 ﻿import { showToast } from './ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    debugger
     const successMessage = document.getElementById('tempdata-success-message')?.value;
     const errorMessage = document.getElementById('tempdata-error-message')?.value;
     const infoMessage = document.getElementById('tempdata-info-message')?.value;

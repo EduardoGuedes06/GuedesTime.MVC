@@ -1,4 +1,7 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+﻿import './services/fetchInterceptor.js';
+import { loadingService } from './services/loadingService.js';
+
+document.addEventListener('DOMContentLoaded', () => {
     import('./ui.js').then(ui => {
         const successMessage = document.getElementById('tempdata-success-message')?.value;
         if (successMessage) ui.showToast(successMessage, 'success');
@@ -50,6 +53,14 @@ document.addEventListener('click', function (event) {
             if (modalToClose) ui.closeModal(modalToClose);
         });
     }
+
+    const link = event.target.closest('a');
+    if (link && link.href && !link.hasAttribute('data-no-loading') && link.target !== '_blank' && !link.href.startsWith('#') && !link.closest('[data-modal-url]')) {
+        const isInternalLink = new URL(link.href).host === window.location.host;
+        if (isInternalLink) {
+            loadingService.show();
+        }
+    }
 });
 
 document.addEventListener('input', function (event) {
@@ -89,6 +100,14 @@ document.addEventListener('submit', function (event) {
                     console.error('Erro no envio do formulário AJAX:', error);
                 });
         });
+    } else if (!form.hasAttribute('data-no-loading')) {
+        loadingService.show("Enviando...");
+    }
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        loadingService.hide();
     }
 });
 
