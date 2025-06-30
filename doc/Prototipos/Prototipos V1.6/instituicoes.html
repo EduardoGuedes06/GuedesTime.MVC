@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Instituições - Health Time</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="page-container">
+        <header class="page-header">
+            <h1 class="section-title">Minhas Instituições</h1>
+            <a href="login.html" class="btn danger-btn"><i class="fas fa-sign-out-alt"></i> Sair</a>
+        </header>
+        
+        <div class="card">
+            <h3 class="card-title">Selecione uma instituição para gerenciar</h3>
+                <div class="filters-and-search">
+                    <input type="text" name="search" placeholder="Buscar por nome..." class="search-input" />
+                        <select name="ativo" class="filter-select">
+                        <option value="">Todas</option>
+                        <option value="true">Ativas</option>
+                        <option value="false">Inativas</option>
+                        </select>
+                    <button type="submit" class="btn primary-btn"><i class="fas fa-search"></i> Buscar</button>
+                </div>
+            <div class="entity-list-grid" style="grid-template-columns: 1fr;">
+                <a href="painel.html" class="institution-card">
+                    <div class="institution-info">
+                        <h3><i class="fas fa-school"></i> Escola Modelo Padrão</h3>
+                        <p>Plano de aulas de 2025 ativo.</p>
+                    </div>
+                                        <div class="actions">
+						<span class="btn secondary-btn">
+							Editar <i class="fas fa-pencil-alt"></i>
+						</span>
+						<span class="btn secondary-btn">
+							Gerenciar <i class="fas fa-arrow-right"></i>
+						</span>
+					</div>
+                </a>
+                <a href="painel.html" class="institution-card">
+                     <div class="institution-info">
+                        <h3><i class="fas fa-university"></i> Colégio Avançado Integral</h3>
+                        <p>12 turmas e 45 professores cadastrados.</p>
+                    </div>
+                    <div class="actions">
+						<span class="btn secondary-btn">
+							Editar <i class="fas fa-pencil-alt"></i>
+						</span>
+						<span class="btn secondary-btn">
+							Gerenciar <i class="fas fa-arrow-right"></i>
+						</span>
+					</div>
+                </a>
+            </div>
+            <nav aria-label="Paginação das instituições" class="pagination-controls">
+                <button disabled><i class="fas fa-chevron-left"></i> Anterior</button>
+                <button class="active">1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>Próxima <i class="fas fa-chevron-right"></i></button>
+            </nav>
+            <hr style="margin: 32px 0;">
+            <h3 class="card-title">Ou crie uma nova</h3>
+            <div class="filter-bar" style="margin-bottom: 0;">
+                <input type="text" placeholder="Nome da Nova Instituição" class="search-input">
+                <a href="painel.html" class="btn primary-btn"><i class="fas fa-plus"></i> Criar e Gerenciar</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,59 +1,36 @@
-﻿@using GuedesTime.MVC.Models
-@using Microsoft.AspNetCore.Identity
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
-@{
-    ViewData["Title"] = "Home Page";
+﻿@{
+    Layout = "~/Views/Shared/_LandingLayout.cshtml";
+    ViewData["Title"] = "Planejamento de Horários Escolares";
 }
 
-<div class="container text-center mt-5">
-    <h1 class="display-4">Bem-vindo ao Sistema de Planejamento Escolar</h1>
-    <p class="lead">Automatize e organize os horários da sua escola de forma simples e eficiente.</p>
+<main class="landing-container">
+    <section class="welcome-section">
+        <h1 class="welcome-title">Planejamento Inteligente para Escolas de Tempo Integral</h1>
+        <p class="welcome-subtitle">A plataforma completa para organizar horários com foco na saúde e bem-estar de alunos e professores.</p>
+        <div class="cta-group">
+            <a asp-controller="Painel" asp-action="Index" class="cta-button primary">Comece a Planejar Agora</a>
+            <a href="#features" class="cta-button secondary">Conheça os Recursos</a>
+        </div>
+    </section>
 
-    <img src="/assets/imagens/calendario-home.png" class="img-fluid my-4" style="max-width: 20%;" alt="Ilustração do sistema">
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">🔹 Gestão de Horários</h5>
-                    <p class="card-text">Crie e gerencie os horários das turmas com facilidade.</p>
-                </div>
+    <section id="features" class="features-section">
+        <h2 class="section-title-light">Recursos Principais</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-cogs feature-icon"></i>
+                <h3>Gerador de Horários Inteligente</h3>
+                <p>Crie grades otimizadas com base na disponibilidade de professores, restrições e feriados.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users feature-icon"></i>
+                <h3>Colaboração Simplificada</h3>
+                <p>Notifique professores e receba feedbacks de conflitos diretamente na plataforma.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-file-export feature-icon"></i>
+                <h3>Exportação Flexível</h3>
+                <p>Exporte horários por turma, professor ou sala em formatos PDF e Excel.</p>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">🔹 Planejamento Eficiente</h5>
-                    <p class="card-text">Distribua disciplinas e professores de forma otimizada.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">🔹 Controle Personalizado</h5>
-                    <p class="card-text">Defina regras e restrições para atender às necessidades da instituição.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Call to Action -->
-    <div class="mt-5">
-        <a href="#" class="btn btn-primary btn-lg">Saiba Mais</a>
-
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <a asp-area="" asp-controller="Dashboard" asp-action="Index" class="btn btn-outline-secondary btn-lg">
-                <span><strong>Acessar</strong></span>
-            </a>
-        }
-        else
-        {
-            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-secondary btn-lg">
-                <span><strong>Login</strong></span>
-            </a>
-        }
-    </div>
-
-</div>
+    </section>
+</main>

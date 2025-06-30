@@ -1,10 +1,12 @@
-﻿using System;
+﻿using GuedesTime.Domain.Models;
+using GuedesTime.MVC.Extensions;
+using GuedesTime.MVC.ViewModels.Utils;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using GuedesTime.Domain.Models;
-using GuedesTime.MVC.Extensions;
-using Microsoft.AspNetCore.Http;
 
 namespace GuedesTime.MVC.ViewModels
 {
@@ -19,8 +21,8 @@ namespace GuedesTime.MVC.ViewModels
         public string Nome { get; set; }
 
         [DisplayName("Codigo INEP / Codigo CIE")]
-        [Required]
-        [StringLength(8, MinimumLength = 8, ErrorMessage = "O INEP deve ter 8 dígitos.")]
+		[Required(ErrorMessage = "O campo {0} é obrigatório")]
+		[StringLength(8, MinimumLength = 8, ErrorMessage = "O INEP deve ter 8 dígitos.")]
 
         public string CodigoCie { get; set; }
         [DisplayName("CNPJ")]
@@ -34,7 +36,9 @@ namespace GuedesTime.MVC.ViewModels
 
         public string? Avatar { get; set; }
 
-        public bool? Ativo { get; set; }
+
+		[JsonIgnore]
+		public bool? Ativo { get; set; }
 
         public EnderecoViewModel Endereco { get; set; }
         public ICollection<ProfessorViewModel>? Professores { get; set; }

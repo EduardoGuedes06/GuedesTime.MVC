@@ -1,246 +1,122 @@
-﻿function SetModal() {
+﻿import './services/fetchInterceptor.js';
+import { loadingService } from './services/loadingService.js';
 
-    $(document).ready(function () {
-        $(function () {
-            $.ajaxSetup({ cache: false });
+document.addEventListener('DOMContentLoaded', () => {
+    import('./ui.js').then(ui => {
+        const successMessage = document.getElementById('tempdata-success-message')?.value;
+        if (successMessage) ui.showToast(successMessage, 'success');
 
-            $("a[data-modal]").on("click",
-                function (e) {
-                    $('#myModalContent').load(this.href,
-                        function () {
-                            $('#myModal').modal({
-                                    keyboard: true
-                                },
-                                'show');
-                            bindForm(this);
-                        });
-                    return false;
-                });
-        });
+        const errorMessage = document.getElementById('tempdata-error-message')?.value;
+        if (errorMessage) ui.showToast(errorMessage, 'error');
     });
-}
+});
 
-function toggleSection(sectionId, button) {
-    var container = document.getElementById(sectionId);
-    var icon = button.querySelector("i");
+document.addEventListener('click', function (event) {
+    const modalTrigger = event.target.closest('[data-modal-url]');
+    if (modalTrigger) {
+        event.preventDefault();
+        import('./ui.js').then(ui => {
+            const url = modalTrigger.getAttribute('data-modal-url');
+            const modal = document.getElementById('modal-global');
+            const modalContent = document.getElementById('modal-global-content');
+            if (!modal || !modalContent) return;
 
-    if (container.style.display === "none" || container.style.display === "") {
-        container.style.display = "block";
-        icon.classList.remove("fa-chevron-down");
-        icon.classList.add("fa-chevron-up");
-    } else {
-        container.style.display = "none";
-        icon.classList.remove("fa-chevron-up");
-        icon.classList.add("fa-chevron-down");
-    }
-}
+            modalContent.innerHTML = '<p style="text-align:center; padding: 20px;">Carregando...</p>';
+            ui.openModal(modal);
 
-function bindForm(dialog) {
-    $('form', dialog).submit(function () {
-        $.ajax({
-            url: this.action,
-            type: this.method,
-            data: $(this).serialize(),
-            success: function (result) {
-                if (result.success) {
-                    $('#myModal').modal('hide');
-                    $('#EnderecoTarget').load(result.url);
-                } else {
-                    $('#myModalContent').html(result);
-                    bindForm(dialog);
-                }
-            }
-        });
-
-        SetModal();
-        return false;
-    });
-}
-
-function BuscaCep() {
-    $(document).ready(function () {
-
-        function limpa_formulário_cep() {
-            // Limpa valores do formulário de cep.
-            $("#Endereco_Logradouro").val("");
-            $("#Endereco_Bairro").val("");
-            $("#Endereco_Cidade").val("");
-            $("#Endereco_Estado").val("");
-        }
-
-        //Quando o campo cep perde o foco.
-        $("#Endereco_Cep").blur(function () {
-
-            //Nova variável "cep" somente com dígitos.
-            var cep = $(this).val().replace(/\D/g, '');
-
-            //Verifica se campo cep possui valor informado.
-            if (cep != "") {
-
-                //Expressão regular para validar o CEP.
-                var validacep = /^[0-9]{8}$/;
-
-                //Valida o formato do CEP.
-                if (validacep.test(cep)) {
-
-                    //Preenche os campos com "..." enquanto consulta webservice.
-                    $("#Endereco_Logradouro").val("...");
-                    $("#Endereco_Bairro").val("...");
-                    $("#Endereco_Cidade").val("...");
-                    $("#Endereco_Estado").val("...");
-
-                    //Consulta o webservice viacep.com.br/
-                    $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?",
-                        function (dados) {
-
-                            if (!("erro" in dados)) {
-                                //Atualiza os campos com os valores da consulta.
-                                $("#Endereco_Logradouro").val(dados.logradouro);
-                                $("#Endereco_Bairro").val(dados.bairro);
-                                $("#Endereco_Cidade").val(dados.localidade);
-                                $("#Endereco_Estado").val(dados.uf);
-                            } //end if.
-                            else {
-                                //CEP pesquisado não foi encontrado.
-                                limpa_formulário_cep();
-                                alert("CEP não encontrado.");
-                            }
-                        });
-                } //end if.
-                else {
-                    //cep é inválido.
-                    limpa_formulário_cep();
-                    alert("Formato de CEP inválido.");
-                }
-            } //end if.
-            else {
-                //cep sem valor, limpa formulário.
-                limpa_formulário_cep();
-            }
-        });
-    });
-}
-
-function ValidarNome() {
-    $(document).ready(function () {
-        debugger
-        $("#Nome").on("input", function () {
-            var nameField = $(this);
-            var nameError = $("#name-error");
-            var nameValue = nameField.val();
-            debugger
-            var regex = /^[A-Za-zÀ-ÖØ-öø-ÿ. ]*$/;
-
-            if (!regex.test(nameValue)) {
-                nameError.text("O nome só pode conter letras e ponto.");
-                nameField.val(nameValue.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ. ]/g, ""));
-                return;
-            }
-
-            var correctedName = nameValue
-                .toLowerCase()
-                .replace(/(^|[\s.])([a-zà-öø-ÿ])/g, function (_, sep, char) {
-                    return sep + char.toUpperCase();
-                });
-
-            nameField.val(correctedName);
-            nameError.text("");
-        });
-    });
-}
-
-function ValidarNomesMultiplos() {
-    $(document).ready(function () {
-        $("#Nomes").on("input", function () {
-            var nomesField = $(this);
-            var nomesValue = nomesField.val();
-
-            var regex = /[^A-Za-zÀ-ÖØ-öø-ÿ. ]/g;
-
-            var nomes = nomesValue.split(',').map(function (nome) {
-                nome = nome.trim().replace(regex, "");
-
-                return nome
-                    .toLowerCase()
-                    .replace(/(^|[\s.])([a-zà-öø-ÿ])/g, function (_, sep, char) {
-                        return sep + char.toUpperCase();
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    modalContent.innerHTML = html;
+                    import('./utils.js').then(utils => {
+                        const allToggles = modalContent.querySelectorAll('input[class*="-toggle"]');
+                        if (allToggles.length > 0 && utils.initializeToggleSwitch) {
+                            allToggles.forEach(toggle => {
+                                if (Array.from(toggle.classList).some(cls => cls.startsWith('campo-') && cls.endsWith('-toggle'))) {
+                                    utils.initializeToggleSwitch(toggle);
+                                }
+                            });
+                        }
                     });
-            });
-
-            nomesField.val(nomes.join(", "));
+                })
+                .catch(err => {
+                    console.error('Erro ao carregar conteúdo do modal:', err);
+                    modalContent.innerHTML = '<p style="text-align:center; padding: 20px; color: red;">Erro ao carregar conteúdo.</p>';
+                });
         });
-    });
-}
-
-
-function ValidarCnpj() {
-    $(document).ready(function () {
-        $("#Cnpj").mask("00.000.000/0000-00");
-
-        $("#Cnpj").on("input", function () {
-            const cnpjValue = $(this).val().replace(/\D/g, "");
-            const cnpjError = $("#cnpj-error");
-
-            if (cnpjValue.length === 0) {
-                cnpjError.text("");
-                return;
-            }
-
-            if (cnpjValue.length < 14) {
-                cnpjError.text("CNPJ incompleto.");
-                return;
-            }
-
-            if (!validarCNPJ(cnpjValue)) {
-                cnpjError.text("CNPJ inválido.");
-            } else {
-                cnpjError.text("");
-            }
-        });
-
-        $("form").on("submit", function (e) {
-            const cnpjField = $("#Cnpj");
-            const cnpjValue = cnpjField.val().replace(/\D/g, "");
-            const cnpjError = $("#cnpj-error");
-
-            if (cnpjValue.length > 0 && (!validarCNPJ(cnpjValue) || cnpjValue.length !== 14)) {
-                e.preventDefault();
-                cnpjError.text("CNPJ inválido.");
-                cnpjField.focus();
-            } else {
-                cnpjError.text("");
-            }
-        });
-    });
-}
-
-function validarCNPJ(cnpj) {
-    if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) return false;
-
-    let tamanho = cnpj.length - 2;
-    let numeros = cnpj.substring(0, tamanho);
-    let digitos = cnpj.substring(tamanho);
-    let soma = 0;
-    let pos = tamanho - 7;
-
-    for (let i = tamanho; i >= 1; i--) {
-        soma += numeros.charAt(tamanho - i) * pos--;
-        if (pos < 2) pos = 9;
     }
 
-    let resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-    if (resultado != digitos.charAt(0)) return false;
-
-    tamanho++;
-    numeros = cnpj.substring(0, tamanho);
-    soma = 0;
-    pos = tamanho - 7;
-
-    for (let i = tamanho; i >= 1; i--) {
-        soma += numeros.charAt(tamanho - i) * pos--;
-        if (pos < 2) pos = 9;
+    const closeTrigger = event.target.closest('[data-modal-close]');
+    if (closeTrigger) {
+        import('./ui.js').then(ui => {
+            const modalToClose = closeTrigger.closest('.modal-overlay');
+            if (modalToClose) ui.closeModal(modalToClose);
+        });
     }
 
-    resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
-    return resultado == digitos.charAt(1);
+    const link = event.target.closest('a');
+    if (link && link.href && !link.hasAttribute('data-no-loading') && link.target !== '_blank' && !link.href.startsWith('#') && !link.closest('[data-modal-url]')) {
+        const isInternalLink = new URL(link.href).host === window.location.host;
+        if (isInternalLink) {
+            loadingService.show();
+        }
+    }
+});
+
+document.addEventListener('input', function (event) {
+    if (event.target.classList.contains('campo-cep')) {
+        import('./utils.js').then(utils => utils.handleCepInput(event.target));
+    }
+    if (event.target.classList.contains('campo-cnpj')) {
+        import('./utils.js').then(utils => utils.handleCnpjInput(event.target));
+    }
+    if (event.target.classList.contains('campo-nome')) {
+        import('./utils.js').then(utils => utils.handleNomeInput(event.target));
+    }
+    if (event.target.classList.contains('campo-numero')) {
+        import('./utils.js').then(utils => utils.handleNumeroInput(event.target));
+    }
+});
+
+document.addEventListener('submit', function (event) {
+    const form = event.target;
+    if (form.closest('#modal-global')) {
+        event.preventDefault();
+        import('./ui.js').then(ui => {
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.url;
+                    } else {
+                        ui.showToast('<ul>' + data.errors.map(e => `<li>${e}</li>`).join('') + '</ul>', 'error');
+                    }
+                })
+                .catch(error => {
+                    ui.showToast('Ocorreu um erro de comunicação com o servidor.', 'error');
+                    console.error('Erro no envio do formulário AJAX:', error);
+                });
+        });
+    } else if (!form.hasAttribute('data-no-loading')) {
+        loadingService.show("Enviando...");
+    }
+});
+
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        loadingService.hide();
+    }
+});
+
+function navigateTo(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const element = event.currentTarget;
+    const redirectUrl = element.dataset.redirectUrl;
+    if (redirectUrl) {
+        window.location.href = redirectUrl;
+    }
 }

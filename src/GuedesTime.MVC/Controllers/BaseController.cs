@@ -2,40 +2,60 @@
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GuedesTime.MVC.Controllers
 {
-    public abstract class BaseController : Controller
-    {
-        public readonly INotificador _notificador;
+	public abstract class BaseController : Controller
+	{
+		private readonly INotificador _notificador;
 
-        internal BaseController(INotificador notificador)
-        {
-            _notificador = notificador;
-        }
+		protected BaseController(INotificador notificador)
+		{
+			_notificador = notificador;
+		}
 
-        internal bool OperacaoValida()
-        {
-            return !_notificador.TemNotificacao();
-        }
+		protected bool OperacaoValida()
+		{
+			return !_notificador.TemNotificacao();
+		}
 
-        internal bool ResponsePossuiErros(ResponseResult resposta)
-        {
-            if (resposta != null && resposta.Errors.Mensagens.Any())
-            {
-                foreach (var mensagem in resposta.Errors.Mensagens)
-                {
-                    ModelState.AddModelError(string.Empty, mensagem);
-                }
+		protected IEnumerable<string> ObterErrosDeNegocio()
+		{
+			return _notificador.ObterNotificacoes().Select(n => n.Mensagem);
+		}
 
-                return true;
-            }
+		public override void OnActionExecuting(ActionExecutingContext context)
+		{
+			var controllerName = context.RouteData.Values["controller"].ToString();
+			var controllersPermitidos = new[] { "Instituicao", "Home", "Account" };
 
-            return false;
-        }
+			if (User.Identity.IsAuthenticated && !controllersPermitidos.Contains(controllerName))
+			{
+				var instituicaoId = context.HttpContext.Session.GetString("InstituicaoId");
+				if (string.IsNullOrEmpty(instituicaoId))
+				{
+					context.Result = new RedirectToActionResult("SelecionarInstituicao", "Instituicao", null);
+				}
+			}
+			base.OnActionExecuting(context);
+		}
+
+		protected bool ResponsePossuiErros(ResponseResult resposta)
+		{
+			if (resposta != null && resposta.Errors.Mensagens.Any())
+			{
+				foreach (var mensagem in resposta.Errors.Mensagens)
+				{
+					ModelState.AddModelError(string.Empty, mensagem);
+				}
+				return true;
+			}
+			return false;
+		}
 
 		#region Utils
-		internal bool ValidarNomesMultiplos(string nomesMultiplos)
+		protected bool ValidarNomesMultiplos(string nomesMultiplos)
 		{
 			var maxLength = (int)ValidacaoMultiplosInputsEnum.MaxLengthNome;
 

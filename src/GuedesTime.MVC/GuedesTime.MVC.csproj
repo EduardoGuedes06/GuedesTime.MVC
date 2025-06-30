@@ -8,9 +8,13 @@
 
 	<ItemGroup>
 	  <Compile Remove="wwwroot\assets\imegens\**" />
+	  <Compile Remove="wwwroot\imagens\**" />
 	  <Content Remove="wwwroot\assets\imegens\**" />
+	  <Content Remove="wwwroot\imagens\**" />
 	  <EmbeddedResource Remove="wwwroot\assets\imegens\**" />
+	  <EmbeddedResource Remove="wwwroot\imagens\**" />
 	  <None Remove="wwwroot\assets\imegens\**" />
+	  <None Remove="wwwroot\imagens\**" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -43,7 +47,6 @@
 	<ItemGroup>
 	  <Folder Include="Views\Series\" />
 	  <Folder Include="Views\Turma\" />
-	  <Folder Include="wwwroot\imagens\" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" properties_4servicedependencies_1json__JsonSchema="https://cdn.jsdelivr.net/gh/tarampampam/error-pages@latest/schemas/config/1.0.schema.json" /></VisualStudio></ProjectExtensions>

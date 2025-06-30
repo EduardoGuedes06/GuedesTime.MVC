@@ -36,7 +36,5 @@ namespace GuedesTime.MVC.ViewModels
         public IEnumerable<AtividadesViewModel> Atividades { get; set; }
         public IEnumerable<DisciplinaProfessorViewModel> Disciplinas { get; set; }
         public ICollection<ProfessorDisciplinaTurmaViewModel> ProfessoresDisciplinasTurmas { get; set; }
-
-
     }
 }
