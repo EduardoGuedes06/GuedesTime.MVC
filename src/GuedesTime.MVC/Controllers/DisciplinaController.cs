@@ -33,7 +33,13 @@ namespace GuedesTime.MVC.Controllers
             _disciplinaService = idisciplinaService;
         }
 
-        public async Task<IActionResult> Index(Guid id, string? search, int page = 1, int pageSize = 5, bool ativo = true)
+		public ActionResult Index()
+		{
+			return View();
+		}
+
+
+		public async Task<IActionResult> ConsultaDiciplinas(Guid id, string? search, int page = 1, int pageSize = 5, bool ativo = true)
         {
 
             var userId = Guid.Parse(_userManager.GetUserId(User));

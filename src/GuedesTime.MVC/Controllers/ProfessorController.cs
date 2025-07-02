@@ -31,14 +31,12 @@ namespace GuedesTime.MVC.Controllers
         }
 
 
-        // GET: ProfessorController
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: ProfessorController/Details/5
-        public ActionResult Details(int id)
+		public ActionResult Details(int id)
         {
             return View();
         }

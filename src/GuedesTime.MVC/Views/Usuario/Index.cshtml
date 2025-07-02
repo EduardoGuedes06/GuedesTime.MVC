@@ -1,0 +1,94 @@
+﻿
+<h2 class="section-title">Perfil do Usuário</h2>
+<div class="profile-grid">
+	<div class="card">
+		<h3 class="card-title">Dados Pessoais</h3>
+
+		<div class="profile-picture-area">
+			<div class="profile-avatar-control">
+
+				<div class="profile-avatar-wrapper" id="profile-picture-container">
+					<img src="/img/userPlaceholder.png"alt="Foto do Perfil"
+						 id="profile-picture-img">
+				</div>
+
+				<input type="file" id="profile-picture-input" accept="image/*" style="display: none;">
+
+				<div class="profile-avatar-actions">
+					<button class="avatar-action-btn" id="btn-view-photo" title="Visualizar Foto">
+						<i class="fas fa-eye"></i>
+					</button>
+					<label for="profile-picture-input" class="avatar-action-btn" title="Editar Foto">
+						<i class="fas fa-pencil-alt"></i>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="profile-details">
+			<div class="detail-item">
+				<span>Nome Completo</span>
+				<strong id="profile-user-name">Ana Beatriz</strong>
+			</div>
+			<div class="detail-item">
+				<span>Endereço de E-mail</span>
+				<strong id="profile-user-email">admin@healthtime.com</strong>
+			</div>
+			<div class="detail-item">
+				<span>Tipo da Conta</span>
+				<span id="profile-user-role-badge" class="badge status-approved">Administradora</span>
+			</div>
+			<div class="detail-item">
+				<span>Membro Desde</span>
+				<strong id="profile-member-since">14 de janeiro de 2024</strong>
+			</div>
+		</div>
+		<div class="modal-actions" style="border-top: none; padding-top: 0; margin-top: 16px;">
+			<button class="btn secondary-btn">Editar Dados</button>
+		</div>
+	</div>
+
+	<div class="card">
+		<h3 class="card-title">Alterar Senha</h3>
+		<form id="form-change-password">
+			<div class="form-group">
+				<label for="current-password">Senha Atual</label>
+				<input type="password" id="current-password" value="123456" readonly>
+			</div>
+			<div class="form-group">
+				<label for="new-password">Nova Senha</label>
+				<input type="password" id="new-password">
+			</div>
+			<div class="form-group">
+				<label for="confirm-password">Confirmar Nova Senha</label>
+				<input type="password" id="confirm-password">
+			</div>
+			<div class="modal-actions">
+				<button type="submit" class="btn primary-btn">Salvar Nova Senha</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="card" style="margin-top: 24px;">
+	<h3 class="card-title">Instituições Relacionadas</h3>
+	<div id="profile-institutions-list" class="entity-list-grid" style="grid-template-columns: 1fr;">
+
+		<a href="#" class="institution-card">
+			<div class="institution-info">
+				<h3><i class="fas fa-school"></i> Escola Modelo Padrão</h3>
+				<p>Plano de aulas de 2025 ativo.</p>
+			</div>
+			<span class="btn secondary-btn">Ver Detalhes <i class="fas fa-arrow-right"></i></span>
+		</a>
+
+		<a href="#" class="institution-card">
+			<div class="institution-info">
+				<h3><i class="fas fa-school"></i> Colégio Avançado Integral</h3>
+				<p>12 turmas e 45 professores.</p>
+			</div>
+			<span class="btn secondary-btn">Ver Detalhes <i class="fas fa-arrow-right"></i></span>
+		</a>
+
+	</div>
+</div>
+

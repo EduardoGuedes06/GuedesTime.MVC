@@ -77,7 +77,7 @@ document.addEventListener('click', (event) => {
     else if (link && link.href && !link.hasAttribute('data-no-loading') && link.target !== '_blank' && !link.href.startsWith('#')) {
         const isInternalLink = new URL(link.href).host === window.location.host;
         if (isInternalLink) {
-            loadingService.show("Carregando página...");
+            loadingService.show("Carregando p\u00E1gina...");
         }
     }
 });

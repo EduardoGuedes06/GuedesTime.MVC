@@ -38,6 +38,13 @@ namespace GuedesTime.MVC.Controllers
 			return RedirectToAction("Index", "Painel");
 		}
 
+		public IActionResult Index()
+		{
+			var idInstituicao = HttpContext.Session.GetString("InstituicaoId");
+
+			return View();
+		}
+
 		public async Task<IActionResult> SelecionarInstituicao(string? search, int? page = 1, bool? ativo = true)
 		{
 			var UserId = Guid.Parse(_userManager.GetUserId(User));
@@ -86,6 +93,8 @@ namespace GuedesTime.MVC.Controllers
 
 			return View(instituicoesViewModel);
 		}
+
+
 
 		[HttpGet]
 		public async Task<IActionResult> Upsert(Guid? id)

@@ -44,11 +44,6 @@
 	  <ProjectReference Include="..\GuedesTime.Service\GuedesTime.Service.csproj" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Views\Series\" />
-	  <Folder Include="Views\Turma\" />
-	</ItemGroup>
-
 	<ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" properties_4servicedependencies_1json__JsonSchema="https://cdn.jsdelivr.net/gh/tarampampam/error-pages@latest/schemas/config/1.0.schema.json" /></VisualStudio></ProjectExtensions>
 
 </Project>

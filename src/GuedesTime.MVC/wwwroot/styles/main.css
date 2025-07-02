@@ -6,6 +6,7 @@
 @import url('layout/_grid.css');
 @import url('layout/_header.css');
 @import url('layout/_sidebar.css');
+@import url('layout/_loading.css');
 
 @import url('components/_buttons.css');
 @import url('components/_cards.css');
@@ -17,9 +18,11 @@
 @import url('components/_toast.css');
 @import url('components/_settings.css');
 @import url('components/_uploader.css');
+@import url('components/_instituicao.css');
 
 @import url('pages/_landing.css');
 @import url('pages/_auth.css');
 @import url('pages/_panel.css');
 @import url('pages/_instituicoes.css');
 @import url('pages/_profile.css');
+@import url('pages/_error.css');

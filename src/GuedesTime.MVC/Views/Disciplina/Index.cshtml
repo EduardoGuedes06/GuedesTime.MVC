@@ -1,150 +1,216 @@
-﻿@using GuedesTime.MVC.ViewModels
-@using GuedesTime.MVC.ViewModels.Utils
-@model PagedViewModel<DisciplinaViewModel>
-
-
-<link rel="stylesheet" href="~/css/filtragem.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/css/card_instituicao.css" asp-append-version="true" />
-<script src="~/js/site.js" asp-append-version="true"></script>
-<h1 style="text-align: center; color: #1E3A8A;">Diciplinas</h1>
-
-
-<!-- Filtro -->
-<form method="get" class="filtro-instituicao">
-    <label for="search">
-        <i class="fas fa-search"></i>
-    </label>
-    <input type="text" id="search" name="search" value="@Context.Request.Query["search"]" />
-
-    <label for="ativo"><i class="fas fa-question"></i></label>
-    <select id="ativo" name="ativo">
-        <option value="true" selected="@(Context.Request.Query["ativo"] == "true" ? "selected" : null)">Ativo</option>
-        <option value="false" selected="@(Context.Request.Query["ativo"] == "false" ? "selected" : null)">Inativo</option>
-    </select>
-
-    <label for="pageSize"><i class="fa-solid fa-file"></i></label>
-    <select id="pageSize" name="pageSize">
-        <option value="5" selected="@(Context.Request.Query["pageSize"] == "5" ? "selected" : null)">5</option>
-        <option value="10" selected="@(Context.Request.Query["pageSize"] == "10" ? "selected" : null)">10</option>
-        <option value="20" selected="@(Context.Request.Query["pageSize"] == "20" ? "selected" : null)">20</option>
-    </select>
-
-    <button type="submit">
-        <i class="fas fa-search" style="color: white; border-radius: 50%; padding: 4px;"></i>
-        Filtrar
+﻿<div class="section-header">
+    <h2 class="section-title">Disciplinas</h2>
+    <button id="add-subject-btn" class="btn primary-btn">
+        <i class="fas fa-plus"></i>Adicionar
+        Disciplina
     </button>
-
-</form>
-
-<div class="disciplina-container">
-    <div style="display: flex; justify-content: center; margin: 20px;">
-        <a href="javascript:void(0);" onclick="openDisciplinaModal()" class="instituicao-button" style="display: inline-flex; align-items: center; text-decoration: none;">
-            <i class="fas fa-plus" style="margin-right: 5px;"></i> Cadastrar Disciplina
-        </a>
-    </div>
 </div>
-
-<div class="consulta-container">
-    <table class="table tabela" id="Table">
-        <thead>
-            <tr>
-                <th>Nome <i class="fas fa-sort"></i></th>
-                <th>Ativo <i class="fas fa-sort"></i></th>
-                <th>Opções</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Model)
-            {
-                <tr>
-                    <td>@item.Nome</td>
-                    <td>@(item.Ativo.HasValue && item.Ativo.Value ? "Sim" : "Não")</td>
-                    <td>
-                        <a href="javascript:void(0);" onclick="openEditDisciplinaModal('@item.Id')" class="btn btn-light text-primary btn-hover">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-
-                        <form action="@Url.Action("Delete", new {instituicaoId = ViewBag.InstituicaoId, id = item.Id })" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-light text-danger btn-hover">
-                                <i class="fas fa-trash-alt"></i> Excluir
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="filter-bar">
+    <input type="text" id="subject-search" placeholder="Buscar disciplinas..." class="search-input">
+    <select id="subject-filter-teacher" class="filter-select">
+        <option value="">Filtrar por Professor</option>
+    </select>
+    <select id="subject-filter-series" class="filter-select">
+        <option value="">Filtrar por Série</option>
+    </select>
 </div>
+<div id="subjects-list" class="entity-list-grid">
 
-<div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="d-flex">
-        @if (Model.Page > 1)
-        {
-            <a href="@Url.Action("Index", new { id = ViewBag.InstituicaoId, search = Model.Search, page = Model.Page - 1, pageSize = Model.PageSize })"
-               class="btn btn-secondary text-white btn-hover d-flex align-items-center" style="margin-right: 20px;">
-                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Anterior
-            </a>
-        }
-
-        @if (Model.Page < Model.TotalPages)
-        {
-            <a href="@Url.Action("Index", new { id = ViewBag.InstituicaoId, search = Model.Search, page = Model.Page + 1, pageSize = Model.PageSize })"
-               class="btn btn-secondary text-white btn-hover d-flex align-items-center" style="margin-left: 20px;">
-                <i class="fas fa-arrow-right" style="margin-right: 8px;"></i> Próxima
-            </a>
-        }
-    </div>
-    <div class="position-relative w-100 d-flex align-items-center justify-content-center">
-        <span class="position-absolute" style="left: 50%; transform: translateX(-50%);">
-            Página @Model.Page de @Model.TotalPages
-        </span>
-    </div>
-</div>
-
-
-<div class="modal fade" id="disciplinaModal" tabindex="-1" aria-labelledby="disciplinaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" id="modal-disciplina-body">
+    <div class="entity-card">
+        <h3>Matemática</h3>
+        <p>Código: MAT101</p>
+        <p>Carga Horária: 60 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">Alice</span>
+                <span class="badge teacher-badge">Carol</span>
+                <span class="badge teacher-badge">Frank</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">1ª Série</span>
+                <span class="badge series-badge">2ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
         </div>
     </div>
+
+    <div class="entity-card">
+        <h3>Física</h3>
+        <p>Código: FIS201</p>
+        <p>Carga Horária: 75 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">Bob</span>
+                <span class="badge teacher-badge">Carol</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">2ª Série</span>
+                <span class="badge series-badge">3ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
+    <div class="entity-card">
+        <h3>Química</h3>
+        <p>Código: QUI301</p>
+        <p>Carga Horária: 70 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">Alice</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">3ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
+    <div class="entity-card">
+        <h3>Biologia</h3>
+        <p>Código: BIO401</p>
+        <p>Carga Horária: 65 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">Bob</span>
+                <span class="badge teacher-badge">Frank</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">1ª Série</span>
+                <span class="badge series-badge">2ª Série</span>
+                <span class="badge series-badge">3ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
+    <div class="entity-card">
+        <h3>História</h3>
+        <p>Código: HIS101</p>
+        <p>Carga Horária: 50 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">Carol</span>
+                <span class="badge teacher-badge">Eva</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">1ª Série</span>
+                <span class="badge series-badge">3ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
+    <div class="entity-card">
+        <h3>Geografia</h3>
+        <p>Código: GEO202</p>
+        <p>Carga Horária: 50 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">Bob</span>
+                <span class="badge teacher-badge">Eva</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">1ª Série</span>
+                <span class="badge series-badge">2ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
+    <div class="entity-card">
+        <h3>Educação Física</h3>
+        <p>Código: EDF100</p>
+        <p>Carga Horária: 30 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">David</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">1ª Série</span>
+                <span class="badge series-badge">2ª Série</span>
+                <span class="badge series-badge">3ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
+    <div class="entity-card">
+        <h3>Artes</h3>
+        <p>Código: ART101</p>
+        <p>Carga Horária: 40 horas</p>
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                <span class="badge teacher-badge">David</span>
+            </div>
+        </div>
+        <div class="info-row">
+            <span>Séries:</span>
+            <div class="badges-container">
+                <span class="badge series-badge">1ª Série</span>
+                <span class="badge series-badge">2ª Série</span>
+            </div>
+        </div>
+        <div class="actions">
+            <button class="btn primary-btn" disabled>Editar</button>
+            <button class="btn danger-btn" disabled>Excluir</button>
+        </div>
+    </div>
+
 </div>
 
-
-<script>
-    const instituicaoId = '@ViewBag.InstituicaoId';
-
-    function openDisciplinaModal() {
-        debugger
-        $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId }, function (html) {
-            $("#modal-disciplina-body").html(html);
-            const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
-            modal.show();
-            inicializarEventosModal();
-        });
-    }
-
-    function openEditDisciplinaModal(id) {
-        debugger
-        $.get("/Disciplina/UpsertPartial", { instituicaoId: instituicaoId, id: id }, function (html) {
-            $("#modal-disciplina-body").html(html);
-            const modal = new bootstrap.Modal(document.getElementById('disciplinaModal'));
-            modal.show();
-            inicializarEventosModal();
-        });
-    }
-
-    function closeModal() {
-        const modalElement = document.getElementById('disciplinaModal');
-        const modal = bootstrap.Modal.getInstance(modalElement);
-        if (modal) {
-            modal.hide();
-        }
-    }
-
-    function inicializarEventosModal() {
-        ValidarNome();
-        ValidarNomesMultiplos();
-    }
-</script>
-
+<div id="subjects-pagination" class="pagination-controls">
+    <button class="btn" disabled>Anterior</button>
+    <button class="btn" disabled>1</button>
+    <button class="btn" disabled>Próximo</button>
+</div>

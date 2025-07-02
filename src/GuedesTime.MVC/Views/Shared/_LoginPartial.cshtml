@@ -5,7 +5,7 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    <div class="sidebar-user-profile">
+    <div class="sidebar-user-profile" onclick="window.location.href='@Url.Action("Index", "Usuario")'" style="cursor: pointer;">
         <div class="sidebar-user-avatar" id="sidebar-user-avatar">
             <i class="fas fa-user-circle"></i>
         </div>
