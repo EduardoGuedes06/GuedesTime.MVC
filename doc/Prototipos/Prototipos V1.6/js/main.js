@@ -24,13 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentSectionId = 'dashboard';
 
     function updateCounts() {
-        document.getElementById('count-teachers').textContent = appData.teachers.length;
-        document.getElementById('count-subjects').textContent = appData.subjects.length;
-        document.getElementById('count-classes').textContent = appData.classes.length;
-        document.getElementById('count-classrooms').textContent = appData.classrooms.length;
-        document.getElementById('status-pending').textContent = appData.lessonPlans.filter(p => p.status === 'Pending').length;
-        document.getElementById('status-approved').textContent = appData.lessonPlans.filter(p => p.status === 'Approved').length;
-        document.getElementById('status-conflicted').textContent = appData.lessonPlans.filter(p => p.status === 'Conflicted').length;
+
+
     }
 
     function showSection(sectionId) {

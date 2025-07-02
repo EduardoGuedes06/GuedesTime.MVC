@@ -18,8 +18,10 @@
 @import url('components/_settings.css');
 @import url('components/_uploader.css');
 @import url('components/_instituicao.css');
+@import url('components/_detailed-progress.css');
 
 @import url('pages/_landing.css');
+@import url('pages/_dashboard.css');
 @import url('pages/_auth.css');
 @import url('pages/_panel.css');
 @import url('pages/_instituicoes.css');

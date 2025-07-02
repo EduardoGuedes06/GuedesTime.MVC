@@ -38,7 +38,6 @@ namespace GuedesTime.MVC.Controllers
 			return View();
 		}
 
-
 		public async Task<IActionResult> ConsultaDiciplinas(Guid id, string? search, int page = 1, int pageSize = 5, bool ativo = true)
         {
 
@@ -140,7 +139,6 @@ namespace GuedesTime.MVC.Controllers
 
 			return RedirectToAction("Detalhes", "Instituicao", new { id = disciplinaViewModel.InstituicaoId });
 		}
-
 
 		[HttpPost]
         [ValidateAntiForgeryToken]
