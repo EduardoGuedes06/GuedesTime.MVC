@@ -20,7 +20,17 @@ namespace GuedesTime.MVC.ViewModels
         [DisplayName("Instituição")]
         public Guid InstituicaoId { get; set; }
 
-        public InstituicaoViewModel Instituicao { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
+
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+		public InstituicaoViewModel Instituicao { get; set; }
 
         public List<PlanejamentoDeAulaItemViewModel> Itens { get; set; } = new();
         public List<HistoricoExportacaoViewModel> Historicos { get; set; } = new();

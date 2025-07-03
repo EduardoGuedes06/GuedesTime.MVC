@@ -28,7 +28,16 @@ namespace GuedesTime.Data.Mappings
                    .HasForeignKey(pdt => pdt.TurmaId)
                    .OnDelete(DeleteBehavior.Restrict);
 
-            builder.ToTable("ProfessoresDisciplinasTurmas");
+			builder.Property(p => p.Ativo)
+				    .IsRequired()
+				    .HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				    .IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("ProfessoresDisciplinasTurmas");
         }
     }
 }

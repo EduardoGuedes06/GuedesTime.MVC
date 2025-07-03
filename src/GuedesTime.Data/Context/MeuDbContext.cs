@@ -1,5 +1,6 @@
 ﻿
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Generics;
 using GuedesTime.Service.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,22 +49,54 @@ namespace GuedesTime.Data.Context
 
             base.OnModelCreating(modelBuilder);
         }
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
-        {
-            foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("DataCadastro") != null))
-            {
-                if (entry.State == EntityState.Added)
-                {
-                    entry.Property("DataCadastro").CurrentValue = DateTime.Now;
-                }
+		public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+		{
+			foreach (var entry in ChangeTracker.Entries()
+				.Where(e => e.State == EntityState.Added))
+			{
+				if (entry.Entity is Entity entityBase)
+				{
+					entityBase.DataCriacao = DateTime.UtcNow;
+				}
 
-                if (entry.State == EntityState.Modified)
-                {
-                    entry.Property("DataCadastro").IsModified = false;
-                }
-            }
+				if (entry.Entity is EntityExpanded entidadeExpandida)
+				{
+					if (string.IsNullOrWhiteSpace(entidadeExpandida.Codigo))
+					{
+						var tipoEntidade = entry.Entity.GetType();
+						var instituicaoId = (Guid?)entry.CurrentValues["InstituicaoId"];
 
-            return base.SaveChangesAsync(cancellationToken);
-        }
-    }
+						if (instituicaoId != null)
+						{
+							var method = typeof(DbContext).GetMethod(nameof(Set), Array.Empty<Type>())!;
+							var genericMethod = method.MakeGenericMethod(tipoEntidade);
+
+							var dbSet = (IQueryable)genericMethod.Invoke(this, null)!;
+
+							var codigos = dbSet
+								.Cast<object>()
+								.Where(e =>
+									EF.Property<Guid>(e, "InstituicaoId") == instituicaoId &&
+									!string.IsNullOrEmpty(EF.Property<string>(e, "Codigo")))
+								.Select(e => EF.Property<string>(e, "Codigo"));
+
+							var maiorCodigo = await codigos
+								.OrderByDescending(c => c)
+								.FirstOrDefaultAsync();
+
+							int novoCodigo = 1;
+							if (int.TryParse(maiorCodigo, out int codigoInt))
+								novoCodigo = codigoInt + 1;
+
+							entidadeExpandida.Codigo = novoCodigo.ToString("D3");
+						}
+					}
+				}
+			}
+
+			return await base.SaveChangesAsync(cancellationToken);
+		}
+
+
+	}
 }

@@ -20,7 +20,16 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasMaxLength(1000);
 
-            builder.ToTable("ConfiguracoesGenericas");
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("ConfiguracoesGenericas");
         }
     }
 

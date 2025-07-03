@@ -26,6 +26,9 @@ O projeto busca solucionar a dificuldade das escolas em gerenciar e distribuir a
 | Ilustrações      | Undraw    |
 | Teste com Usuario| Maze      |
 
+### Organização
+- [Trello](https://trello.com/b/KtC5DkE8/helphtime)
+
 ## Paleta de Cores
 A identidade visual do sistema seguirá uma paleta de cores frias, priorizando modernidade e inovação.
 

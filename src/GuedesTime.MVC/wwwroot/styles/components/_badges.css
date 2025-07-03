@@ -21,7 +21,7 @@
 
 .badge.status-pending {
     background-color: var(--yellow-status);
-    color: var(--dark-text); /* Opcional: melhora o contraste no amarelo */
+    color: var(--dark-text);
 }
 
 .badge.status-conflicted {

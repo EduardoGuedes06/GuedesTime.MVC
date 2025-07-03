@@ -12,20 +12,28 @@ namespace GuedesTime.Data.Mappings
         {
             builder.HasKey(t => t.Id);
 
-            // Relacionamento com Professor (muitos para um)
             builder.HasOne(t => t.Professor)
-                .WithMany(p => p.Tarefas)  // Assumindo que Professor tem uma coleção de Tarefas
+                .WithMany(p => p.Tarefas)
                 .HasForeignKey(t => t.ProfessorId)
-                .OnDelete(DeleteBehavior.Restrict);  // Evitar exclusão em cascata
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(t => t.Descricao)
                 .IsRequired()
-                .HasMaxLength(500);  // Por exemplo, limitando a descrição a 500 caracteres
+                .HasMaxLength(500);
 
             builder.Property(t => t.DataLimite)
-                .IsRequired();  // O DataLimite não pode ser nulo
+                .IsRequired();
 
-            builder.ToTable("Tarefas");
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("Tarefas");
         }
     }
 

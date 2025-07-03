@@ -21,9 +21,17 @@ namespace GuedesTime.MVC.ViewModels
         
         public EnderecoViewModel Endereco { get; set; }
 
-        [DisplayName("Ativo?")]
-        public bool Ativo { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
 
-        public IEnumerable<ProdutoViewModel> Produtos { get; set; }
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+
+		public IEnumerable<ProdutoViewModel> Produtos { get; set; }
     }
 }

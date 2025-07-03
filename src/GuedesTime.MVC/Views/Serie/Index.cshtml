@@ -1,77 +1,60 @@
-﻿<div class="section-header">
-    <h2 class="section-title">Séries</h2>
-    <button id="add-series-btn" class="btn primary-btn">
-        <i class="fas fa-plus"></i>Adicionar
-        Série
-    </button>
+﻿@using GuedesTime.MVC.Extensions
+@using GuedesTime.MVC.ViewModels
+@using GuedesTime.MVC.ViewModels.Utils
+@model PagedViewModel<SerieViewModel>
+
+@{
+	ViewData["Title"] = "Series";
+	Layout = "_Layout";
+}
+
+<div class="section-header">
+	<h2 class="section-title">Séries</h2>
+	<button id="add-series-btn" class="btn primary-btn">
+		<i class="fas fa-plus"></i>Adicionar
+		Série
+	</button>
 </div>
 <div class="filter-bar">
-    <input type="text" id="series-search" placeholder="Buscar séries..." class="search-input">
+	<input type="text" id="series-search" placeholder="Buscar séries..." class="search-input">
 </div>
 <div id="series-list" class="entity-list-grid">
-
-    <div class="entity-card">
-        <h3>1º Ano</h3>
-        <p>Ordem: 1</p>
-        <div class="info-row">
-            <span>Disciplinas Relacionadas:</span>
-            <div class="badges-container">
-                <span class="badge subject-badge">Matemática</span>
-                <span class="badge subject-badge">Biologia</span>
-                <span class="badge subject-badge">História</span>
-                <span class="badge subject-badge">Geografia</span>
-                <span class="badge subject-badge">Educação Física</span>
-                <span class="badge subject-badge">Artes</span>
-            </div>
-        </div>
-        <div class="actions">
-            <button class="btn primary-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Editar</button>
-            <button class="btn danger-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Excluir</button>
-        </div>
-    </div>
-
-    <div class="entity-card">
-        <h3>2º Ano</h3>
-        <p>Ordem: 2</p>
-        <div class="info-row">
-            <span>Disciplinas Relacionadas:</span>
-            <div class="badges-container">
-                <span class="badge subject-badge">Matemática</span>
-                <span class="badge subject-badge">Física</span>
-                <span class="badge subject-badge">Biologia</span>
-                <span class="badge subject-badge">Geografia</span>
-                <span class="badge subject-badge">Educação Física</span>
-                <span class="badge subject-badge">Artes</span>
-            </div>
-        </div>
-        <div class="actions">
-            <button class="btn primary-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Editar</button>
-            <button class="btn danger-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Excluir</button>
-        </div>
-    </div>
-
-    <div class="entity-card">
-        <h3>3º Ano</h3>
-        <p>Ordem: 3</p>
-        <div class="info-row">
-            <span>Disciplinas Relacionadas:</span>
-            <div class="badges-container">
-                <span class="badge subject-badge">Física</span>
-                <span class="badge subject-badge">Química</span>
-                <span class="badge subject-badge">Biologia</span>
-                <span class="badge subject-badge">História</span>
-                <span class="badge subject-badge">Educação Física</span>
-            </div>
-        </div>
-        <div class="actions">
-            <button class="btn primary-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Editar</button>
-            <button class="btn danger-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Excluir</button>
-        </div>
-    </div>
-
+	@foreach (var serie in Model.Model)
+	{
+		<div class="entity-card">
+			<h3>@serie.Nome Ano</h3>
+			<p>Ordem: @serie.Codigo</p>
+			<p>@this.EnumDisplayName(serie.TipoEnsino)</p>
+			<div class="info-row">
+				@if (serie.Disciplinas != null && serie.Disciplinas.Any())
+				{
+					<span>Disciplinas Relacionadas:</span>
+					<div class="badges-container">
+						@foreach (var disciplina in serie.Disciplinas)
+						{
+							<span class="badge subject-badge">@disciplina.Disciplina.Nome</span>
+						}
+					</div>
+				}
+				else
+				{
+					<ul class="pending-check-info">
+						<li>
+							<i class="fas fa-exclamation-circle"></i>
+							<span class="text-muted">Nenhuma disciplina relacionada</span>
+						</li>
+					</ul>
+				}
+			</div>
+			<div class="actions">
+				<button class="btn primary-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Editar</button>
+				<button class="btn danger-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Excluir</button>
+			</div>
+		</div>
+	}
 </div>
 <div id="series-pagination" class="pagination-controls">
-    <button class="btn" disabled>Anterior</button>
-    <button class="btn" disabled>1</button>
-    <button class="btn" disabled>Próximo</button>
+	<button class="btn" disabled>Anterior</button>
+	<button class="btn" disabled>1</button>
+	<button class="btn" disabled>Próximo</button>
 </div>

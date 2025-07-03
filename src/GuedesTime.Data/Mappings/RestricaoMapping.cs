@@ -20,13 +20,21 @@ namespace GuedesTime.Data.Mappings
                 .IsRequired()
                 .HasColumnType("datetime");
 
-            // Relacionamento com Professor (muitos para um)
             builder.HasOne(r => r.Professor)
                 .WithMany(p => p.Restricoes)
                 .HasForeignKey(r => r.ProfessorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.ToTable("Restricoes");
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("Restricoes");
         }
     }
 

@@ -14,9 +14,21 @@ namespace GuedesTime.Data.Mappings
 				.IsRequired()
 				.HasMaxLength(100);
 
+			builder.Property(s => s.Codigo)
+				.HasMaxLength(10);
+
 			builder.Property(p => p.Ativo)
 				.IsRequired()
 				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.Property(s => s.TipoEnsino)
+				.IsRequired()
+				.HasConversion<int>();
 
 			builder.HasOne(s => s.Instituicao)
 				.WithMany(i => i.Series)

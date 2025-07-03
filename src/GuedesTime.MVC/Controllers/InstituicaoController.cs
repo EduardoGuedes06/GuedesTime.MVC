@@ -5,9 +5,11 @@ using GuedesTime.MVC.Models;
 using GuedesTime.MVC.ViewModels;
 using GuedesTime.MVC.ViewModels.Enum;
 using GuedesTime.MVC.ViewModels.Utils;
+using GuedesTime.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing.Printing;
 
 namespace GuedesTime.MVC.Controllers
 {
@@ -17,6 +19,7 @@ namespace GuedesTime.MVC.Controllers
 		private readonly IMapper _mapper;
 		private readonly IInstituicaoService _instituicaoService;
 		private readonly UserManager<ApplicationUser> _userManager;
+
 
 		public InstituicaoController(IMapper mapper,
 									 IInstituicaoService instituicaoService,
@@ -49,14 +52,24 @@ namespace GuedesTime.MVC.Controllers
 		{
 			var UserId = Guid.Parse(_userManager.GetUserId(User));
 
-			var instituicoes = await _instituicaoService.GetPagedByInstituicaoAsync(UserId, search, page.Value, (int)EnumQuantidadeDeItensPorPagina.Poucos, ativo.Value);
+			var instituicoes = await _instituicaoService.GetPagedByInstituicaoAsync(
+																			UserId,
+																			search,
+																			page.Value,
+																			(int)EnumQuantidadeDeItensPorPagina.Poucos,
+																			ativo.Value,
+																			filtroAdicional: null,
+																			ordenacao: q => q.OrderBy(s => s.Nome),
+																			includes: null
+																		);
+
 			var instituicaoIds = instituicoes.Items.Select(i => i.Id).ToList();
 			var dadosResumo = _mapper.Map<Dictionary<Guid, DadosAgregadosInstituicaoViewModel>>(await _instituicaoService.ObterCalculoGeralDosDadosDaInstituicao(instituicaoIds));
 			ViewBag.ResumoInstituicoes = dadosResumo;
 			var instituicoesViewModel = _mapper.Map<IEnumerable<InstituicaoViewModel>>(instituicoes.Items);
-			var paged = new PagedInstituicoesViewModel
+			var paged = new PagedViewModel<InstituicaoViewModel>
 			{
-				Instituicoes = instituicoesViewModel,
+				Model = instituicoesViewModel,
 				Search = search,
 				Page = page.Value,
 				PageSize = 5,

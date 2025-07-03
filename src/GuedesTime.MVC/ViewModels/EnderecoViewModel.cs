@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
 
 namespace GuedesTime.MVC.ViewModels
 {
@@ -34,8 +35,17 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(50, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
         public string Estado { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
 
-        [HiddenInput]
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+		[HiddenInput]
         public Guid InstituicaoId { get; set; }
     }
 }

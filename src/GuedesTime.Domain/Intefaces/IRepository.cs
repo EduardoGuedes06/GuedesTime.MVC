@@ -1,5 +1,4 @@
-﻿
-using GuedesTime.Domain.Models;
+﻿using GuedesTime.Domain.Models.Generics;
 using GuedesTime.Service.Models;
 using System;
 using System.Collections.Generic;

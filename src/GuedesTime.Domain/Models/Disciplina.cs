@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuedesTime.Domain.Models.Generics;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace GuedesTime.Domain.Models
     {
         public string Nome { get; set; }
         public Guid InstituicaoId { get; set; }
-        public bool? Ativo { get; set; }
 
         /* EF Relations */
 

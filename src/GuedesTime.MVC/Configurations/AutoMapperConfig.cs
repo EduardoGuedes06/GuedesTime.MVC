@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Enums;
 using GuedesTime.Domain.Models.Utils;
 using GuedesTime.MVC.ViewModels;
+using GuedesTime.MVC.ViewModels.Enum;
 using GuedesTime.MVC.ViewModels.Utils;
 using GuedesTime.Service.Models;
 
@@ -28,7 +30,8 @@ namespace GuedesTime.MVC.Configurations
             CreateMap<DisciplinaProfessor, DisciplinaProfessorViewModel>().ReverseMap();
             CreateMap<PlanejamentoDeAulaItem, PlanejamentoDeAulaItemViewModel>().ReverseMap();
             CreateMap<Serie, SerieViewModel>().ReverseMap();
-            CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
+			CreateMap<EnumTipoEnsino, EnumTipoEnsinoViewModel>().ReverseMap();
+			CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
             CreateMap<DisciplinaSerie, DisciplinaSerieViewModel>().ReverseMap();
 
             CreateMap<DadosAgregadosInstituicao, DadosAgregadosInstituicaoViewModel>().ReverseMap();

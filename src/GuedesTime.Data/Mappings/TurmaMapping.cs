@@ -19,7 +19,16 @@ namespace GuedesTime.Data.Mappings
             builder.Property(t => t.Ano)
                 .IsRequired();
 
-            builder.HasOne(t => t.Serie)
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.HasOne(t => t.Serie)
                 .WithMany(s => s.Turmas)
                 .HasForeignKey(t => t.SerieId);
 

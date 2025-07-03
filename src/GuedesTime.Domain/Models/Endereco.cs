@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GuedesTime.Domain.Models.Generics;
+using System;
 
 namespace GuedesTime.Domain.Models
 {

@@ -23,7 +23,16 @@ namespace GuedesTime.MVC.ViewModels
         [DisplayName("Usuário Responsável")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string UsuarioResponsavel { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
 
-        public IEnumerable<PlanejamentoDeAulaViewModel> PlanejamentosDeAula { get; set; }
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+		public IEnumerable<PlanejamentoDeAulaViewModel> PlanejamentosDeAula { get; set; }
     }
 }

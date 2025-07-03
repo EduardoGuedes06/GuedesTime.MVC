@@ -29,7 +29,17 @@ namespace GuedesTime.MVC.ViewModels
         [Phone(ErrorMessage = "Telefone invalido")]
         public string Telefone { get; set; }
 
-        public bool? Ativo { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
+
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+
         public IEnumerable<TarefasViewModel> Tarefas { get; set; }
         public IEnumerable<RestricaoViewModel> Restricoes { get; set; }
         public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAulaItens { get; set; }

@@ -26,7 +26,16 @@ namespace GuedesTime.Data.Mappings
             builder.Property(h => h.Observacoes)
                 .HasColumnType("varchar(500)");
 
-            builder.ToTable("HistoricoExportacao");
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("HistoricoExportacao");
         }
     }
 

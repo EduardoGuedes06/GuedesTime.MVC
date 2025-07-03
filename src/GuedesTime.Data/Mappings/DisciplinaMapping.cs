@@ -40,8 +40,16 @@ namespace GuedesTime.Data.Mappings
                    .HasForeignKey(pdt => pdt.DisciplinaId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+			builder.Property(p => p.Ativo)
+                    .IsRequired()
+                    .HasDefaultValue(true);
 
-            builder.ToTable("Disciplinas");
+			builder.Property(s => s.DataCriacao)
+				    .IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("Disciplinas");
         }
     }
 

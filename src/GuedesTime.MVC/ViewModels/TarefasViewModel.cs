@@ -21,7 +21,18 @@ namespace GuedesTime.MVC.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public DateTime DataLimite { get; set; }
 
-        public Guid ProfessorId { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
+
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+
+		public Guid ProfessorId { get; set; }
         public ProfessorViewModel Professor { get; set; }
     }
 }

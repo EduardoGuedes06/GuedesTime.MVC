@@ -37,10 +37,18 @@ namespace GuedesTime.MVC.ViewModels
         [ScaffoldColumn(false)]
         public DateTime DataCadastro { get; set; }
 
-        [DisplayName("Ativo?")]
-        public bool Ativo { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
 
-        public FornecedorViewModel Fornecedor { get; set; }
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+
+		public FornecedorViewModel Fornecedor { get; set; }
 
         public IEnumerable<FornecedorViewModel> Fornecedores { get; set; }
     }

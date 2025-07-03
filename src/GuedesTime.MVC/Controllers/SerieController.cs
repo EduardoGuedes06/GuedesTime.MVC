@@ -3,6 +3,7 @@ using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using GuedesTime.MVC.Models;
 using GuedesTime.MVC.ViewModels;
+using GuedesTime.MVC.ViewModels.Enum;
 using GuedesTime.MVC.ViewModels.Utils;
 using GuedesTime.Service.Services;
 using k8s.KubeConfigModels;
@@ -33,30 +34,37 @@ namespace GuedesTime.MVC.Controllers
             _serieService = serieService;
         }
 
-		public ActionResult Index()
-		{
-			return View();
-		}
-
-		public async Task<IActionResult> IndexAntigo(Guid id, string? search, int page = 1, int pageSize = 5, bool ativo = true)
+		public async Task<IActionResult> Index(string? search, int? page = 1, int? pageSize = ((int)EnumQuantidadeDeItensPorPagina.Muitos), bool? ativo = true)
         {
             var userId = Guid.Parse(_userManager.GetUserId(User));
+			var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
 
-            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, id))
+
+			if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
                 return NotFound();
 
-            ViewBag.InstituicaoId = id;
-            var pagedSerie = await _serieService.GetPagedByInstituicaoAsync(id, search, page, pageSize, ativo);
+			var pagedSerie = await _serieService.GetPagedByInstituicaoAsync(
+				instituicaoId,
+				search,
+				page.Value,
+				pageSize.Value,
+				ativo.Value,
+				filtroAdicional: null,
+				ordenacao: q => q
+					.OrderBy(s => s.TipoEnsino)
+					.ThenBy(s => s.Nome),
+				includes: s => s.Disciplinas
+			);
 
-            var serieViewModels = _mapper.Map<IEnumerable<SerieViewModel>>(pagedSerie.Items);
+			var serieViewModels = _mapper.Map<IEnumerable<SerieViewModel>>(pagedSerie.Items);
 
             var pagedViewModel = new PagedViewModel<SerieViewModel>
             {
                 Model = serieViewModels,
                 Search = search,
-                Page = page,
-                PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling((double)pagedSerie.TotalCount / pageSize),
+                Page = page.Value,
+                PageSize = pageSize.Value,
+                TotalPages = (int)Math.Ceiling((double)pagedSerie.TotalCount / pageSize.Value),
                 TotalItems = pagedSerie.TotalCount
             };
             return View(pagedViewModel);

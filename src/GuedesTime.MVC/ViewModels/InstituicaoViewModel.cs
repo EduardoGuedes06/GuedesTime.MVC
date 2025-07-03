@@ -36,6 +36,12 @@ namespace GuedesTime.MVC.ViewModels
 
         public string? Avatar { get; set; }
 
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
+
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
 
 		[JsonIgnore]
 		public bool? Ativo { get; set; }

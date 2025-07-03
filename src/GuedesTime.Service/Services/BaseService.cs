@@ -3,7 +3,7 @@ using FluentValidation.Results;
 using GuedesTime.Data.Context;
 using GuedesTime.Domain.Enums;
 using GuedesTime.Domain.Intefaces;
-using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Generics;
 using GuedesTime.Domain.Models.Utils;
 using GuedesTime.Domain.Notificacoes;
 using Microsoft.EntityFrameworkCore;
@@ -90,25 +90,53 @@ namespace GuedesTime.Service.Services
             return await _pagedRepository.GetPagedResultAsync(query, pageSize, page, ativo);
         }
 
-        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(Guid instituicaoId, string? search, int page, int pageSize, bool ativo = true)
-        {
-            IQueryable<T> query = _context.Set<T>().AsNoTracking();
+		public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(
+			Guid instituicaoId,
+			string? search,
+			int page,
+			int pageSize,
+			bool ativo = true,
+			Expression<Func<T, bool>>? filtroAdicional = null,
+			Func<IQueryable<T>, IOrderedQueryable<T>>? ordenacao = null,
+			params Expression<Func<T, object>>[]? includes)
+		{
+			IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
-            if (typeof(T).GetProperty("InstituicaoId") != null)
-            {
-                query = query.Where(e => EF.Property<Guid>(e, "InstituicaoId") == instituicaoId);
-            }
-            if (typeof(T).GetProperty("Ativo") != null)
-            {
-                query = query.Where(e => EF.Property<bool?>(e, "Ativo") == ativo);
-            }
+			if (typeof(T).GetProperty("InstituicaoId") != null)
+			{
+				query = query.Where(e => EF.Property<Guid>(e, "InstituicaoId") == instituicaoId);
+			}
 
-            query = ApplySearch(query, search);
+			if (typeof(T).GetProperty("Ativo") != null)
+			{
+				query = query.Where(e => EF.Property<bool?>(e, "Ativo") == ativo);
+			}
 
-            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
-        }
+			if (filtroAdicional != null)
+			{
+				query = query.Where(filtroAdicional);
+			}
 
-        public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)
+			query = ApplySearch(query, search);
+
+			if (ordenacao != null)
+			{
+				query = ordenacao(query);
+			}
+
+			if (includes != null)
+			{
+				foreach (var include in includes)
+				{
+					query = query.Include(include);
+				}
+			}
+
+			return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
+		}
+
+
+		public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
 

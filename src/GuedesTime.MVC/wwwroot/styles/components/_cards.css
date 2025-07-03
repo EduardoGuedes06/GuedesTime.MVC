@@ -93,3 +93,17 @@
     padding: 8px 16px;
     font-size: 14px;
 }
+
+.pending-check {
+    list-style: none !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+    font-size: 15px !important;
+    margin-bottom: 24px !important;
+}
+
+    .pending-check i {
+        color: var(--yellow-status) !important;
+    }

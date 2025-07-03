@@ -15,5 +15,15 @@ namespace GuedesTime.MVC.ViewModels
         public string Acao { get; set; }
         public string Usuario { get; set; }
         public string Detalhes { get; set; }
-    }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
+
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+	}
 }

@@ -21,7 +21,16 @@ namespace GuedesTime.Data.Mappings
                 .WithMany(s => s.Disciplinas)
                 .HasForeignKey(ds => ds.SerieId);
 
-            builder.ToTable("DisciplinasSeries");
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
+
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("DisciplinasSeries");
         }
 
     }

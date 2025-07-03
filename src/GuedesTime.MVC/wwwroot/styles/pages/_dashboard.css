@@ -240,7 +240,7 @@
 	.checklist-item .progress-bar-container.mini {
 		height: 6px !important;
 		border-radius: 6px !important;
-		background-color: var(--lilac);
+		background-color: var(--white);
 		margin-top: 4px !important;
 	}
 

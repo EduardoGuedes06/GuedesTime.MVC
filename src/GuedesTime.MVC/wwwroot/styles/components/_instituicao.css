@@ -1,10 +1,3 @@
-/* ============================================= */
-/* ESTILOS PARA A PÁGINA DE             */
-/* DETALHES DA INSTITUIÇÃO               */
-/* ============================================= */
-
-/* --- Layout e Estrutura Geral --- */
-
 .institution-page-title {
     margin-bottom: 8px;
 }
@@ -22,8 +15,6 @@
     flex-direction: column;
     gap: 24px;
 }
-
-/* --- Card de Informações Gerais --- */
 
 .info-card {
     display: flex;
@@ -83,8 +74,6 @@
     width: 20px;
 }
 
-/* --- Card de Progresso do Cadastro --- */
-
 .progress-card.complete {
     text-align: center;
     background-color: var(--green-status-light-bg);
@@ -140,8 +129,6 @@
     display: flex;
 }
 
-/* --- Card de Status do Planejamento --- */
-
 .status-card .status-card-version {
     font-size: 15px;
     margin-bottom: 20px;
@@ -172,7 +159,6 @@
     background-color: var(--yellow-status);
 }
 
-/* --- Card de Atividade e Responsáveis --- */
 .activity-card-subtitle {
     font-weight: 500;
     margin-bottom: 12px;
@@ -192,7 +178,6 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    /* Pedido específico: borda com a cor principal */
     border: 3px solid var(--petroleum-blue);
 }
 
@@ -240,8 +225,6 @@
 .log-icon-info { color: var(--lilac); }
 .log-icon-default { color: var(--dark-text); }
 
-
-/* --- Card do Mapa Visual da Estrutura --- */
 .structure-card .section-header {
     margin-bottom: 16px;
     padding-bottom: 16px;
@@ -278,8 +261,6 @@
     margin-top: 8px;
 }
 
-
-/* --- Seção de Indicadores Resumidos --- */
 .indicators-header {
     margin-top: 32px;
 }
@@ -322,8 +303,6 @@
     margin: 0;
 }
 
-
-/* --- Media Query para Responsividade --- */
 @media (max-width: 992px) {
     .institution-grid {
         grid-template-columns: 1fr;

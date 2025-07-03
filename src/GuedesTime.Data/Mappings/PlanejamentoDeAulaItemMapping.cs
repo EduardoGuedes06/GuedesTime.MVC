@@ -45,8 +45,16 @@ namespace GuedesTime.Data.Mappings
                 .HasForeignKey(p => p.HorarioId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+			builder.Property(p => p.Ativo)
+				.IsRequired()
+				.HasDefaultValue(true);
 
-            builder.ToTable("PlanejamentoDeAulaItens");
+			builder.Property(s => s.DataCriacao)
+				.IsRequired();
+
+			builder.Property(s => s.DataAlteracao);
+
+			builder.ToTable("PlanejamentoDeAulaItens");
         }
     }
 

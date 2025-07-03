@@ -17,8 +17,17 @@ namespace GuedesTime.MVC.ViewModels
         [DisplayName("Nome")]
         public string Nome { get; set; }
 
-        public bool? Ativo { get; set; }
-        public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAula { get; set; }
+		[DisplayName("Data do Cadastro")]
+		public DateTime DataCriacao { get; set; }
+
+
+		[DisplayName("Data da Alteração")]
+		public DateTime? DataAlteracao { get; set; }
+
+
+		[DisplayName("Ativo")]
+		public bool? Ativo { get; set; }
+		public IEnumerable<PlanejamentoDeAulaItemViewModel> PlanejamentosDeAula { get; set; }
         public IEnumerable<DisciplinaProfessorViewModel> DisciplinasProfessores { get; set; }
         public IEnumerable<DisciplinaSerieViewModel> DisciplinasPorSerie { get; set; }
         public ICollection<ProfessorDisciplinaTurmaViewModel> ProfessoresDisciplinasTurmas { get; set; }

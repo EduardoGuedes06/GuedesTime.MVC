@@ -1,5 +1,6 @@
-﻿@using GuedesTime.MVC.ViewModels.Utils
-@model GuedesTime.MVC.ViewModels.PagedInstituicoesViewModel
+﻿@using GuedesTime.MVC.ViewModels
+@using GuedesTime.MVC.ViewModels.Utils
+@model PagedViewModel<InstituicaoViewModel>
 
 @{
 	ViewData["Title"] = "Minhas Instituições";
@@ -32,7 +33,7 @@
 		</form>
 
 		<div class="entity-list-grid" style="grid-template-columns: 1fr;">
-			@foreach (var instituicao in Model.Instituicoes)
+			@foreach (var instituicao in Model.Model)
 			{
 				var id = instituicao.Id ?? Guid.Empty;
 				var resumo = new DadosAgregadosInstituicaoViewModel();
