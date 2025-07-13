@@ -82,20 +82,6 @@ document.addEventListener('click', (event) => {
     }
 });
 
-document.addEventListener('input', (event) => {
-    if (event.target.classList.contains('campo-cep')) {
-        import('./utils.js').then(utils => utils.handleCepInput(event.target));
-    }
-    if (event.target.classList.contains('campo-cnpj')) {
-        import('./utils.js').then(utils => utils.handleCnpjInput(event.target));
-    }
-    if (event.target.classList.contains('campo-nome')) {
-        import('./utils.js').then(utils => utils.handleNomeInput(event.target));
-    }
-    if (event.target.classList.contains('campo-numero')) {
-        import('./utils.js').then(utils => utils.handleNumeroInput(event.target));
-    }
-});
 
 document.addEventListener('submit', function (event) {
     const form = event.target;
