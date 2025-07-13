@@ -4,57 +4,56 @@
 @model PagedViewModel<SerieViewModel>
 
 @{
-	ViewData["Title"] = "Series";
-	Layout = "_Layout";
+    ViewData["Title"] = "Séries";
+    Layout = "_Layout";
+
+    var tipoEnsinoSelecionado = ViewBag.FiltroTipoEnsino != null
+        ? (int)ViewBag.FiltroTipoEnsino
+        : (int?)null;
 }
 
 <div class="section-header">
-	<h2 class="section-title">Séries</h2>
-	<button id="add-series-btn" class="btn primary-btn">
-		<i class="fas fa-plus"></i>Adicionar
-		Série
-	</button>
+    <h2 class="section-title">Séries</h2>
+    <button type="button" id="add-series-btn" class="btn primary-btn" data-modal-url="@Url.Action("Upsert", "Serie")"
+            data-modal-title="Adicionar Nova Série">
+        <i class="fas fa-plus"></i> Adicionar Série
+    </button>
 </div>
-<div class="filter-bar">
-	<input type="text" id="series-search" placeholder="Buscar séries..." class="search-input">
-</div>
-<div id="series-list" class="entity-list-grid">
-	@foreach (var serie in Model.Model)
-	{
-		<div class="entity-card">
-			<h3>@serie.Nome Ano</h3>
-			<p>Ordem: @serie.Codigo</p>
-			<p>@this.EnumDisplayName(serie.TipoEnsino)</p>
-			<div class="info-row">
-				@if (serie.Disciplinas != null && serie.Disciplinas.Any())
-				{
-					<span>Disciplinas Relacionadas:</span>
-					<div class="badges-container">
-						@foreach (var disciplina in serie.Disciplinas)
-						{
-							<span class="badge subject-badge">@disciplina.Disciplina.Nome</span>
-						}
-					</div>
-				}
-				else
-				{
-					<ul class="pending-check-info">
-						<li>
-							<i class="fas fa-exclamation-circle"></i>
-							<span class="text-muted">Nenhuma disciplina relacionada</span>
-						</li>
-					</ul>
-				}
-			</div>
-			<div class="actions">
-				<button class="btn primary-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Editar</button>
-				<button class="btn danger-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Excluir</button>
-			</div>
-		</div>
-	}
-</div>
-<div id="series-pagination" class="pagination-controls">
-	<button class="btn" disabled>Anterior</button>
-	<button class="btn" disabled>1</button>
-	<button class="btn" disabled>Próximo</button>
+
+
+<form id="filter-form"
+      class="js-dynamic-filter-form"
+      data-url="@Url.Action("Index")"
+      data-list-container="#list-container">
+
+    <div class="filter-bar" style=" align-items: center">
+        <input type="text" id="series-search" name="search" placeholder="Buscar séries..."
+               class="search-input js-dynamic-search" value="@Model.Search">
+  
+        <select id="series-filter-level" class="filter-select js-dynamic-filter" name="tipoEnsino">
+            <option value="">Filtrar por Nível</option>
+            @foreach (var opcao in (List<SelectListItem>)ViewBag.TipoEnsinoOptions)
+            {
+                var isSelected = tipoEnsinoSelecionado.HasValue && tipoEnsinoSelecionado.Value == int.Parse(opcao.Value);
+                <option value="@opcao.Value" selected="@isSelected">@opcao.Text</option>
+            }
+        </select>
+
+        <div class="filter-toggle-group">
+            <label for="series-status-toggle" class="toggle-label">Apenas ativas</label>
+            <div class="toggle-switch">
+                <input type="checkbox" id="series-status-toggle" name="ativo" value="true"
+                       class="js-dynamic-filter js-default-checked" @(ViewBag.FiltroAtivo != false ? "checked" : "")>
+                <label class="toggle-slider" for="series-status-toggle"></label>
+            </div>
+        </div>
+
+        <button type="button" id="clear-filters-btn" class="btn tertiary-btn js-clear-filters-btn" title="Limpar filtros">
+            <i class="fas fa-times"></i> Limpar
+        </button>
+    </div>
+</form>
+
+<div id="list-container">
+    @await Html.PartialAsync("_SerieListPartial", Model)
 </div>

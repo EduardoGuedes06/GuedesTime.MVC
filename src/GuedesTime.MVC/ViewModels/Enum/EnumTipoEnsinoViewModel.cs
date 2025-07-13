@@ -4,6 +4,9 @@ namespace GuedesTime.MVC.ViewModels.Enum
 {
 	public enum EnumTipoEnsinoViewModel
 	{
+		[Display(Name = "Todos")]
+		Todos = 0,
+
 		[Display(Name = "Educação Infantil")]
 		Ensino_Infantil = 1,
 

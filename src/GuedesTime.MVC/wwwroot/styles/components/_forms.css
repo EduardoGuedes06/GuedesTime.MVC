@@ -1,3 +1,144 @@
+﻿
+
+.form-options {
+    display: flex !important;
+    justify-content: flex-end !important;
+    margin-bottom: 24px !important;
+}
+
+.forgot-password {
+    font-size: 14px !important;
+    color: var(--petroleum-blue) !important;
+    text-decoration: none !important;
+    transition: color 0.2s !important;
+}
+
+    .forgot-password:hover {
+        color: var(--lilac) !important;
+    }
+
+.auth-actions {
+    margin-top: 16px !important;
+}
+
+    .auth-actions .btn {
+        width: 100% !important;
+        padding: 14px !important;
+        font-size: 18px !important;
+    }
+
+.filter-bar {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    margin-bottom: 24px !important;
+    align-items: center !important;
+}
+
+.search-input,
+.filter-select {
+    flex: 1 !important;
+    min-width: 200px !important;
+    padding: 12px !important;
+    border: 1px solid var(--light-gray) !important;
+    border-radius: 8px !important;
+    font-size: 16px !important;
+    outline: none !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+    .search-input:focus,
+    .filter-select:focus {
+        border-color: var(--lilac) !important;
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3) !important;
+    }
+
+.form-group {
+    margin-bottom: 20px !important;
+}
+
+    .form-group label {
+        display: block !important;
+        font-weight: 600 !important;
+        margin-bottom: 8px !important;
+        color: var(--dark-text) !important;
+        font-size: 14px !important;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="number"],
+    .form-group input[type="file"],
+    .form-group input[type="time"],
+    .form-group select,
+    .form-group textarea {
+        width: 100% !important;
+        padding: 12px !important;
+        border: 1px solid var(--light-gray) !important;
+        border-radius: 8px !important;
+        font-size: 16px !important;
+        outline: none !important;
+        font-family: var(--font-family) !important;
+        transition: border-color 0.2s, box-shadow 0.2s !important;
+    }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--lilac) !important;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3) !important;
+        }
+
+.input-with-button {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+    .input-with-button .form-control,
+    .input-with-button .search-input {
+        padding-right: 40px !important;
+    }
+
+.clear-input-btn {
+    position: absolute !important;
+    right: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    color: var(--light-text) !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    transition: color 0.2s !important;
+}
+
+    .clear-input-btn:hover {
+        color: var(--dark-text) !important;
+    }
+
+.form-grid-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+}
+
+.multi-select-container {
+    border: 1px solid var(--light-gray) !important;
+    border-radius: 8px !important;
+    padding: 8px !important;
+    position: relative !important;
+}
+
+    .multi-select-container:focus-within {
+        border-color: var(--lilac) !important;
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3) !important;
+    }
+
 .form-options {
     display: flex;
     justify-content: flex-end;
@@ -11,26 +152,36 @@
     transition: color 0.2s;
 }
 
-.forgot-password:hover {
-    color: var(--lilac);
-}
+    .forgot-password:hover {
+        color: var(--lilac);
+    }
 
 .auth-actions {
     margin-top: 16px;
 }
 
-.auth-actions .btn {
-    width: 100%;
-    padding: 14px;
-    font-size: 18px;
-}
+    .auth-actions .btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+    }
 
 .filter-bar {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
     margin-bottom: 24px;
+    align-items: center !important;
 }
+
+    .filter-bar .toggle-switch {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        height: 24px;
+    }
+
 
 .search-input,
 .filter-select {
@@ -44,48 +195,48 @@
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.search-input:focus,
-.filter-select:focus {
-    border-color: var(--lilac);
-    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
-}
+    .search-input:focus,
+    .filter-select:focus {
+        border-color: var(--lilac);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+    }
 
 .form-group {
     margin-bottom: 20px;
 }
 
-.form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 14px;
-}
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 14px;
+    }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="password"],
-.form-group input[type="number"],
-.form-group input[type="file"],
-.form-group input[type="time"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--light-gray);
-    border-radius: 8px;
-    font-size: 16px;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: var(--font-family);
-}
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="number"],
+    .form-group input[type="file"],
+    .form-group input[type="time"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--light-gray);
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        font-family: var(--font-family);
+    }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    border-color: var(--lilac);
-    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
-}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--lilac);
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+        }
 
 .form-grid-2 {
     display: grid;
@@ -100,10 +251,10 @@
     position: relative;
 }
 
-.multi-select-container:focus-within {
-    border-color: var(--lilac);
-    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
-}
+    .multi-select-container:focus-within {
+        border-color: var(--lilac);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+    }
 
 .selected-items-container {
     display: flex;
@@ -123,15 +274,15 @@
     font-weight: 500;
 }
 
-.selected-item-chip .remove-btn {
-    background: none;
-    border: none;
-    color: var(--white);
-    margin-left: 8px;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 0;
-}
+    .selected-item-chip .remove-btn {
+        background: none;
+        border: none;
+        color: var(--white);
+        margin-left: 8px;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 0;
+    }
 
 .multi-select-search {
     width: 100%;
@@ -157,7 +308,9 @@
     display: none;
 }
 
-.available-items-list.active { display: block; }
+    .available-items-list.active {
+        display: block;
+    }
 
 .available-item {
     padding: 10px 12px;
@@ -165,7 +318,9 @@
     transition: background-color 0.2s;
 }
 
-.available-item:hover { background-color: var(--light-gray); }
+    .available-item:hover {
+        background-color: var(--light-gray);
+    }
 
 .filter-group {
     display: flex;
@@ -175,17 +330,17 @@
     margin-bottom: 24px;
 }
 
-.filter-group .search-input {
-    flex-grow: 1;
-    min-width: 250px;
-}
+    .filter-group .search-input {
+        flex-grow: 1;
+        min-width: 250px;
+    }
 
-.filter-group .filter-select {
-    flex-shrink: 0;
-    min-width: 150px;
-}
+    .filter-group .filter-select {
+        flex-shrink: 0;
+        min-width: 150px;
+    }
 
-.filter-group .btn {
-    flex-shrink: 0;
-}
+    .filter-group .btn {
+        flex-shrink: 0;
+    }
 

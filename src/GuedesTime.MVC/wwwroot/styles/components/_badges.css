@@ -13,11 +13,20 @@
 
 .series-badge { background-color: var(--petroleum-blue); }
 
+.series-ativo {
+    background-color: var(--red-status);
+}
+
 .subject-badge { background-color: #6D28D9; }
+
+.subject-offline-badge {
+    background-color: var(--red-status);
+}
 
 .badge.status-approved {
     background-color: var(--green-status);
 }
+
 
 .badge.status-pending {
     background-color: var(--yellow-status);

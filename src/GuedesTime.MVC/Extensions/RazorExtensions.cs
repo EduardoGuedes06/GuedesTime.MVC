@@ -44,21 +44,5 @@ namespace GuedesTime.MVC.Extensions
 			return attribute?.Name ?? value.ToString();
 		}
 
-		//public static bool IfClaim(this RazorPage page, string claimName, string claimValue)
-		//{
-		//    return CustomAuthorization.ValidarClaimsUsuario(page.Context, claimName, claimValue);
-		//}
-
-		//public static string IfClaimShow(this RazorPage page, string claimName, string claimValue)
-		//{
-		//    return CustomAuthorization.ValidarClaimsUsuario(page.Context, claimName, claimValue) ? "" : "disabled";
-		//}
-
-		//public static IHtmlContent IfClaimShow(this IHtmlContent page, HttpContext context, string claimName, string claimValue)
-		//{
-		//    return CustomAuthorization.ValidarClaimsUsuario(context, claimName, claimValue) ? page : null;
-		//}
-
-
 	}
 }

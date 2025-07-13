@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Enums;
+using GuedesTime.MVC.Extensions;
 using GuedesTime.MVC.Models;
 using GuedesTime.MVC.ViewModels;
 using GuedesTime.MVC.ViewModels.Enum;
@@ -11,37 +13,52 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 
 namespace GuedesTime.MVC.Controllers
 {
-    [Authorize]
-    public class SerieController : BaseController
-    {
-        private readonly IMapper _mapper;
-        private readonly IInstituicaoService _instituicaoService;
-        private readonly ISerieService _serieService;
-        private readonly UserManager<ApplicationUser> _userManager;
+	[Authorize]
+	public class SerieController : BaseController
+	{
+		private readonly IMapper _mapper;
+		private readonly IInstituicaoService _instituicaoService;
+		private readonly ISerieService _serieService;
+		private readonly UserManager<ApplicationUser> _userManager;
 
-        public SerieController(IMapper mapper,
-                                    INotificador notificador,
-                                    IInstituicaoService instituicaoService,
-                                    UserManager<ApplicationUser> userManager,
-                                    ISerieService serieService) : base(notificador)
-        {
-            _mapper = mapper;
-            _userManager = userManager;
-            _instituicaoService = instituicaoService;
-            _serieService = serieService;
-        }
+		public SerieController(IMapper mapper,
+									INotificador notificador,
+									IInstituicaoService instituicaoService,
+									UserManager<ApplicationUser> userManager,
+									ISerieService serieService) : base(notificador)
+		{
+			_mapper = mapper;
+			_userManager = userManager;
+			_instituicaoService = instituicaoService;
+			_serieService = serieService;
+		}
 
-		public async Task<IActionResult> Index(string? search, int? page = 1, int? pageSize = ((int)EnumQuantidadeDeItensPorPagina.Muitos), bool? ativo = true)
-        {
-            var userId = Guid.Parse(_userManager.GetUserId(User));
+		public async Task<IActionResult> Index(
+			string? search,
+			EnumTipoEnsino? tipoEnsino,
+			bool? ativo = true,
+			int? page = 1,
+			int? pageSize = ((int)EnumQuantidadeDeItensPorPagina.Muitos))
+		{
+			var userId = Guid.Parse(_userManager.GetUserId(User));
 			var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
 
-
 			if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
-                return NotFound();
+				return NotFound();
+
+			var ensinoItems = EnumTipoEnsinoViewModel.Ensino_Infantil.ToSelectListItems();
+			ViewBag.TipoEnsinoOptions = ensinoItems;
+
+			Expression<Func<Serie, bool>>? filtroAdicional = null;
+			if (tipoEnsino.HasValue)
+			{
+				var tipoEnsinoFiltro = tipoEnsino.Value;
+				filtroAdicional = s => s.TipoEnsino == tipoEnsinoFiltro;
+			}
 
 			var pagedSerie = await _serieService.GetPagedByInstituicaoAsync(
 				instituicaoId,
@@ -49,121 +66,194 @@ namespace GuedesTime.MVC.Controllers
 				page.Value,
 				pageSize.Value,
 				ativo.Value,
-				filtroAdicional: null,
-				ordenacao: q => q
-					.OrderBy(s => s.TipoEnsino)
-					.ThenBy(s => s.Nome),
+				filtroAdicional: filtroAdicional,
+				ordenacao: q => q.OrderBy(s => s.TipoEnsino).ThenBy(s => s.Nome),
 				includes: s => s.Disciplinas
 			);
 
 			var serieViewModels = _mapper.Map<IEnumerable<SerieViewModel>>(pagedSerie.Items);
 
-            var pagedViewModel = new PagedViewModel<SerieViewModel>
-            {
-                Model = serieViewModels,
-                Search = search,
-                Page = page.Value,
-                PageSize = pageSize.Value,
-                TotalPages = (int)Math.Ceiling((double)pagedSerie.TotalCount / pageSize.Value),
-                TotalItems = pagedSerie.TotalCount
-            };
-            return View(pagedViewModel);
-        }
-
-        public async Task<IActionResult> UpsertPartial(Guid instituicaoId, Guid? id)
-        {
-            var userId = Guid.Parse(_userManager.GetUserId(User));
-
-            if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
-                return NotFound();
-
-            SerieViewModel serieViewModel;
-
-            if (id.HasValue)
-            {
-                var serie = await _serieService.ObterPorId(id.Value);
-                if (serie == null) return NotFound();
-
-                serieViewModel = _mapper.Map<SerieViewModel>(serie);
-            }
-            else
-            {
-                serieViewModel = new SerieViewModel
-                {
-                    InstituicaoId = instituicaoId
-                };
-            }
-
-            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-            {
-                return PartialView("_UpsertPartial", serieViewModel);
-            }
-
-            return View(serieViewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(SerieViewModel serieViewModel)
-        {
-			var referer = Request.Headers["Referer"].ToString();
-			var userId = Guid.Parse(_userManager.GetUserId(User));
-			if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, serieViewModel.InstituicaoId))
-				return NotFound();
-
-			if (!ModelState.IsValid)
+			var pagedViewModel = new PagedViewModel<SerieViewModel>
 			{
-				if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-				{
-					return Json(new
-					{
-						success = false,
-						errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
-					});
-				}
+				Model = serieViewModels,
+				Search = search,
+				Page = page.Value,
+				PageSize = pageSize.Value,
+				TotalPages = (int)Math.Ceiling((double)pagedSerie.TotalCount / pageSize.Value),
+				TotalItems = pagedSerie.TotalCount
+			};
 
-				return View(serieViewModel);
-			}
-
-			var serieComMesmoNome = await _serieService.ObterSeriePorNome(serieViewModel.InstituicaoId, serieViewModel.Nome);
-
-
-			if (serieComMesmoNome != null &&
-				(serieViewModel.Id == null || serieComMesmoNome.Id != serieViewModel.Id) &&
-				serieComMesmoNome.Ativo == serieViewModel.Ativo)
-			{
-				TempData["error"] = "Já existe uma serie com esse nome!";
-				return Redirect(referer);
-			}
-
-			if (serieViewModel.Id == null || serieViewModel.Id == Guid.Empty)
-			{
-				var novaserie = _mapper.Map<Serie>(serieViewModel);
-				await _serieService.Adicionar(novaserie);
-				TempData["success"] = "serie cadastrada com sucesso!";
-			}
-			else
-			{
-				var serieExistente = await _serieService.ObterPorId(serieViewModel.Id);
-				if (serieExistente == null)
-					return NotFound();
-
-				_mapper.Map(serieViewModel, serieExistente);
-				await _serieService.Atualizar(serieExistente);
-				TempData["success"] = "Dados da serie alterados com sucesso!";
-			}
+			ViewBag.FiltroAtivo = ativo;
+			ViewBag.FiltroTipoEnsino = tipoEnsino;
 
 			if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
 			{
-				return Json(new { success = true });
+				return PartialView("_SerieListPartial", pagedViewModel);
 			}
+			return View(pagedViewModel);
+		}
 
-			if (!string.IsNullOrEmpty(referer))
+		//public async Task<IActionResult> UpsertPartial(Guid instituicaoId, Guid? id)
+		//      {
+		//          var userId = Guid.Parse(_userManager.GetUserId(User));
+
+		//          if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
+		//              return NotFound();
+
+		//          SerieViewModel serieViewModel;
+
+		//          if (id.HasValue)
+		//          {
+		//              var serie = await _serieService.ObterPorId(id.Value);
+		//              if (serie == null) return NotFound();
+
+		//              serieViewModel = _mapper.Map<SerieViewModel>(serie);
+		//          }
+		//          else
+		//          {
+		//              serieViewModel = new SerieViewModel
+		//              {
+		//                  InstituicaoId = instituicaoId
+		//              };
+		//          }
+
+		//          if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+		//          {
+		//              return PartialView("_UpsertPartial", serieViewModel);
+		//          }
+
+		//          return View(serieViewModel);
+		//      }
+
+		//      [HttpPost]
+		//      [ValidateAntiForgeryToken]
+		//      public async Task<IActionResult> Upsert(SerieViewModel serieViewModel)
+		//      {
+		//	var referer = Request.Headers["Referer"].ToString();
+		//	var userId = Guid.Parse(_userManager.GetUserId(User));
+		//	if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, serieViewModel.InstituicaoId))
+		//		return NotFound();
+
+		//	if (!ModelState.IsValid)
+		//	{
+		//		if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+		//		{
+		//			return Json(new
+		//			{
+		//				success = false,
+		//				errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+		//			});
+		//		}
+
+		//		return View(serieViewModel);
+		//	}
+
+		//	var serieComMesmoNome = await _serieService.ObterSeriePorNome(serieViewModel.InstituicaoId, serieViewModel.Nome);
+
+
+		//	if (serieComMesmoNome != null &&
+		//		(serieViewModel.Id == null || serieComMesmoNome.Id != serieViewModel.Id) &&
+		//		serieComMesmoNome.Ativo == serieViewModel.Ativo)
+		//	{
+		//		TempData["error"] = "Já existe uma serie com esse nome!";
+		//		return Redirect(referer);
+		//	}
+
+		//	if (serieViewModel.Id == null || serieViewModel.Id == Guid.Empty)
+		//	{
+		//		var novaserie = _mapper.Map<Serie>(serieViewModel);
+		//		await _serieService.Adicionar(novaserie);
+		//		TempData["success"] = "serie cadastrada com sucesso!";
+		//	}
+		//	else
+		//	{
+		//		var serieExistente = await _serieService.ObterPorId(serieViewModel.Id);
+		//		if (serieExistente == null)
+		//			return NotFound();
+
+		//		_mapper.Map(serieViewModel, serieExistente);
+		//		await _serieService.Atualizar(serieExistente);
+		//		TempData["success"] = "Dados da serie alterados com sucesso!";
+		//	}
+
+		//	if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+		//	{
+		//		return Json(new { success = true });
+		//	}
+
+		//	if (!string.IsNullOrEmpty(referer))
+		//	{
+		//		return Redirect(referer);
+		//	}
+
+		//	return RedirectToAction("Detalhes", "Instituicao", new { id = serieViewModel.InstituicaoId });
+		//}
+
+		[HttpGet]
+		public async Task<IActionResult> Upsert(Guid? id)
+		{
+			var serieViewModel = new SerieViewModel();
+
+			var userId = Guid.Parse(_userManager.GetUserId(User));
+			var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
+
+			if (id.HasValue)
 			{
-				return Redirect(referer);
+				var serie = await _serieService.ObterPorId(id.Value);
+				if (serie == null) return NotFound();
+
+				serieViewModel = _mapper.Map<SerieViewModel>(serie);
+			}
+			else
+			{
+				serieViewModel = new SerieViewModel
+				{
+					InstituicaoId = instituicaoId
+				};
 			}
 
-			return RedirectToAction("Detalhes", "Instituicao", new { id = serieViewModel.InstituicaoId });
+			return PartialView("_Upsert", serieViewModel);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Upsert(SerieViewModel serieViewModel)
+		{
+
+			bool? estadoDoToggleEnviado = serieViewModel.Ativo;
+
+
+			if (!ModelState.IsValid)
+			{
+				var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+				return Json(new { success = false, errors });
+			}
+
+			if (serieViewModel.Id == Guid.Empty || serieViewModel.Id == null)
+			{
+				var serie = _mapper.Map<Serie>(serieViewModel);
+				await _serieService.Adicionar(serie);
+				TempData["success"] = "Série Cadastrada com sucesso!!";
+			}
+			else
+			{
+				var serieExiste = await _serieService.ObterPorId((Guid)serieViewModel.Id);
+				if (serieExiste == null)
+				{
+					return Json(new { success = false, errors = new[] { "Instituição não encontrada." } });
+				}
+
+				_mapper.Map(serieViewModel, serieExiste);
+				await _serieService.Atualizar(serieExiste);
+				TempData["success"] = "Dados da Série alterados com sucesso!!";
+			}
+
+			if (!OperacaoValida())
+			{
+				return Json(new { success = false, errors = ObterErrosDeNegocio() });
+			}
+
+			return Json(new { success = true, url = Url.Action("SelecionarInstituicao", "Instituicao") });
 		}
 
 		[HttpPost]

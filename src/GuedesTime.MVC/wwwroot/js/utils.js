@@ -127,6 +127,64 @@ function handleNomeInput(nomeInput) {
     if (nameError) nameError.textContent = "";
 }
 
+function handleFiltroInput(filtroInput) {
+
+    debugger
+
+    const filtroValue = filtroInput.value;
+
+    if (filtroValue.length > 50) {
+        filtroInput.value = filtroValue.slice(0, 50);
+        const errorId = filtroInput.getAttribute('data-error-id');
+        if (errorId) {
+            const errorSpan = document.getElementById(errorId);
+            if (errorSpan) errorSpan.textContent = "O filtro pode ter no máximo 50 caracteres.";
+        }
+        return;
+    }
+
+    const errorId = filtroInput.getAttribute('data-error-id');
+    if (errorId) {
+        const errorSpan = document.getElementById(errorId);
+        if (errorSpan) errorSpan.textContent = "";
+    }
+}
+
+function handleOrdinalUnicoInput(input) {
+    let valor = input.value.replace(/\D/g, '');
+    if (valor.length > 1) {
+        valor = valor.charAt(0);
+    }
+    if (valor === '0') {
+        valor = '';
+    }
+    input.value = valor ? valor + 'º' : '';
+}
+
+function handleOrdinalMultiploInput(input) {
+    const errorSpan = document.getElementById(input.dataset.errorId);
+    const numeros = input.value.match(/\d/g) || [];
+    const numerosValidos = [...new Set(numeros)]
+        .map(n => parseInt(n, 10))
+        .filter(n => n >= 1 && n <= 9);
+
+    let numerosLimitados = numerosValidos;
+    if (numerosValidos.length > 10) {
+        numerosLimitados = numerosValidos.slice(0, 10);
+        if (errorSpan) errorSpan.textContent = "Limite de 10 itens atingido.";
+    } else {
+        if (errorSpan) errorSpan.textContent = "";
+    }
+
+    const valorFinal = numerosLimitados
+        .sort((a, b) => a - b)
+        .map(n => n + 'º')
+        .join(', ');
+
+    input.value = valorFinal;
+}
+
+
 function handleNumeroInput(numeroInput) {
     let valor = numeroInput.value.replace(/\D/g, '');
     if (valor.length > 10) {
@@ -135,4 +193,13 @@ function handleNumeroInput(numeroInput) {
     numeroInput.value = valor;
 }
 
-export { handleCepInput, initializeToggleSwitch, handleCnpjInput, handleNomeInput, handleNumeroInput };
+export {
+    handleCepInput,
+    initializeToggleSwitch,
+    handleCnpjInput,
+    handleNomeInput,
+    handleNumeroInput,
+    handleFiltroInput,
+    handleOrdinalUnicoInput,
+    handleOrdinalMultiploInput
+};

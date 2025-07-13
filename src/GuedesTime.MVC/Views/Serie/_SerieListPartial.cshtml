@@ -1,0 +1,78 @@
+﻿@using GuedesTime.MVC.Extensions
+@using GuedesTime.MVC.ViewModels
+@using GuedesTime.MVC.ViewModels.Utils
+@model PagedViewModel<SerieViewModel>
+
+<div id="series-list" class="entity-list-grid">
+	@if (Model.Model.Any())
+	{
+		@foreach (var serie in Model.Model)
+		{
+			<div class="entity-card">
+				<h3>@serie.Nome Ano</h3>
+				<p>Ordem: @serie.Codigo</p>
+				<p>@this.EnumDisplayName(serie.TipoEnsino)</p>
+				<div class="info-row">
+					@if (serie.Disciplinas != null && serie.Disciplinas.Any())
+					{
+						<span>Disciplinas Relacionadas:</span>
+						<div class="badges-container">
+							@foreach (var disciplina in serie.Disciplinas)
+							{
+								<span class="badge subject-badge">@disciplina.Disciplina.Nome</span>
+							}
+						</div>
+					}
+					else
+					{
+						<ul class="pending-check-info">
+							<li>
+								<i class="fas fa-exclamation-circle"></i>
+								<span class="text-muted">Nenhuma disciplina relacionada</span>
+							</li>
+						</ul>
+
+					}
+
+					@if (serie.Ativo == false)
+					{
+						<div class="badges-container">
+
+							<span class="badge status-pending"><i class="fa-solid fa-power-off"></i></span>
+
+						</div>
+					}
+
+				</div>
+				<div class="actions">
+					<button class="btn primary-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Editar</button>
+					<button class="btn danger-btn" onclick="alert('Ação desabilitada no protótipo.')" disabled>Excluir</button>
+				</div>
+			</div>
+		}
+	}
+	else
+	{
+		<p>PLACEHOLDER PARA FALTA DE DADOS!!!!.</p>
+	}
+</div>
+
+<div id="series-pagination" class="pagination-controls">
+	@if (Model.TotalPages > 0)
+	{
+		<button class="btn @(Model.Page > 1 ? "" : "disabled")" data-page="@(Model.Page - 1)" @(Model.Page > 1 ? "" : "disabled")>
+			<i class="fas fa-chevron-left"></i> Anterior
+		</button>
+
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<button class="btn @(i == Model.Page ? "primary-btn active" : "")" data-page="@i">
+				@i
+			</button>
+		}
+
+		<button class="btn @(Model.Page < Model.TotalPages ? "" : "disabled")" data-page="@(Model.Page + 1)" @(Model.Page < Model.TotalPages ? "" : "disabled")>
+			Próxima <i class="fas fa-chevron-right"></i>
+		</button>
+	}
+</div>

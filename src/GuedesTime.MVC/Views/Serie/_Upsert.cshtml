@@ -1,0 +1,66 @@
+﻿@using GuedesTime.MVC.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model GuedesTime.MVC.ViewModels.SerieViewModel
+
+<div class="modal-header">
+    <h3 class="modal-title">
+        @((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar uma Nova Série" : "Editar dados da Série")
+    </h3>
+</div>
+<form asp-controller="Serie" asp-action="Upsert" method="post" id="form-upsert-serie">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <vc:summary />
+
+    <div class="modal-body">
+        <div class="form-group">
+            <label asp-for="SerieUnica" class="control-label"></label>
+            <div class="input-with-button">
+                <input asp-for="SerieUnica" class="form-control campo-ordinal-unico" placeholder="Ex: 4º" />
+                <button type="button" class="clear-input-btn js-clear-input-btn" title="Limpar campo">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+            </div>
+            <span asp-validation-for="SerieUnica" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SeriesMultiplas" class="control-label"></label>
+            <div class="input-with-button">
+                <input asp-for="SeriesMultiplas" class="form-control campo-ordinal-multiplo"
+                       placeholder="Ex: 1º, 2º, 3º" data-error-id="series-multiplas-error" />
+                <button type="button" class="clear-input-btn js-clear-input-btn" title="Limpar campo">
+                    <i class="fas fa-times-circle"></i>
+                </button>
+            </div>
+            <span asp-validation-for="SeriesMultiplas" class="text-danger"></span>
+            <span id="series-multiplas-error" class="text-danger"></span>
+        </div>
+        
+        @if (Model.Id != null && Model.Id != Guid.Empty)
+        {
+            <div class="form-group">
+                <div class="toggle-switch-group">
+                    <label class="control-label">Instituição Ativa</label>
+
+                    <div class="toggle-switch">
+                        <input type="checkbox"
+                               id="Ativo-checkbox-visual"
+                               class="campo-Ativo-toggle"
+                               data-initial-value="@ViewBag.EstadoInicialAtivo.ToString().ToLower()" />
+                        <label class="toggle-slider" for="Ativo-checkbox-visual"></label>
+                    </div>
+                </div>
+                <input type="hidden" name="Ativo" id="hidden-Ativo-value" />
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn secondary-btn" data-modal-close>Cancelar</button>
+        <button type="submit" class="btn primary-btn">
+            @((Model.Id == null || Model.Id == Guid.Empty) ? "Criar" : "Salvar Alterações")
+        </button>
+    </div>
+</form>

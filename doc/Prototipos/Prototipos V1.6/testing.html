@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Time - Painel de Controle</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar" id="sidebar">
+            <h1 class="logo">Health Time</h1>
+            <div class="sidebar-user-profile">
+                <div class="sidebar-user-avatar" id="sidebar-user-avatar">
+                </div>
+                <div class="user-details">
+                    <span class="user-name" id="sidebar-user-name"></span>
+                    <span class="user-role" id="sidebar-user-role"></span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" data-section="dashboard" class="active"><i class="fas fa-home"></i>Painel</a></li>
+                    <li><a href="#" data-section="instituicao"><i class="fas fa-university"></i>Instituição</a></li>
+                    <li><a href="#" data-section="teachers"><i class="fas fa-chalkboard-teacher"></i>Professores</a>
+                    </li>
+                    <li><a href="#" data-section="subjects"><i class="fas fa-book-open"></i>Disciplinas</a></li>
+                    <li><a href="#" data-section="series"><i class="fas fa-graduation-cap"></i>Séries</a></li>
+                    <li><a href="#" data-section="classes"><i class="fas fa-users"></i>Turmas</a></li>
+                    <li><a href="#" data-section="classrooms"><i class="fas fa-building"></i>Salas de Aula</a></li>
+                    <li><a href="#" data-section="time-slots"><i class="fas fa-clock"></i>Horários</a></li>
+                    <li><a href="#" data-section="holidays"><i class="fas fa-calendar-alt"></i>Feriados</a></li>
+                    <li><a href="#" data-section="lesson-plans"><i class="fas fa-calendar-check"></i>Planos de Aula</a>
+                    </li>
+                    <li><a href="#" data-section="teacher-review"><i class="fas fa-user-check"></i>Revisão do
+                            Professor</a></li>
+                    <li><a href="#" data-section="configuracoes"><i class="fas fa-cog"></i>Configurações</a></li>
+                </ul>
+            </nav>
+            <a href="login.html" class="btn danger-btn" style="width: 100%; margin-top: 24px;"><i
+                    class="fas fa-sign-out-alt"></i>Sair</a>
+        </aside>
+
+        <div class="main-content">
+            <header class="mobile-header">
+                <button id="sidebar-toggle" class="sidebar-toggle-btn"><i class="fas fa-bars"></i></button>
+                <h2 class="mobile-header-title">Health Time</h2>
+            </header>
+
+            
+
+
+        </div>
+    </div>
+
+
+    <div id="toast-container" class="toast-container"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

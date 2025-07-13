@@ -1,6 +1,8 @@
 ﻿using GuedesTime.Domain.Enums;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.MVC.Models;
+using GuedesTime.Service.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -27,17 +29,29 @@ namespace GuedesTime.MVC.Controllers
 
 		public override void OnActionExecuting(ActionExecutingContext context)
 		{
-			var controllerName = context.RouteData.Values["controller"].ToString();
+			var controllerName = context.RouteData.Values["controller"]?.ToString();
 			var controllersPermitidos = new[] { "Instituicao", "Home", "Account" };
+			var controllersAValidarAcesso = new[] { "Serie", "Disciplina", "Professor" };
 
 			if (User.Identity.IsAuthenticated && !controllersPermitidos.Contains(controllerName))
 			{
-				var instituicaoId = context.HttpContext.Session.GetString("InstituicaoId");
-				if (string.IsNullOrEmpty(instituicaoId))
+				var instituicaoIdStr = context.HttpContext.Session.GetString("InstituicaoId");
+
+				if (string.IsNullOrEmpty(instituicaoIdStr) || !Guid.TryParse(instituicaoIdStr, out var instituicaoId))
 				{
 					context.Result = new RedirectToActionResult("SelecionarInstituicao", "Instituicao", null);
+					return;
+				}
+
+				if (controllersAValidarAcesso.Contains(controllerName) &&
+					!ValidarAcessoInstituicaoViaRota(context.HttpContext))
+				{
+					TempData["error"] = "Você não tem acesso a essa instituição!";
+					context.Result = new RedirectToActionResult("SelecionarInstituicao", "Instituicao", null);
+					return;
 				}
 			}
+
 			base.OnActionExecuting(context);
 		}
 
@@ -95,6 +109,30 @@ namespace GuedesTime.MVC.Controllers
 
 			return true;
 		}
+
+		private bool ValidarAcessoInstituicaoViaRota(HttpContext httpContext)
+		{
+			try
+			{
+				var request = httpContext.Request;
+				var baseUrl = $"{request.Scheme}://{request.Host}";
+				using var httpClient = new HttpClient();
+				if (request.Headers.TryGetValue("Cookie", out var cookieHeader))
+				{
+					httpClient.DefaultRequestHeaders.Add("Cookie", cookieHeader.ToString());
+				}
+				var response = httpClient.GetAsync($"{baseUrl}/Instituicao/ValidaUsuarioInstituicao").Result;
+				var content = response.Content.ReadAsStringAsync().Result;
+
+				return response.IsSuccessStatusCode && bool.TryParse(content, out var result) && result;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+
 		#endregion
 	}
 }

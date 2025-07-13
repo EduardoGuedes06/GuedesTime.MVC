@@ -17,7 +17,9 @@ namespace GuedesTime.MVC.ViewModels
         [DisplayName("Nome")]
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Nome { get; set; }
-        public Guid InstituicaoId { get; set; }
+		public string? SerieUnica { get; set; }
+		public string? SeriesMultiplas { get; set; }
+		public Guid InstituicaoId { get; set; }
 		public string Codigo { get; set; }
 
 		[DisplayName("Data do Cadastro")]

@@ -1,6 +1,7 @@
 .vs
 /src/GuedesTime.Domain/bin
 /src/GuedesTime.Domain/obj
+src\GuedesTime.Domain\obj
 /src/GuedesTime.Data/obj
 /src/GuedesTime.Data/bin
 /src/GuedesTime.MVC/bin

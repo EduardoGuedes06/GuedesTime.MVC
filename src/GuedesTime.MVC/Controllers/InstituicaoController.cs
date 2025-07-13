@@ -6,6 +6,7 @@ using GuedesTime.MVC.ViewModels;
 using GuedesTime.MVC.ViewModels.Enum;
 using GuedesTime.MVC.ViewModels.Utils;
 using GuedesTime.Service.Services;
+using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -148,7 +149,7 @@ namespace GuedesTime.MVC.Controllers
 				return Json(new { success = false, errors });
 			}
 
-			if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id==null)
+			if (instituicaoViewModel.Id == Guid.Empty || instituicaoViewModel.Id == null)
 			{
 				instituicaoViewModel.Avatar = await _instituicaoService.ObterAvatarAleatorioAsync();
 				var instituicao = _mapper.Map<Instituicao>(instituicaoViewModel);
@@ -244,5 +245,19 @@ namespace GuedesTime.MVC.Controllers
 				ProximaEtapa = proximaEtapa
 			};
 		}
+
+		[HttpGet]
+		public async Task<bool> ValidaUsuarioInstituicao()
+		{
+			var userId = Guid.Parse(_userManager.GetUserId(User));
+			var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
+			if (!await _instituicaoService.VerificaUsuarioInstituicao(userId, instituicaoId))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 	}
 }
