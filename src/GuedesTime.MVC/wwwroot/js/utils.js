@@ -184,6 +184,24 @@ function handleOrdinalMultiploInput(input) {
     input.value = valorFinal;
 }
 
+function initializeClearInputButtons() {
+    document.addEventListener('click', function (event) {
+        const clearButton = event.target.closest('.js-clear-input-btn');
+        if (!clearButton) return;
+        event.preventDefault();
+
+        const wrapper = clearButton.closest('.input-with-button');
+        if (!wrapper) return;
+
+        const inputToClear = wrapper.querySelector('input');
+        if (inputToClear) {
+            inputToClear.value = '';
+            inputToClear.focus();
+            inputToClear.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    });
+}
+
 
 function handleNumeroInput(numeroInput) {
     let valor = numeroInput.value.replace(/\D/g, '');
@@ -201,5 +219,6 @@ export {
     handleNumeroInput,
     handleFiltroInput,
     handleOrdinalUnicoInput,
-    handleOrdinalMultiploInput
+    handleOrdinalMultiploInput,
+    initializeClearInputButtons
 };

@@ -1,5 +1,6 @@
 ﻿using GuedesTime.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GuedesTime.Data.Mappings
@@ -15,7 +16,8 @@ namespace GuedesTime.Data.Mappings
 				.HasMaxLength(100);
 
 			builder.Property(s => s.Codigo)
-				.HasMaxLength(10);
+				.IsRequired(false)
+				.ValueGeneratedNever();
 
 			builder.Property(p => p.Ativo)
 				.IsRequired()

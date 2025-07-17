@@ -725,10 +725,8 @@ namespace GuedesTime.Data.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasDefaultValue(true);
 
-                    b.Property<string>("Codigo")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(100)");
+                    b.Property<int?>("Codigo")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DataAlteracao")
                         .HasColumnType("datetime(6)");

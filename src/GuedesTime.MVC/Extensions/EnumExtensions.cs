@@ -21,6 +21,22 @@ namespace GuedesTime.MVC.Extensions
 			return items;
 		}
 
+		public static List<SelectListItem> ToSelectListItemsFiltered<TEnum>(this TEnum enumObj, bool useDisplayName = true) where TEnum : Enum
+		{
+			var type = typeof(TEnum);
+
+			var items = Enum.GetValues(type)
+				.Cast<Enum>()
+				.Where(e => Convert.ToInt32(e) != 0)
+				.Select(e => new SelectListItem
+				{
+					Value = Convert.ToInt32(e).ToString(),
+					Text = useDisplayName ? GetDisplayName(e) : e.ToString()
+				}).ToList();
+
+			return items;
+		}
+
 		private static string GetDisplayName(Enum enumValue)
 		{
 			return enumValue.GetType()

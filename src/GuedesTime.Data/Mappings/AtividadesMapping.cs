@@ -1,6 +1,5 @@
 ﻿
 using GuedesTime.Domain.Models;
-using GuedesTime.Service.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

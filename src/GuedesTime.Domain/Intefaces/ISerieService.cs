@@ -1,6 +1,5 @@
-﻿
-
-using GuedesTime.Domain.Models;
+﻿using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Enums;
 using GuedesTime.Domain.Models.Utils;
 using System.Linq.Expressions;
 
@@ -25,5 +24,7 @@ namespace GuedesTime.Domain.Intefaces
 		Task<Serie> ObterPorId(Guid id);
 		Task ObterTodos();
 		Task Remover(Guid id);
+		Task AdicionarVariasAsync(IEnumerable<Serie> series);
+		Task<List<string>> VerificarSeriesDuplicadasAsync(Guid instituicaoId, string? serieUnica, string? seriesMultiplas, EnumTipoEnsino tipoEnsino, Guid? idSerie = null);
 	}
 }

@@ -19,6 +19,10 @@
 @import url('components/_settings.css');
 @import url('components/_uploader.css');
 @import url('components/_instituicao.css');
+@import url('components/_tooltip-info.css');
+@import url('components/_detailed-progress.css');
+@import url('components/_inline-confirm.css');
+@import url('components/_empty-state.css');
 
 @import url('pages/_landing.css');
 @import url('pages/_auth.css');

@@ -109,7 +109,6 @@ namespace GuedesTime.MVC.Controllers
 		}
 
 
-
 		[HttpGet]
 		public async Task<IActionResult> Upsert(Guid? id)
 		{

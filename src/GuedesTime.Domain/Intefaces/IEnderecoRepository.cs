@@ -1,7 +1,4 @@
 ﻿using GuedesTime.Domain.Models;
-using GuedesTime.Service.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Intefaces
 {

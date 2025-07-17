@@ -1,0 +1,19 @@
+﻿@using GuedesTime.MVC.ViewModels.Utils
+@model NotFoundViewModel
+
+<div class="empty-state-container">
+    <div class="empty-state__visual">
+        <i class="@Model.IconCssClass"></i>
+    </div>
+    <h3 class="empty-state__title">@Model.Titulo</h3>
+    <p class="empty-state__message">
+        @Model.Mensagem
+    </p>
+    <div class="empty-state__action">
+        <button class="btn primary-btn"
+                data-modal-url="@Model.BotaoUrl"
+                data-modal-title="@Model.BotaoModalTitulo">
+            <i class="fas fa-plus"></i> @Model.BotaoTexto
+        </button>
+    </div>
+</div>

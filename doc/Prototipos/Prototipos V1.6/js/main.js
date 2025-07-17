@@ -90,6 +90,65 @@ document.addEventListener('DOMContentLoaded', () => {
         showSection('profile');
     });
 
+    // ==========================================================
+    // NOVO CÓDIGO INTELIGENTE (Controle do Pop-up de Confirmação)
+    // ==========================================================
+    document.addEventListener('click', function (e) {
+        // Delegação de eventos para os botões de desativar
+        if (e.target.matches('.btn-deactivate')) {
+            const container = e.target.closest('.inline-confirm-container');
+            if (!container) return;
+
+            const popup = container.querySelector('.inline-confirm-popup');
+
+            // --- LÓGICA DE DETECÇÃO DE ESPAÇO ---
+            // Primeiro, removemos as classes de direção para recalcular
+            popup.classList.remove('popup-left', 'popup-right', 'popup-top', 'popup-bottom');
+
+            const triggerRect = e.target.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth; // Mede a largura real do pop-up
+
+            // Verifica se há espaço à esquerda. Se não houver, muda para a direita.
+            if (triggerRect.left < popupWidth + 20) { // +20 de margem de segurança
+                popup.classList.add('popup-right'); // Força para a direita
+            } else {
+                popup.classList.add('popup-left'); // Usa a posição padrão (esquerda)
+            }
+            // --- FIM DA LÓGICA DE DETECÇÃO ---
+
+            // Fecha outros pop-ups abertos antes de abrir o novo
+            document.querySelectorAll('.inline-confirm-popup.active').forEach(p => {
+                if (p !== popup) p.classList.remove('active');
+            });
+
+            // Mostra ou esconde o pop-up atual
+            popup.classList.toggle('active');
+        }
+        // Se clicou em "Não" ou "Cancelar"
+        else if (e.target.matches('.btn-confirm-no')) {
+            e.target.closest('.inline-confirm-popup').classList.remove('active');
+        }
+        // Se clicou em "Sim, desativar"
+        else if (e.target.matches('.btn-confirm-yes')) {
+            const popup = e.target.closest('.inline-confirm-popup');
+            const card = popup.closest('.entity-card');
+
+            // Simula a desativação
+            if (card) {
+                card.style.opacity = '0.5';
+                card.style.pointerEvents = 'none';
+            }
+
+            popup.classList.remove('active');
+        }
+        // Se clicou fora de qualquer pop-up container, fecha todos
+        else if (!e.target.closest('.inline-confirm-container')) {
+            document.querySelectorAll('.inline-confirm-popup.active').forEach(popup => {
+                popup.classList.remove('active');
+            });
+        }
+    });
+
     document.querySelectorAll('.modal-overlay').forEach(modal => {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {

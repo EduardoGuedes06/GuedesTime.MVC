@@ -2,6 +2,7 @@
 using GuedesTime.Data.Repository;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
+using GuedesTime.Domain.Models.Enums;
 
 namespace GuedesTime.Service.Services
 {
@@ -24,6 +25,43 @@ namespace GuedesTime.Service.Services
 
 		public async Task<Serie> ObterPorId(Guid id) => await _serieRepository.ObterPorId(id);
 
+		public async Task<List<string>> VerificarSeriesDuplicadasAsync(
+		Guid instituicaoId,
+		string? serieUnica,
+		string? seriesMultiplas,
+		EnumTipoEnsino tipoEnsino,
+		Guid? idSerie = null)
+		{
+			var nomes = new List<string>();
+
+			if (!string.IsNullOrWhiteSpace(serieUnica))
+				nomes.Add(serieUnica.Trim());
+
+			if (!string.IsNullOrWhiteSpace(seriesMultiplas))
+			{
+				var nomesMultiplos = seriesMultiplas
+					.Split(',', StringSplitOptions.RemoveEmptyEntries)
+					.Select(s => s.Trim())
+					.Where(s => !string.IsNullOrWhiteSpace(s))
+					.ToList();
+
+				nomes.AddRange(nomesMultiplos);
+			}
+
+			if (!nomes.Any())
+				return new List<string>();
+
+			return await _serieRepository.ObterNomesSeriesDuplicadasAsync(
+				instituicaoId,
+				nomes,
+				tipoEnsino,
+				serieUnica,
+				idSerie
+			);
+		}
+
+
+
 		public async Task<Serie> ObterSeriePorNome(Guid instituicaoId, string nomeSerie)
 		{
 			return await _serieRepository.ObterSeriePorNome(instituicaoId, nomeSerie);
@@ -34,7 +72,18 @@ namespace GuedesTime.Service.Services
             await _serieRepository.Adicionar(Serie);
         }
 
-        public async Task Atualizar(Serie Serie)
+		public async Task AdicionarVariasAsync(IEnumerable<Serie> series)
+		{
+
+			foreach (var serie in series)
+			{
+				if (serie == null) continue;
+				await _serieRepository.Adicionar(serie);
+			}
+		}
+
+
+		public async Task Atualizar(Serie Serie)
         {
             await _serieRepository.Atualizar(Serie);
         }

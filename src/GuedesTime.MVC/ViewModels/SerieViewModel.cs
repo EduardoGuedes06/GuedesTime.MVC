@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using GuedesTime.Domain.Models;
+﻿using GuedesTime.Domain.Models;
 using GuedesTime.MVC.Extensions;
 using GuedesTime.MVC.ViewModels.Enum;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace GuedesTime.MVC.ViewModels
 {
@@ -15,12 +16,19 @@ namespace GuedesTime.MVC.ViewModels
         public Guid Id { get; set; }
 
         [DisplayName("Nome")]
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public string Nome { get; set; }
+
+		[DisplayName("Série")]
 		public string? SerieUnica { get; set; }
+
+		[DisplayName("Registro de múltiplas Séries")]
 		public string? SeriesMultiplas { get; set; }
+
+		[DisplayName("Tipo Ensino")]
+		public List<SelectListItem>? ListaTipoEnsino { get; set; }
+
 		public Guid InstituicaoId { get; set; }
-		public string Codigo { get; set; }
+		public int? Codigo { get; set; }
 
 		[DisplayName("Data do Cadastro")]
 		public DateTime DataCriacao { get; set; }
@@ -31,7 +39,8 @@ namespace GuedesTime.MVC.ViewModels
 		[DisplayName("Ativo")]
 		public bool? Ativo { get; set; }
 
-		[DisplayName("Tipo de Ensino")]
+		[DisplayName("Tipo Ensino")]
+		[Required(ErrorMessage = "O campo de tipo Ensino é obrigatório")]
 		public EnumTipoEnsinoViewModel TipoEnsino { get; set; }
 		public InstituicaoViewModel Instituicao { get; set; }
         public ICollection<TurmaViewModel> Turmas { get; set; }

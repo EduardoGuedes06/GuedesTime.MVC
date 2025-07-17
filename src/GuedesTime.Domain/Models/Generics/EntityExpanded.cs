@@ -12,6 +12,6 @@ namespace GuedesTime.Domain.Models.Generics
 		{
 		}
 
-		public string Codigo { get; set; }
+		public int? Codigo { get; set; }
 	}
 }

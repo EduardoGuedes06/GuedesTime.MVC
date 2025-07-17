@@ -5,7 +5,6 @@ using GuedesTime.Domain.Models.Utils;
 using GuedesTime.MVC.ViewModels;
 using GuedesTime.MVC.ViewModels.Enum;
 using GuedesTime.MVC.ViewModels.Utils;
-using GuedesTime.Service.Models;
 
 namespace GuedesTime.MVC.Configurations
 {
@@ -25,7 +24,14 @@ namespace GuedesTime.MVC.Configurations
             CreateMap<ConfiguracoesGenericas, ConfiguracoesGenericasViewModel>().ReverseMap();
             CreateMap<Atividades, AtividadesViewModel>().ReverseMap();
             CreateMap<Serie, LogViewModel>().ReverseMap();
-            CreateMap<Instituicao, InstituicaoViewModel>().ReverseMap();
+
+			//CreateMap<SerieViewModel, Serie>()
+	  //      .ForMember(dest => dest.SerieUnica, opt => opt.Ignore())
+	  //      .ForMember(dest => dest.SeriesMultiplas, opt => opt.Ignore())
+	  //      .ForMember(dest => dest.ListaTipoEnsino, opt => opt.Ignore());
+
+
+			CreateMap<Instituicao, InstituicaoViewModel>().ReverseMap();
             CreateMap<Feriado, FeriadoViewModel>().ReverseMap();
             CreateMap<DisciplinaProfessor, DisciplinaProfessorViewModel>().ReverseMap();
             CreateMap<PlanejamentoDeAulaItem, PlanejamentoDeAulaItemViewModel>().ReverseMap();

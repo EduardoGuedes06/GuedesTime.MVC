@@ -9,7 +9,8 @@ namespace GuedesTime.Domain.Models.Enums
 	public enum EnumTipoEnsino
 	{
 		Ensino_Infantil = 1,
-		Ensino_Fundamental = 2,
-		Ensino_Medio = 3,
+		Ensino_Fundamental_I = 2,
+		Ensino_Fundamental_II =3,
+		Ensino_Medio = 4,
 	}
 }

@@ -5,10 +5,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GuedesTime.Data.Migrations
 {
-    /// <inheritdoc />
-    public partial class InitialDatabase : Migration
+public partial class InitialDatabase : Migration
     {
-        /// <inheritdoc />
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
@@ -22,7 +21,10 @@ namespace GuedesTime.Data.Migrations
                     NomeConfiguracao = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Valor = table.Column<string>(type: "varchar(100)", maxLength: 1000, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,8 +45,10 @@ namespace GuedesTime.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Avatar = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
-                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -63,7 +67,10 @@ namespace GuedesTime.Data.Migrations
                     Usuario = table.Column<string>(type: "varchar(200)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Detalhes = table.Column<string>(type: "varchar(500)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,7 +86,9 @@ namespace GuedesTime.Data.Migrations
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -111,7 +120,10 @@ namespace GuedesTime.Data.Migrations
                     Cidade = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Estado = table.Column<string>(type: "varchar(50)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -133,7 +145,10 @@ namespace GuedesTime.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Data = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Recorrente = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -153,7 +168,10 @@ namespace GuedesTime.Data.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Inicio = table.Column<DateTime>(type: "datetime", nullable: false),
                     Fim = table.Column<DateTime>(type: "datetime", nullable: false),
-                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -178,7 +196,9 @@ namespace GuedesTime.Data.Migrations
                     Telefone = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -199,7 +219,10 @@ namespace GuedesTime.Data.Migrations
                     Nome = table.Column<string>(type: "varchar(100)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Capacidade = table.Column<int>(type: "int", nullable: false),
-                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -220,7 +243,11 @@ namespace GuedesTime.Data.Migrations
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true)
+                    TipoEnsino = table.Column<int>(type: "int", nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Codigo = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -242,7 +269,10 @@ namespace GuedesTime.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DataInicio = table.Column<DateTime>(type: "datetime", nullable: false),
                     DataFim = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -263,7 +293,10 @@ namespace GuedesTime.Data.Migrations
                     ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Observacao = table.Column<string>(type: "varchar(100)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -289,7 +322,10 @@ namespace GuedesTime.Data.Migrations
                     Descricao = table.Column<string>(type: "varchar(100)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Data = table.Column<DateTime>(type: "datetime", nullable: false),
-                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -310,7 +346,10 @@ namespace GuedesTime.Data.Migrations
                     Descricao = table.Column<string>(type: "varchar(100)", maxLength: 500, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DataLimite = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -330,7 +369,10 @@ namespace GuedesTime.Data.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     DisciplinaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     SerieId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    CargaHoraria = table.Column<TimeSpan>(type: "time(6)", nullable: false)
+                    CargaHoraria = table.Column<TimeSpan>(type: "time(6)", nullable: false),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -357,7 +399,10 @@ namespace GuedesTime.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Ano = table.Column<int>(type: "int", nullable: false),
                     InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    SerieId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    SerieId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -386,7 +431,10 @@ namespace GuedesTime.Data.Migrations
                     DisciplinaId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     ProfessorId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     SalaId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    TurmaId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    TurmaId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -426,7 +474,10 @@ namespace GuedesTime.Data.Migrations
                     ProfessorId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     DisciplinaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     TurmaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -463,7 +514,10 @@ namespace GuedesTime.Data.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Observacoes = table.Column<string>(type: "varchar(500)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PlanejamentoDeAulaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    PlanejamentoDeAulaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -488,7 +542,10 @@ namespace GuedesTime.Data.Migrations
                     TurmaId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     HorarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Observacao = table.Column<string>(type: "varchar(100)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
+                    DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -673,7 +730,7 @@ namespace GuedesTime.Data.Migrations
                 column: "SerieId");
         }
 
-        /// <inheritdoc />
+
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

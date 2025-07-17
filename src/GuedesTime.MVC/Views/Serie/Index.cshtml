@@ -14,6 +14,18 @@
 
 <div class="section-header">
     <h2 class="section-title">Séries</h2>
+
+    <div class="info-tooltip-container">
+        <i class="fas fa-info-circle info-icon"></i>
+        <div class="info-tooltip-text tooltip-bottom">
+            <h4 class="tooltip-title">Listagem e Cadastro das Séries</h4>
+            <p>
+                Nesta seção é possivel listar e cadastrar as etapas do ensino da sua instituição, como "1º Ano", "9º
+                Ano", "Ensino Médio", etc. Elas são a base fundamental para depois organizar as turmas.
+            </p>
+        </div>
+    </div>
+
     <button type="button" id="add-series-btn" class="btn primary-btn" data-modal-url="@Url.Action("Upsert", "Serie")"
             data-modal-title="Adicionar Nova Série">
         <i class="fas fa-plus"></i> Adicionar Série
@@ -40,7 +52,7 @@
         </select>
 
         <div class="filter-toggle-group">
-            <label for="series-status-toggle" class="toggle-label">Apenas ativas</label>
+            <label class="control-label" for="series-status-toggle">Apenas ativas</label>
             <div class="toggle-switch">
                 <input type="checkbox" id="series-status-toggle" name="ativo" value="true"
                        class="js-dynamic-filter js-default-checked" @(ViewBag.FiltroAtivo != false ? "checked" : "")>

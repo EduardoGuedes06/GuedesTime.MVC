@@ -1,38 +1,6 @@
 ﻿import './services/fetchInterceptor.js';
 import { loadingService } from './services/loadingService.js';
 
-// =======================================================
-// ✅ CÓDIGO DO BOTÃO DE LIMPAR - ADICIONADO AQUI
-// =======================================================
-// Este listener ouve cliques em QUALQUER lugar da página
-document.addEventListener('click', function (event) {
-    // Ele só age se o clique foi em um botão com a classe .js-clear-input-btn
-    const clearButton = event.target.closest('.js-clear-input-btn');
-    if (!clearButton) {
-        return; // Se não for, ele para aqui.
-    }
-
-    event.preventDefault();
-
-    // Acha o container mais próximo para encontrar o input correto
-    const wrapper = clearButton.closest('.input-with-button');
-    if (!wrapper) return;
-
-    // Acha o input dentro do container
-    const inputToClear = wrapper.querySelector('input');
-    if (inputToClear) {
-        // Limpa o valor e foca no campo
-        inputToClear.value = '';
-        inputToClear.focus();
-        // Dispara um evento "input" para que as validações sejam refeitas
-        inputToClear.dispatchEvent(new Event('input', { bubbles: true }));
-    }
-});
-
-
-// =======================================================
-// SEU CÓDIGO ORIGINAL (CONTINUA ABAIXO)
-// =======================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     import('./ui.js').then(ui => {
@@ -64,20 +32,96 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', handleSidebarDisplay);
     handleSidebarDisplay();
 
-    // A chamada para a função de filtros dinâmicos continua aqui
+    import('./utils.js?v=' + Date.now()).then(utils => {
+        if (typeof utils.initializeClearInputButtons === 'function') {
+            utils.initializeClearInputButtons();
+        }
+
+       
+    });
+
+
     if (typeof initializeDynamicFilters === 'function') {
         initializeDynamicFilters();
     }
 });
 
-document.addEventListener('click', (event) => {
+document.addEventListener('click', function (event) {
     const modalTrigger = event.target.closest('[data-modal-url]');
-    const closeTrigger = event.target.closest('[data-modal-close]');
+    const modalClose = event.target.closest('[data-modal-close]');
     const link = event.target.closest('a');
 
-    // IMPORTANTE: A lógica do botão de limpar já foi tratada no listener separado acima.
-    // O código abaixo para modais e links continua como está.
-    if (modalTrigger) {
+    const deactivateTrigger = event.target.closest('.btn-deactivate');
+    const confirmYes = event.target.closest('.btn-confirm-yes');
+    const confirmNo = event.target.closest('.btn-confirm-no');
+    if (deactivateTrigger || confirmNo || confirmYes) {
+        event.preventDefault();
+
+        if (deactivateTrigger) {
+            const container = deactivateTrigger.closest('.inline-confirm-container');
+            const popup = container.querySelector('.inline-confirm-popup');
+
+            popup.classList.remove('popup-left', 'popup-right', 'popup-top', 'popup-bottom');
+            const triggerRect = deactivateTrigger.getBoundingClientRect();
+            const popupWidth = popup.offsetWidth;
+
+            if (popup.classList.contains('popup-right-default') || triggerRect.left < popupWidth + 20) {
+                popup.classList.add('popup-right');
+            } else {
+                popup.classList.add('popup-left');
+            }
+
+            document.querySelectorAll('.inline-confirm-popup.active').forEach(p => p.classList.remove('active'));
+            popup.classList.add('active');
+        }
+
+        if (confirmNo) {
+            confirmNo.closest('.inline-confirm-popup').classList.remove('active');
+        }
+
+        if (confirmYes) {
+            const popup = confirmYes.closest('.inline-confirm-popup');
+            const card = confirmYes.closest('.entity-card');
+            const url = confirmYes.dataset.url;
+            const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+            if (!url || !token) {
+                console.error('URL ou Token não encontrado para confirmação.');
+                return;
+            }
+
+            loadingService.show("Processando...");
+            popup.classList.remove('active');
+
+            fetch(url, {
+                method: 'POST',
+                headers: { 'RequestVerificationToken': token }
+            })
+                .then(res => res.ok ? res.json() : res.json().then(err => Promise.reject(err)))
+                .then(data => {
+                    loadingService.hide();
+                    import('./ui.js').then(ui => {
+                        if (data.success) {
+                            ui.showToast(data.message, 'success');
+                            if (card) {
+                                card.style.transition = 'opacity 0.5s ease';
+                                card.style.opacity = '0';
+                                setTimeout(() => card.remove(), 500);
+                            }
+                        } else {
+                            ui.showToast(data.message || 'Ocorreu um erro.', 'error');
+                        }
+                    });
+                })
+                .catch(err => {
+                    loadingService.hide();
+                    import('./ui.js').then(ui => {
+                        ui.showToast(err.message || 'Erro de comunicação.', 'error');
+                    });
+                });
+        }
+    }
+    else if (modalTrigger) {
         event.preventDefault();
         import('./ui.js').then(ui => {
             const url = modalTrigger.getAttribute('data-modal-url');
@@ -92,15 +136,14 @@ document.addEventListener('click', (event) => {
                 .then(response => response.text())
                 .then(html => {
                     modalContent.innerHTML = html;
-                    import('./utils.js').then(utils => {
-                        const allToggles = modalContent.querySelectorAll('input[class*="-toggle"]');
-                        if (allToggles.length > 0 && utils.initializeToggleSwitch) {
-                            allToggles.forEach(toggle => {
-                                if (Array.from(toggle.classList).some(cls => cls.startsWith('campo-') && cls.endsWith('-toggle'))) {
-                                    utils.initializeToggleSwitch(toggle);
-                                }
-                            });
-                        }
+
+                    import('./utils.js?v=' + Date.now()).then(utils => {
+                        const toggles = modalContent.querySelectorAll('input[class*="-toggle"]');
+                        toggles.forEach(toggle => {
+                            if (typeof utils.initializeToggleSwitch === 'function') {
+                                utils.initializeToggleSwitch(toggle);
+                            }
+                        });
                     });
                 })
                 .catch(err => {
@@ -109,17 +152,20 @@ document.addEventListener('click', (event) => {
                 });
         });
     }
-    else if (closeTrigger) {
+    else if (modalClose) {
         import('./ui.js').then(ui => {
-            const modalToClose = closeTrigger.closest('.modal-overlay');
+            const modalToClose = modalClose.closest('.modal-overlay');
             if (modalToClose) ui.closeModal(modalToClose);
         });
     }
     else if (link && link.href && !link.hasAttribute('data-no-loading') && link.target !== '_blank' && !link.href.startsWith('#')) {
         const isInternalLink = new URL(link.href).host === window.location.host;
         if (isInternalLink) {
-            loadingService.show("Carregando p\u00E1gina...");
+            loadingService.show("Carregando página...");
         }
+    }
+    else if (!event.target.closest('.inline-confirm-popup')) {
+        document.querySelectorAll('.inline-confirm-popup.active').forEach(p => p.classList.remove('active'));
     }
 });
 
@@ -182,8 +228,6 @@ window.addEventListener('pageshow', (event) => {
     }
 });
 
-// A função de filtro dinâmico que criamos. 
-// Ela precisa estar aqui para o `initializeDynamicFilters()` ser chamado.
 function initializeDynamicFilters() {
     document.querySelectorAll('.js-dynamic-filter-form').forEach(form => {
         const url = form.dataset.url;

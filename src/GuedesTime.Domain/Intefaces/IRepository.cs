@@ -1,9 +1,5 @@
 ﻿using GuedesTime.Domain.Models.Generics;
-using GuedesTime.Service.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Intefaces
 {

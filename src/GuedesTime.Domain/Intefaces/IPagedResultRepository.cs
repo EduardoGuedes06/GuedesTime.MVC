@@ -1,5 +1,4 @@
 ﻿using GuedesTime.Domain.Models.Utils;
-using GuedesTime.Service.Models;
 
 namespace GuedesTime.Domain.Intefaces
 {
