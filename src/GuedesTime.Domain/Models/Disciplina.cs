@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Models
 {
-    public class Disciplina : Entity
+    public class Disciplina : EntityExpanded
     {
         public string Nome { get; set; }
         public Guid InstituicaoId { get; set; }
 
-        /* EF Relations */
-
-        public Instituicao Instituicao { get; set; }
+		/* EF Relations */
+		public int? Codigo { get; set; }
+		public Instituicao Instituicao { get; set; }
         public ICollection<DisciplinaProfessor> DisciplinasProfessores { get; set; }
         public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }
         public ICollection<DisciplinaSerie> DisciplinasPorSerie { get; set; }

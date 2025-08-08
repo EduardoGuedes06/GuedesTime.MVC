@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace GuedesTime.Domain.Models
 {
-    public class Turma : Entity
-    {
+    public class Turma : EntityExpanded
+	{
         public string Nome { get; set; }
         public int Ano { get; set; }
 

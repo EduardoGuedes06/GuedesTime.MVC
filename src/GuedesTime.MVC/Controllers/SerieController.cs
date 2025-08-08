@@ -8,17 +8,10 @@ using GuedesTime.MVC.ViewModels;
 using GuedesTime.MVC.ViewModels.Enum;
 using GuedesTime.MVC.ViewModels.Utils;
 using GuedesTime.MVC.ViewModels.Validations;
-using GuedesTime.Service.Services;
-using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace GuedesTime.MVC.Controllers
 {

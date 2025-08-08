@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using HealthChecks.UI.Client;
 
 namespace GuedesTime.MVC.Configurations
 {
@@ -10,24 +12,39 @@ namespace GuedesTime.MVC.Configurations
             var connectionString = configuration.GetConnectionString("connection");
 
             services.AddHealthChecks()
-                .AddMySql(connectionString,
+                .AddMySql(
+                    connectionString,
                     name: "Banco de Dados",
                     healthQuery: "SELECT 1;",
                     failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "database" })
+                    tags: new[] { "database" }
+                )
                 .AddCheck("Sistema", () =>
                     HealthCheckResult.Healthy("Sistema está funcionando perfeitamente!"),
-                    tags: new[] { "system" });
+                    tags: new[] { "system" }
+                );
 
             services.AddHealthChecksUI()
                 .AddInMemoryStorage();
 
             return services;
         }
-        private static bool CheckSystemHealth()
+
+        public static IApplicationBuilder UseHealthChecksConfig(this IApplicationBuilder app)
         {
-            return true;
+            app.UseHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = HealthChecksResponseWriter.WriteResponse
+            });
+
+            app.UseHealthChecksUI(config =>
+            {
+                config.UIPath = "/monitoramento";
+            });
+
+            return app;
         }
+
         public static class HealthChecksResponseWriter
         {
             public static async Task WriteResponse(HttpContext context, HealthReport report)

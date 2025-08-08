@@ -24,7 +24,11 @@ namespace GuedesTime.Data.Mappings
                 .HasMaxLength(20)
                 .HasColumnType("varchar(20)");
 
-            builder.Property(p => p.Ativo)
+			builder.Property(s => s.Codigo)
+				.IsRequired(false)
+				.ValueGeneratedNever();
+
+			builder.Property(p => p.Ativo)
                 .IsRequired()
                 .HasDefaultValue(true);
 

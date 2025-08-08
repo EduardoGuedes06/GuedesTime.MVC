@@ -1,0 +1,83 @@
+﻿@using GuedesTime.MVC.ViewModels
+@using GuedesTime.MVC.ViewModels.Utils
+@model PagedViewModel<DisciplinaViewModel>
+
+@if (Model.Model != null && Model.Model.Any())
+{
+    <div class="entity-list-grid">
+        @foreach (var disciplina in Model.Model)
+        {
+            <div class="entity-card">
+                <h3>@disciplina.Nome</h3>
+                <p>Código: @disciplina.Codigo</p>
+                <p>Carga Horária: XX:XX</p>
+                <p>
+                    Carga Horária: @(
+                    disciplina.DisciplinasPorSerie != null && disciplina.DisciplinasPorSerie.Any()
+                    ? Math.Round(disciplina.DisciplinasPorSerie.Sum(dps => dps.CargaHoraria.TotalHours), 2).ToString() + " horas"
+                    : "N/A"
+                        )
+        </p>
+
+        <div class="info-row">
+            <span>Professores:</span>
+            <div class="badges-container">
+                @if (disciplina.DisciplinasProfessores != null && disciplina.DisciplinasProfessores.Any())
+                        {
+                            foreach (var dp in disciplina.DisciplinasProfessores)
+                            {
+                                <span class="badge teacher-badge">@dp.Professor?.Nome ?? "Sem nome"</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Nenhum professor atribuído</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span>Séries:</span>
+                    <div class="badges-container">
+                        @if (disciplina.DisciplinasPorSerie != null && disciplina.DisciplinasPorSerie.Any())
+                        {
+                            foreach (var ds in disciplina.DisciplinasPorSerie)
+                            {
+                                <span class="badge series-badge">@ds.Serie?.Nome ?? "Sem nome"</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Nenhuma série atribuída</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary-btn" disabled>Editar</button>
+                    <button class="btn danger-btn" disabled>Excluir</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="pagination-controls">
+        <button class="btn" disabled>Anterior</button>
+        <button class="btn" disabled>@Model.Page</button>
+        <button class="btn" disabled>Próximo</button>
+    </div>
+}
+else
+{
+    var notFoundViewModel = new NotFoundViewModel
+    {
+        IconCssClass = "fas fa-book-open",
+        Titulo = "Nenhuma Disciplina Encontrada",
+        Mensagem = "Parece que ainda não Disciplinas cadastradas. Que tal adicionar a primeira para organizar suas turmas?",
+        BotaoTexto = "Adicionar Nova Disciplina",
+        BotaoUrl = Url.Action("Upsert", "Disciplina"),
+        BotaoModalTitulo = "Adicionar Nova Disciplina"
+    };
+
+    <partial name="_ItensNotFound" model="notFoundViewModel" />
+}

@@ -21,6 +21,7 @@ namespace GuedesTime.Data.Mappings
                 .WithMany(s => s.Disciplinas)
                 .HasForeignKey(ds => ds.SerieId);
 
+
 			builder.Property(p => p.Ativo)
 				.IsRequired()
 				.HasDefaultValue(true);

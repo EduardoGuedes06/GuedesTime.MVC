@@ -28,6 +28,7 @@ namespace GuedesTime.MVC.ViewModels
 		[DisplayName("Data do Cadastro")]
 		public DateTime DataCriacao { get; set; }
 
+		public int? Codigo { get; set; }
 
 		[DisplayName("Data da Alteração")]
 		public DateTime? DataAlteracao { get; set; }

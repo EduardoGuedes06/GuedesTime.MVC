@@ -119,3 +119,15 @@
 	opacity: 0.9;
 	margin: 0;
 }
+
+.modal-title-container .info-tooltip-container .tooltip-bottom {
+	left: auto !important;
+	right: 0 !important;
+	transform: none !important;
+}
+
+	.modal-title-container .info-tooltip-container .tooltip-bottom::after {
+		left: auto !important;
+		right: 10px !important;
+		margin-left: 0 !important;
+	}

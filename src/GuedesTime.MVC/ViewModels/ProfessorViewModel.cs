@@ -29,6 +29,8 @@ namespace GuedesTime.MVC.ViewModels
         [Phone(ErrorMessage = "Telefone invalido")]
         public string Telefone { get; set; }
 
+		public int? Codigo { get; set; }
+
 		[DisplayName("Data do Cadastro")]
 		public DateTime DataCriacao { get; set; }
 

@@ -24,6 +24,7 @@ namespace GuedesTime.MVC.ViewModels
 		[DisplayName("Data da Alteração")]
 		public DateTime? DataAlteracao { get; set; }
 
+		public int? Codigo { get; set; }
 
 		[DisplayName("Ativo")]
 		public bool? Ativo { get; set; }

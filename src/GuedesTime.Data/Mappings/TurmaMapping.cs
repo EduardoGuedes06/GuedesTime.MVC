@@ -18,6 +18,10 @@ namespace GuedesTime.Data.Mappings
             builder.Property(t => t.Ano)
                 .IsRequired();
 
+			builder.Property(s => s.Codigo)
+				.IsRequired(false)
+				.ValueGeneratedNever();
+
 			builder.Property(p => p.Ativo)
 				.IsRequired()
 				.HasDefaultValue(true);
