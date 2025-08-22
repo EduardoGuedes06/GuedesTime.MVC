@@ -19,7 +19,6 @@ namespace GuedesTime.Domain.Intefaces
 		);
 
 		Task<Serie> ObterSeriePorNome(Guid instituicaoId, string nomeSerie);
-		Task Adicionar(Serie serie);
 		Task Atualizar(Serie serie);
 		Task<Serie> ObterPorId(Guid id);
 		Task ObterTodos();

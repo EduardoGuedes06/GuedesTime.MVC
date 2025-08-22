@@ -2,9 +2,9 @@
 @using GuedesTime.MVC.ViewModels.Utils
 @model PagedViewModel<DisciplinaViewModel>
 
-@if (Model.Model != null && Model.Model.Any())
-{
-    <div class="entity-list-grid">
+<div id="disciplinas-list" class="entity-list-grid">
+    @if (Model.Model != null && Model.Model.Any())
+    {
         @foreach (var disciplina in Model.Model)
         {
             <div class="entity-card">
@@ -14,28 +14,23 @@
                 <p>
                     Carga Horária: @(
                     disciplina.DisciplinasPorSerie != null && disciplina.DisciplinasPorSerie.Any()
-                    ? Math.Round(disciplina.DisciplinasPorSerie.Sum(dps => dps.CargaHoraria.TotalHours), 2).ToString() + " horas"
-                    : "N/A"
-                        )
-        </p>
-
-        <div class="info-row">
-            <span>Professores:</span>
-            <div class="badges-container">
-                @if (disciplina.DisciplinasProfessores != null && disciplina.DisciplinasProfessores.Any())
-                        {
-                            foreach (var dp in disciplina.DisciplinasProfessores)
-                            {
-                                <span class="badge teacher-badge">@dp.Professor?.Nome ?? "Sem nome"</span>
-                            }
-                        }
-                        else
-                        {
-                            <span>Nenhum professor atribuído</span>
-                        }
-                    </div>
+                    ? Math.Round(disciplina.DisciplinasPorSerie.Sum(dps => dps.CargaHoraria.TotalHours), 2).ToString() + " horas": "N/A")</p>
+                <div class="info-row">
+                    <span>Professores:</span>
+                    <div class="badges-container">
+                        @if (disciplina.DisciplinasProfessores != null && disciplina.DisciplinasProfessores.Any())
+                                {
+                                    foreach (var dp in disciplina.DisciplinasProfessores)
+                                    {
+                                        <span class="badge teacher-badge">@dp.Professor?.Nome ?? "Sem nome"</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>Nenhum professor atribuído</span>
+                                }
+                            </div>
                 </div>
-
                 <div class="info-row">
                     <span>Séries:</span>
                     <div class="badges-container">
@@ -52,32 +47,96 @@
                         }
                     </div>
                 </div>
-
                 <div class="actions">
-                    <button class="btn primary-btn" disabled>Editar</button>
-                    <button class="btn danger-btn" disabled>Excluir</button>
+                    <button class="btn secondary-btn btn-sm" data-modal-url="@Url.Action("Upsert", "Disciplina", new { id = disciplina.Id })">
+                        <i class="fas fa-pencil-alt"></i>Editar
+                    </button>
+                    <div class="inline-confirm-container">
+
+                        @if (disciplina.Ativo == false)
+                        {
+                            <button class="btn danger-btn btn-sm btn-deactivate">
+                                <i class="fas fa-power-off"></i>
+                                Remover
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn danger-btn btn-sm btn-deactivate">
+                                <i class="fas fa-power-off"></i>
+                                Desativar
+                            </button>
+                        }
+
+                        <div class="inline-confirm-popup popup-left">
+                            @if (disciplina.Ativo == false)
+                            {
+                                <p>Remover <strong>@disciplina.Nome</strong>? O cadastro será removido definitivamente.</p>
+                            }
+                            else
+                            {
+                                <p>Desativar <strong>@disciplina.Nome</strong>? O cadastro ficará oculto.</p>
+                            }
+
+                            <div class="inline-confirm-actions">
+                                <button class="btn secondary-btn btn-sm btn-confirm-no">Cancelar</button>
+                                @if (disciplina.Ativo == false)
+                                {
+                                    <button class="btn danger-btn btn-sm btn-confirm-yes"
+                                            data-url="@Url.Action("Desativar", "Disciplina", new { instituicaoId = disciplina.InstituicaoId, id = disciplina.Id })">
+                                        Sim, remover
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn danger-btn btn-sm btn-confirm-yes"
+                                            data-url="@Url.Action("Desativar", "Disciplina", new { instituicaoId = disciplina.InstituicaoId, id = disciplina.Id })">
+                                        Sim, desativar
+                                    </button>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         }
-    </div>
 
-    <div class="pagination-controls">
-        <button class="btn" disabled>Anterior</button>
-        <button class="btn" disabled>@Model.Page</button>
-        <button class="btn" disabled>Próximo</button>
-    </div>
-}
-else
-{
-    var notFoundViewModel = new NotFoundViewModel
+    }
+    else
     {
-        IconCssClass = "fas fa-book-open",
-        Titulo = "Nenhuma Disciplina Encontrada",
-        Mensagem = "Parece que ainda não Disciplinas cadastradas. Que tal adicionar a primeira para organizar suas turmas?",
-        BotaoTexto = "Adicionar Nova Disciplina",
-        BotaoUrl = Url.Action("Upsert", "Disciplina"),
-        BotaoModalTitulo = "Adicionar Nova Disciplina"
-    };
+        var notFoundViewModel = new NotFoundViewModel
+        {
+            IconCssClass = "fas fa-book-open",
+            Titulo = "Nenhuma Disciplina Encontrada",
+            Mensagem = "Parece que ainda não Disciplinas cadastradas. Que tal adicionar a primeira para organizar suas turmas?",
+            BotaoTexto = "Adicionar Nova Disciplina",
+            BotaoUrl = Url.Action("Upsert", "Disciplina"),
+            BotaoModalTitulo = "Adicionar Nova Disciplina"
+        };
 
-    <partial name="_ItensNotFound" model="notFoundViewModel" />
-}
+        <partial name="_ItensNotFound" model="notFoundViewModel" />
+    }
+
+</div>
+
+
+<div id="disciplinas-pagination" class="pagination-controls">
+    @if (Model.TotalPages > 0)
+    {
+        <button class="btn @(Model.Page > 1 ? "" : "disabled")" data-page="@(Model.Page - 1)" @(Model.Page > 1 ? "" : "disabled")>
+            <i class="fas fa-chevron-left"></i> Anterior
+        </button>
+
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            <button class="btn @(i == Model.Page ? "primary-btn active" : "")" data-page="@i">
+                @i
+            </button>
+        }
+
+        <button class="btn @(Model.Page < Model.TotalPages ? "" : "disabled")" data-page="@(Model.Page + 1)" @(Model.Page < Model.TotalPages ? "" : "disabled")>
+            Próxima <i class="fas fa-chevron-right"></i>
+        </button>
+    }
+</div>

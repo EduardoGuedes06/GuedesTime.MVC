@@ -15,9 +15,12 @@ namespace GuedesTime.MVC.ViewModels
         public Guid InstituicaoId { get; set; }
 
         [DisplayName("Nome")]
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
 
-		[DisplayName("Data do Cadastro")]
+        [DisplayName("Nomes")]
+        public string? Nomes { get; set; }
+
+        [DisplayName("Data do Cadastro")]
 		public DateTime DataCriacao { get; set; }
 
 

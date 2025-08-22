@@ -281,7 +281,7 @@ function initializeDynamicFilters() {
                 aplicarFiltros(1);
             });
         }
-        listContainer.addEventListener('click', event => {
+        document.addEventListener('click', event => {
             const button = event.target.closest('.pagination-controls button');
             if (button && button.dataset.page && !button.disabled) {
                 event.preventDefault();

@@ -1,0 +1,83 @@
+﻿@using GuedesTime.MVC.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@model GuedesTime.MVC.ViewModels.DisciplinaViewModel
+
+<div class="modal-header">
+    <div class="modal-title-container">
+        <h3 class="modal-title">
+            @((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar Novas Disciplinas" : "Editar dados da Disciplina")
+        </h3>
+
+        <div class="info-tooltip-container">
+            <i class="fas fa-info-circle info-icon"></i>
+            <div class="info-tooltip-text tooltip-bottom">
+                <h4 class="tooltip-title">Dica sobre Cadastro Múltiplo</h4>
+                <p>
+                    Você pode cadastrar apenas <strong>uma disciplina</strong> ou várias ao mesmo tempo.<br><br>
+                    Para cadastrar múltiplas disciplinas, separe-as por vírgula (ex: Matemática, História, Geografia).<br>
+                    O sistema criará cada disciplina individualmente.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<form asp-controller="Disciplina" asp-action="Upsert" method="post" id="form-upsert-disciplina">
+	@Html.AntiForgeryToken()
+	<input type="hidden" asp-for="Id" />
+	<vc:summary />
+
+	<div class="modal-body">
+        @if (Model.Id == null || Model.Id == Guid.Empty)
+        {
+            <div class="form-group">
+                <label asp-for="Nomes" class="control-label">Nomes das Disciplinas (separados por vírgula)</label>
+                <textarea asp-for="Nomes" class="form-control" rows="2" placeholder="Ex: Matemática, Física, Biologia"></textarea>
+                <small class="text-muted">Você pode cadastrar várias disciplinas de uma vez separando por vírgula.</small>
+                <span asp-validation-for="Nomes" class="text-danger"></span>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+        }
+        @if (Model.Id != null && Model.Id != Guid.Empty)
+        {
+            <div class="form-group mb-1">
+                <label class="form-label d-block mb-2">Status da Disciplina</label>
+
+                <div class="d-flex align-items-center gap-10 custom-switch">
+                    <input asp-for="Ativo" class="d-none" />
+                    <input type="checkbox" id="customSwitchInput" @(Model.Ativo == true ? "checked" : "") onchange="document.getElementById('Ativo').value = this.checked;" />
+                    <label for="customSwitchInput" class="custom-switch-checkbox">
+                        <div class="custom-switch-inner">
+                            <div class="custom-switch-ball"></div>
+                        </div>
+                    </label>
+
+                    <div class="custom-switch-text">
+                        <div class="custom-switch-text-options">
+                            <span class="custom-switch-off">Desligado</span>
+                            <span class="custom-switch-on">Ativo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <span asp-validation-for="Ativo" class="text-danger"></span>
+            </div>
+        }
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn secondary-btn" data-modal-close>Cancelar</button>
+		<button type="submit" class="btn primary-btn">
+			@((Model.Id == null || Model.Id == Guid.Empty) ? "Criar" : "Salvar Alterações")
+		</button>
+	</div>
+</form>
