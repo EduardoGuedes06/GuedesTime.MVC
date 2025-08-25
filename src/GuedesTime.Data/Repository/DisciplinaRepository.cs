@@ -32,6 +32,11 @@ namespace GuedesTime.Data.Repository
                     s.InstituicaoId == instituicaoId &&
                     nomesDisciplinas.Contains(s.Nome));
 
+            if (idDisciplina.HasValue)
+            {
+                query = query.Where(s => s.Id != idDisciplina.Value || !nomesDisciplinas.Contains(s.Nome));
+            }
+
             return await query
                 .Select(s => s.Nome)
                 .ToListAsync();

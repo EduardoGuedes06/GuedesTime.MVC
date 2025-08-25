@@ -28,7 +28,7 @@ namespace GuedesTime.Data.Repository
 
         public async Task<Instituicao?> ObterDadosInstituicoesPorId(Guid instituicaoId, bool? incluirInativos = false)
         {
-            return await BuscarInstituicaoCompletaAsync(i => i.Id == instituicaoId, 5, incluirInativos);
+            return await BuscarInstituicaoCompletaAsync(i => i.Id == instituicaoId, 26, incluirInativos);
         }
 
         public async Task<Instituicao?> ObterInstituicaoComEnderecoPorId(Guid id)

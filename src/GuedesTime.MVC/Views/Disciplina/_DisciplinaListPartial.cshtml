@@ -14,25 +14,29 @@
                 <p>
                     Carga Horária: @(
                     disciplina.DisciplinasPorSerie != null && disciplina.DisciplinasPorSerie.Any()
-                    ? Math.Round(disciplina.DisciplinasPorSerie.Sum(dps => dps.CargaHoraria.TotalHours), 2).ToString() + " horas": "N/A")</p>
-                <div class="info-row">
-                    <span>Professores:</span>
-                    <div class="badges-container">
-                        @if (disciplina.DisciplinasProfessores != null && disciplina.DisciplinasProfessores.Any())
-                                {
-                                    foreach (var dp in disciplina.DisciplinasProfessores)
-                                    {
-                                        <span class="badge teacher-badge">@dp.Professor?.Nome ?? "Sem nome"</span>
-                                    }
-                                }
-                                else
-                                {
-                                    <span>Nenhum professor atribuído</span>
-                                }
-                            </div>
+                    ? Math.Round(disciplina.DisciplinasPorSerie.Sum(dps => dps.CargaHoraria.TotalHours), 2).ToString() + " horas" : "N/A")
+        </p>
+        <div class="info-row">
+            <div class="badges-container">
+                @if (disciplina.DisciplinasProfessores != null && disciplina.DisciplinasProfessores.Any())
+                        {
+                            foreach (var dp in disciplina.DisciplinasProfessores)
+                            {
+                                <span class="badge teacher-badge">@dp.Professor?.Nome ?? "Sem nome"</span>
+                            }
+                        }
+                        else
+                        {
+                            <ul class="pending-check-info">
+                                <li>
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span class="text-muted">Nenhum professor relacionado</span>
+                                </li>
+                            </ul>
+                        }
+                    </div>
                 </div>
                 <div class="info-row">
-                    <span>Séries:</span>
                     <div class="badges-container">
                         @if (disciplina.DisciplinasPorSerie != null && disciplina.DisciplinasPorSerie.Any())
                         {
@@ -43,12 +47,17 @@
                         }
                         else
                         {
-                            <span>Nenhuma série atribuída</span>
+                            <ul class="pending-check-info">
+                                <li>
+                                    <i class="fas fa-exclamation-circle"></i>
+                                    <span class="text-muted">Nenhuma série relacionada</span>
+                                </li>
+                            </ul>
                         }
                     </div>
                 </div>
                 <div class="actions">
-                    <button class="btn secondary-btn btn-sm" data-modal-url="@Url.Action("Upsert", "Disciplina", new { id = disciplina.Id })">
+                    <button class="btn primary-btn" data-modal-url="@Url.Action("Upsert", "Disciplina", new { id = disciplina.Id })">
                         <i class="fas fa-pencil-alt"></i>Editar
                     </button>
                     <div class="inline-confirm-container">

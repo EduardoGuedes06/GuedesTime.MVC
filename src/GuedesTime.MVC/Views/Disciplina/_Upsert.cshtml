@@ -50,27 +50,19 @@
         }
         @if (Model.Id != null && Model.Id != Guid.Empty)
         {
-            <div class="form-group mb-1">
-                <label class="form-label d-block mb-2">Status da Disciplina</label>
+            <div class="form-group">
+                <div class="toggle-switch-group">
+                    <label class="control-label">Disciplina Ativa</label>
 
-                <div class="d-flex align-items-center gap-10 custom-switch">
-                    <input asp-for="Ativo" class="d-none" />
-                    <input type="checkbox" id="customSwitchInput" @(Model.Ativo == true ? "checked" : "") onchange="document.getElementById('Ativo').value = this.checked;" />
-                    <label for="customSwitchInput" class="custom-switch-checkbox">
-                        <div class="custom-switch-inner">
-                            <div class="custom-switch-ball"></div>
-                        </div>
-                    </label>
-
-                    <div class="custom-switch-text">
-                        <div class="custom-switch-text-options">
-                            <span class="custom-switch-off">Desligado</span>
-                            <span class="custom-switch-on">Ativo</span>
-                        </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox"
+                               id="Ativo-checkbox-visual"
+                               class="campo-Ativo-toggle"
+                               data-initial-value="@ViewBag.EstadoInicialAtivo.ToString().ToLower()" />
+                        <label class="toggle-slider" for="Ativo-checkbox-visual"></label>
                     </div>
                 </div>
-
-                <span asp-validation-for="Ativo" class="text-danger"></span>
+                <input type="hidden" name="Ativo" id="hidden-Ativo-value" />
             </div>
         }
 	</div>

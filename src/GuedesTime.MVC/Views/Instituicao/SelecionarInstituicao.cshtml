@@ -6,6 +6,11 @@
 	ViewData["Title"] = "Minhas Instituições";
 	Layout = "_LayoutSimples";
 	var resumoInstituicoes = ViewBag.ResumoInstituicoes as Dictionary<Guid, DadosAgregadosInstituicaoViewModel>;
+
+	string LimitarValor(int valor, int maximo = 25)
+	{
+		return valor > maximo ? $"+{maximo}" : valor.ToString();
+	}
 }
 
 <div class="page-container">
@@ -32,6 +37,8 @@
 			<button type="submit" class="btn primary-btn"><i class="fas fa-search"></i> Buscar</button>
 		</form>
 
+		<br />
+
 		<div class="entity-list-grid" style="grid-template-columns: 1fr;">
 			@foreach (var instituicao in Model.Model)
 			{
@@ -48,7 +55,12 @@
 							}
 							else
 							{
-								<text>@resumo.TotalDisciplinas disciplinas, @resumo.TotalTurmas turmas e @resumo.TotalProfessores professores cadastrados.</text>
+								<text>
+									@LimitarValor(resumo.TotalDisciplinas) disciplinas,
+									@LimitarValor(resumo.TotalSeries) séries,
+									@LimitarValor(resumo.TotalTurmas) turmas e
+									@LimitarValor(resumo.TotalProfessores) professores cadastrados.
+								</text>
 							}
 						</p>
 					</div>
