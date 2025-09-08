@@ -118,9 +118,3 @@ O banco de dados do sistema foi projetado com as seguintes tabelas principais:
 - Instituição
 - Feriados
 - Log
-
-
-## Contato
-Eduardo Guedes  
-Email: eduardoguedeslibra@gmail.com  
-LinkedIn: [Eduardo Guedes Pereira](https://www.linkedin.com/in/eduardoguedespereira/)
