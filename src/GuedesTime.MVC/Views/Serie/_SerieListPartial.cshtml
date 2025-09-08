@@ -56,7 +56,7 @@
 
 				</div>
 				<div class="actions">
-					<button class="btn secondary-btn btn-sm" data-modal-url="@Url.Action("Upsert", "Serie", new { id = serie.Id })">
+					<button class="btn primary-btn" data-modal-url="@Url.Action("Upsert", "Serie", new { id = serie.Id })">
 						<i class="fas fa-pencil-alt"></i>Editar
 					</button>
 					<div class="inline-confirm-container">
@@ -109,26 +109,6 @@
 				</div>
 			</div>
 		}
-
-		<div id="series-pagination" class="pagination-controls">
-			@if (Model.TotalPages > 0)
-			{
-				<button class="btn @(Model.Page > 1 ? "" : "disabled")" data-page="@(Model.Page - 1)" @(Model.Page > 1 ? "" : "disabled")>
-					<i class="fas fa-chevron-left"></i> Anterior
-				</button>
-
-				@for (int i = 1; i <= Model.TotalPages; i++)
-				{
-					<button class="btn @(i == Model.Page ? "primary-btn active" : "")" data-page="@i">
-						@i
-					</button>
-				}
-
-				<button class="btn @(Model.Page < Model.TotalPages ? "" : "disabled")" data-page="@(Model.Page + 1)" @(Model.Page < Model.TotalPages ? "" : "disabled")>
-					Próxima <i class="fas fa-chevron-right"></i>
-				</button>
-			}
-		</div>
 	}
 	else
 	{
@@ -143,5 +123,27 @@
 		};
 
 		<partial name="_ItensNotFound" model="notFoundViewModel" />
+	}
+
+</div>
+
+
+<div id="series-pagination" class="pagination-controls">
+	@if (Model.TotalPages > 0)
+	{
+		<button class="btn @(Model.Page > 1 ? "" : "disabled")" data-page="@(Model.Page - 1)" @(Model.Page > 1 ? "" : "disabled")>
+			<i class="fas fa-chevron-left"></i> Anterior
+		</button>
+
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<button class="btn @(i == Model.Page ? "primary-btn active" : "")" data-page="@i">
+				@i
+			</button>
+		}
+
+		<button class="btn @(Model.Page < Model.TotalPages ? "" : "disabled")" data-page="@(Model.Page + 1)" @(Model.Page < Model.TotalPages ? "" : "disabled")>
+			Próxima <i class="fas fa-chevron-right"></i>
+		</button>
 	}
 </div>

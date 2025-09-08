@@ -18,13 +18,13 @@ namespace GuedesTime.Domain.Intefaces
 			Func<IQueryable<Disciplina>, IOrderedQueryable<Disciplina>>? ordenacao = null,
 			params Expression<Func<Disciplina, object>>[]? includes
 		);
-		Task Adicionar(Disciplina disciplina);
-        Task AdicionarDisciplinas(Guid InstituicaoId, List<string> listaDeDisciplinas);
 		Task Atualizar(Disciplina disciplina);
         Task<Disciplina> ObterPorId(Guid DisciplinaId);
         Task ObterTodos();
         Task Remover(Guid id);
         Task<Disciplina> ObterDisciplinaPorNome(Guid instituicaoId, string nomeDisciplina);
 		Task<(bool Existe, List<string> NomesExistentes)> VerificarDisciplinasExistentesPorNomes(Guid instituicaoId, List<string> nomes);
-	}
+        Task<List<string>> VerificarDisciplinasDuplicadasAsync(Guid instituicaoId, string? nome, string? nomes, Guid? idDisciplina = null);
+        Task AdicionarVariasAsync(IEnumerable<Disciplina> disciplinas);
+    }
 }

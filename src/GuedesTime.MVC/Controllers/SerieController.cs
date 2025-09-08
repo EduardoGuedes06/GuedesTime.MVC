@@ -100,6 +100,7 @@ namespace GuedesTime.MVC.Controllers
 
 			var userId = Guid.Parse(_userManager.GetUserId(User));
 			var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
+
 			if (id.HasValue)
 			{
 				var serie = await _serieService.ObterPorId(id.Value);

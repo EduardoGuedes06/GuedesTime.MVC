@@ -21,10 +21,9 @@
         </div>
     </div>
 
-    <button type="button" id="add-disciplina-btn" class="btn primary-btn"
-            data-modal-url="@Url.Action("Upsert", "Disciplina")"
-            data-modal-title="Adicionar Nova Disciplina">
-        <i class="fas fa-plus"></i> Adicionar Disciplina
+    <button type="button" id="add-disciplinas-btn" class="btn primary-btn" data-modal-url="@Url.Action("Upsert", "Disciplina")"
+            data-modal-title="Adicionar Nova Série">
+        <i class="fas fa-plus"></i> Adicionar Série
     </button>
 </div>
 
@@ -50,7 +49,7 @@
             <option value="">Filtrar por Série</option>
             @foreach (var opcao in (List<SelectListItem>)ViewBag.FiltroSerie)
             {
-                var isSelected = (ViewBag.SerieSelecionada != null && ViewBag.SerieSelecionada.ToString() == opcao.Value);
+                var isSelected = (ViewBag.disciplinaselecionada != null && ViewBag.disciplinaselecionada.ToString() == opcao.Value);
                 <option value="@opcao.Value" selected="@(isSelected ? "selected" : null)">@opcao.Text</option>
             }
         </select>

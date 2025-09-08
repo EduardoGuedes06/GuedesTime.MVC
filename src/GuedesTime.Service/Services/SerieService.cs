@@ -60,17 +60,11 @@ namespace GuedesTime.Service.Services
 			);
 		}
 
-
-
 		public async Task<Serie> ObterSeriePorNome(Guid instituicaoId, string nomeSerie)
 		{
 			return await _serieRepository.ObterSeriePorNome(instituicaoId, nomeSerie);
 		}
 
-		public async Task Adicionar(Serie Serie)
-        {
-            await _serieRepository.Adicionar(Serie);
-        }
 
 		public async Task AdicionarVariasAsync(IEnumerable<Serie> series)
 		{
@@ -81,7 +75,6 @@ namespace GuedesTime.Service.Services
 				await _serieRepository.Adicionar(serie);
 			}
 		}
-
 
 		public async Task Atualizar(Serie Serie)
         {
