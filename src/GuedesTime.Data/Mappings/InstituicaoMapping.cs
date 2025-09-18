@@ -30,6 +30,10 @@ namespace GuedesTime.Data.Mappings
                     .HasMaxLength(18)
                     .IsRequired(false);
 
+                builder.Property(p => p.Integral)
+                    .IsRequired()
+                    .HasDefaultValue(false);
+
                 builder.Property(p => p.Ativo)
                     .IsRequired()
                     .HasDefaultValue(true);
@@ -74,16 +78,16 @@ namespace GuedesTime.Data.Mappings
                     .HasForeignKey(s => s.InstituicaoId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-				builder.Property(p => p.Ativo)
-					.IsRequired()
-					.HasDefaultValue(true);
+                builder.Property(p => p.Ativo)
+                    .IsRequired()
+                    .HasDefaultValue(true);
 
-				builder.Property(s => s.DataCriacao)
-					.IsRequired();
+                builder.Property(s => s.DataCriacao)
+                    .IsRequired();
 
-				builder.Property(s => s.DataAlteracao);
+                builder.Property(s => s.DataAlteracao);
 
-				builder.ToTable("Instituicoes");
+                builder.ToTable("Instituicoes");
             }
         }
     }

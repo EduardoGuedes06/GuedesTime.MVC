@@ -193,7 +193,6 @@ document.addEventListener('input', function (event) {
     }
 });
 
-
 document.addEventListener('submit', function (event) {
     const form = event.target;
     if (form.closest('#modal-global')) {
@@ -208,7 +207,12 @@ document.addEventListener('submit', function (event) {
                     if (data.success) {
                         window.location.href = data.url;
                     } else {
-                        ui.showToast('<ul>' + data.errors.map(e => `<li>${e}</li>`).join('') + '</ul>', 'error');
+                        debugger
+                        const toastType = data.type || 'error';
+                        ui.showToast(
+                            '<ul>' + data.errors.map(e => `<li>${e}</li>`).join('') + '</ul>',
+                            toastType
+                        );
                     }
                 })
                 .catch(error => {
@@ -221,6 +225,8 @@ document.addEventListener('submit', function (event) {
         loadingService.show("Processando...");
     }
 });
+
+
 
 window.addEventListener('pageshow', (event) => {
     if (event.persisted) {

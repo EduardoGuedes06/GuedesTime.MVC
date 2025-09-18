@@ -3,7 +3,8 @@
 	public enum EnumQuantidadeDeItensPorPagina
 	{
 		Poucos = 4,
-		Varios = 8,
+        Alguns = 5,
+        Varios = 8,
 		Muitos = 12
 	}
 }

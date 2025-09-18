@@ -32,6 +32,9 @@ namespace GuedesTime.MVC.ViewModels
         [DisplayName("Usuário Responsável")]
         public Guid? UsuarioId { get; set; }
 
+        [DisplayName("É Integral?")]
+        public bool? Integral { get; set; }
+
         [DisplayName("Avatar")]
 
         public string? Avatar { get; set; }

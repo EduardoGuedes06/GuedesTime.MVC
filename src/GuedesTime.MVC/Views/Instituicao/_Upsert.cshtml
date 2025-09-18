@@ -31,6 +31,22 @@
             <span asp-validation-for="Cnpj" class="text-danger"></span>
             <span id="cnpj-error" class="text-danger"></span>
         </div>
+        <!-- Integral -->
+        <div class="form-group">
+            <div class="toggle-switch-group">
+                <label class="control-label" for="Integral-checkbox-visual">É Integral?</label>
+                <div class="toggle-switch">
+                    <input type="checkbox"
+                           id="Integral-checkbox-visual"
+                           class="campo-Integral-toggle"
+                           data-initial-value="@ViewBag.EstadoInicialIntegral.ToString().ToLower()" />
+                    <label class="toggle-slider" for="Integral-checkbox-visual"></label>
+                </div>
+            </div>
+            <input type="hidden" name="Integral" id="hidden-Integral-value" />
+        </div>
+
+        <!-- Ativo -->
         @if (Model.Id != null && Model.Id != Guid.Empty)
         {
             <div class="form-group">
@@ -47,6 +63,7 @@
                 <input type="hidden" name="Ativo" id="hidden-Ativo-value" />
             </div>
         }
+
         <partial name="_Endereco" />
     </div>
     <div class="modal-footer">

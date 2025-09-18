@@ -14,6 +14,7 @@ namespace GuedesTime.Domain.Models
         public string Cnpj { get; set; }
         public string Avatar { get; set; }
         public Guid UsuarioId { get; set; }
+        public bool? Integral { get; set; }
         public Endereco Endereco { get; set; }
         public ICollection<Professor> Professores { get; set; }
         public ICollection<PlanejamentoDeAula> PlanejamentosDeAula { get; set; }

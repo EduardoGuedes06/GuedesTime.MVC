@@ -60,6 +60,7 @@ namespace GuedesTime.Service.Services
 
             if (instituicao.Endereco != null)
             {
+                instituicao.Endereco.Ativo = true;
                 instituicao.Endereco.InstituicaoId = instituicao.Id;
                 instituicao.Endereco.Id = instituicaoExistente.Endereco.Id;
 

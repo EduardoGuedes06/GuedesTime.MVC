@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuedesTime.Data.Migrations
 {
     [DbContext(typeof(MeuDbContext))]
-    [Migration("20250808005930_InitialDatabase_AAA")]
-    partial class InitialDatabase_AAA
+    [Migration("20250918185036_UpdateInstituicao")]
+    partial class UpdateInstituicao
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -408,6 +408,12 @@ namespace GuedesTime.Data.Migrations
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool?>("Integral")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Nome")
                         .IsRequired()

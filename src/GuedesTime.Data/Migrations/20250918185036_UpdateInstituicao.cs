@@ -5,9 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GuedesTime.Data.Migrations
 {
-public partial class InitialDatabase : Migration
+    /// <inheritdoc />
+    public partial class UpdateInstituicao : Migration
     {
-
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
@@ -46,6 +47,7 @@ public partial class InitialDatabase : Migration
                     Avatar = table.Column<string>(type: "LONGTEXT", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UsuarioId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Integral = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -86,6 +88,7 @@ public partial class InitialDatabase : Migration
                     Nome = table.Column<string>(type: "varchar(100)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Codigo = table.Column<int>(type: "int", nullable: true),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
@@ -198,7 +201,8 @@ public partial class InitialDatabase : Migration
                     InstituicaoId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Codigo = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -402,7 +406,8 @@ public partial class InitialDatabase : Migration
                     SerieId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Ativo = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: true),
                     DataCriacao = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    DataAlteracao = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Codigo = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -730,7 +735,7 @@ public partial class InitialDatabase : Migration
                 column: "SerieId");
         }
 
-
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

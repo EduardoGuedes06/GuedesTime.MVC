@@ -406,6 +406,12 @@ namespace GuedesTime.Data.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool?>("Integral")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("tinyint(1)")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(150)

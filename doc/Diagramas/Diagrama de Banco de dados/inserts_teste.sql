@@ -43,26 +43,31 @@ CALL truncate_all();
 DROP PROCEDURE truncate_all;
 SET FOREIGN_KEY_CHECKS = 1;
 
--- Insert Instituicao
-INSERT INTO `guedestimedatabase`.`instituicoes` 
-(`Id`, `Nome`, `CodigoCie`, `Cnpj`, `Avatar`, `Ativo`, `UsuarioId`, `DataCriacao`, `DataAlteracao`)
-SELECT 
-    x.Id, x.Nome, x.CodigoCie, x.Cnpj, x.Avatar, x.Ativo, u.Id AS UsuarioId, UTC_TIMESTAMP(), NULL
-FROM (
-    SELECT '11111111-1111-1111-1111-111111111111' AS Id, 'Instituição A' AS Nome, 'CIE001' AS CodigoCie, '12345678000101' AS Cnpj, '/assets/avatar/avatar_1.jpg' AS Avatar, 1 AS Ativo
-    UNION ALL SELECT '22222222-2222-2222-2222-222222222222', 'Instituição B', 'CIE002', '23456789000102', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '33333333-3333-3333-3333-333333333333', 'Instituição C', 'CIE003', '34567890000103', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '44444444-4444-4444-4444-444444444444', 'Instituição D', 'CIE004', '45678901000104', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '55555555-5555-5555-5555-555555555555', 'Instituição E', 'CIE005', '56789012000105', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '66666666-6666-6666-6666-666666666666', 'Instituição F', 'CIE006', '67890123000106', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '77777777-7777-7777-7777-777777777777', 'Instituição G', 'CIE007', '78901234000107', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '88888888-8888-8888-8888-888888888888', 'Instituição H', 'CIE008', '89012345000108', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT '99999999-9999-9999-9999-999999999999', 'Instituição I', 'CIE009', '90123456000109', '/assets/avatar/avatar_1.jpg', 1
-    UNION ALL SELECT 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Instituição J', 'CIE010', '01234567000110', '/assets/avatar/avatar_1.jpg', 1
-) AS x
-CROSS JOIN (
-    SELECT Id FROM AspNetUsers LIMIT 1
-) AS u;
+INSERT INTO Instituicoes
+(
+    Id, 
+    Nome, 
+    CodigoCie, 
+    Cnpj, 
+    Avatar, 
+    Ativo, 
+    Integral,
+    UsuarioId, 
+    DataCriacao, 
+    DataAlteracao
+)
+VALUES
+('11111111-1111-1111-1111-111111111111', 'Instituição A', 'CIE001', '12345678000101', '/assets/avatar/avatar_1.jpg', 1, 1, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('22222222-2222-2222-2222-222222222222', 'Instituição B', 'CIE002', '23456789000102', '/assets/avatar/avatar_1.jpg', 1, 0, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('33333333-3333-3333-3333-333333333333', 'Instituição C', 'CIE003', '34567890000103', '/assets/avatar/avatar_1.jpg', 1, 1, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('44444444-4444-4444-4444-444444444444', 'Instituição D', 'CIE004', '45678901000104', '/assets/avatar/avatar_1.jpg', 1, 0, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('55555555-5555-5555-5555-555555555555', 'Instituição E', 'CIE005', '56789012000105', '/assets/avatar/avatar_1.jpg', 1, 1, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('66666666-6666-6666-6666-666666666666', 'Instituição F', 'CIE006', '67890123000106', '/assets/avatar/avatar_1.jpg', 1, 0, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('77777777-7777-7777-7777-777777777777', 'Instituição G', 'CIE007', '78901234000107', '/assets/avatar/avatar_1.jpg', 1, 1, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('88888888-8888-8888-8888-888888888888', 'Instituição H', 'CIE008', '89012345000108', '/assets/avatar/avatar_1.jpg', 1, 0, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('99999999-9999-9999-9999-999999999999', 'Instituição I', 'CIE009', '90123456000109', '/assets/avatar/avatar_1.jpg', 1, 1, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL),
+('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Instituição J', 'CIE010', '01234567000110', '/assets/avatar/avatar_1.jpg', 1, 0, '00000000-0000-0000-0000-000000000001', UTC_TIMESTAMP(), NULL);
+
 
 
 INSERT INTO Enderecos
