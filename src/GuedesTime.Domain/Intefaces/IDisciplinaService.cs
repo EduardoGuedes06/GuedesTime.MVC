@@ -26,5 +26,6 @@ namespace GuedesTime.Domain.Intefaces
 		Task<(bool Existe, List<string> NomesExistentes)> VerificarDisciplinasExistentesPorNomes(Guid instituicaoId, List<string> nomes);
         Task<List<string>> VerificarDisciplinasDuplicadasAsync(Guid instituicaoId, string? nome, string? nomes, Guid? idDisciplina = null);
         Task AdicionarVariasAsync(IEnumerable<Disciplina> disciplinas);
+        Task<IEnumerable<Disciplina>> BuscarPorNomeAsync(Guid instituicaoId, string nomeQuery);
     }
 }

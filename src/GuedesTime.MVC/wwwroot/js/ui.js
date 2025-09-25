@@ -1,5 +1,3 @@
-
-const toastContainer = document.getElementById('toast-container');
 export function showToast(message, type = 'success') {
     const toastContainer = document.getElementById('toast-container');
     if (!toastContainer || !message) return;
@@ -71,52 +69,66 @@ export function renderPagination(containerId, totalPages, currentPage, renderFun
     paginationContainer.appendChild(createButton('Next &raquo;', currentPage + 1, false, currentPage === totalPages));
 }
 
-export function setupMultiSelect(containerId, selectedContainerId, searchInputId, availableListId, allItems, itemPropertyId, itemPropertyName, selectedIdsArrayRef) {
+export function setupMultiSelect(config) {
+    const {
+        containerId, selectedContainerId, searchInputId, availableListId,
+        itemPropertyId, itemPropertyName, selectedIdsArrayRef, searchEndpoint,
+        hiddenInputToUpdate
+    } = config;
+
     const selectedContainer = document.getElementById(selectedContainerId);
     const searchInput = document.getElementById(searchInputId);
     const availableList = document.getElementById(availableListId);
     const parentContainer = document.getElementById(containerId);
 
-    if (!selectedContainer || !searchInput || !availableList || !parentContainer) {
-        console.error('MultiSelect Error: One or more element IDs are invalid.');
+    if (!selectedContainer || !searchInput || !availableList || !parentContainer || !hiddenInputToUpdate) {
+        console.error('MultiSelect Error: Um ou mais elementos (ou o hiddenInput) são inválidos.', config);
         return;
     }
 
+    let allItems = [];
     let currentSelectedIds = new Set(selectedIdsArrayRef);
+
+    // NOVO: Criamos um cache para guardar os dados dos itens (ID -> {id, name})
+    const itemCache = new Map();
+
+    const updateHiddenInput = () => {
+        hiddenInputToUpdate.value = JSON.stringify(Array.from(currentSelectedIds));
+    };
 
     const renderSelected = () => {
         selectedContainer.innerHTML = '';
-        Array.from(currentSelectedIds).forEach(id => {
-            const item = allItems.find(i => i[itemPropertyId] === id);
-            if (item) {
-                const chip = document.createElement('span');
-                chip.className = 'selected-item-chip';
-                chip.innerHTML = `${item[itemPropertyName]} <button type="button" class="remove-btn" data-id="${id}"><i class="fas fa-times"></i></button>`;
-                selectedContainer.appendChild(chip);
+        currentSelectedIds.forEach(id => {
+            // MUDANÇA: Buscamos primeiro no nosso cache
+            const item = itemCache.get(id);
+            const itemName = item ? item[itemPropertyName] : `Item ID: ${id}`;
 
-                chip.querySelector('.remove-btn').addEventListener('click', (e) => {
-                    const removeId = e.currentTarget.dataset.id;
-                    currentSelectedIds.delete(removeId);
-                    const index = selectedIdsArrayRef.indexOf(removeId);
-                    if (index > -1) {
-                        selectedIdsArrayRef.splice(index, 1);
-                    }
-                    renderSelected();
-                    renderAvailable(searchInput.value);
-                });
-            }
+            const chip = document.createElement('span');
+            chip.className = 'selected-item-chip';
+            chip.innerHTML = `${itemName} <button type="button" class="remove-btn" data-id="${id}"><i class="fas fa-times"></i></button>`;
+            selectedContainer.appendChild(chip);
+
+            chip.querySelector('.remove-btn').addEventListener('click', (e) => {
+                const removeId = e.currentTarget.dataset.id;
+                currentSelectedIds.delete(removeId);
+                updateHiddenInput();
+                renderSelected();
+                renderAvailable(searchInput.value);
+            });
         });
+        updateHiddenInput();
     };
 
     const renderAvailable = (searchTerm = '') => {
         availableList.innerHTML = '';
+
         const filteredItems = allItems.filter(item =>
             !currentSelectedIds.has(item[itemPropertyId]) &&
             item[itemPropertyName].toLowerCase().includes(searchTerm.toLowerCase())
         );
 
-        if (filteredItems.length === 0) {
-            availableList.innerHTML = '<div class="available-item text-center">Nenhum item disponível.</div>';
+        if (filteredItems.length === 0 && searchTerm) {
+            availableList.innerHTML = '<div class="available-item text-center">Nenhum resultado encontrado.</div>';
         }
 
         filteredItems.forEach(item => {
@@ -125,10 +137,11 @@ export function setupMultiSelect(containerId, selectedContainerId, searchInputId
             listItem.textContent = item[itemPropertyName];
             listItem.dataset.id = item[itemPropertyId];
             listItem.addEventListener('click', () => {
-                currentSelectedIds.add(item[itemPropertyId]);
-                if (!selectedIdsArrayRef.includes(item[itemPropertyId])) {
-                    selectedIdsArrayRef.push(item[itemPropertyId]);
+                // Adicionamos o item completo ao cache ao selecionar
+                if (!itemCache.has(item[itemPropertyId])) {
+                    itemCache.set(item[itemPropertyId], item);
                 }
+                currentSelectedIds.add(item[itemPropertyId]);
                 searchInput.value = '';
                 renderSelected();
                 renderAvailable('');
@@ -137,15 +150,60 @@ export function setupMultiSelect(containerId, selectedContainerId, searchInputId
             availableList.appendChild(listItem);
         });
 
-        if (filteredItems.length > 0 || searchTerm !== '') {
+        if (availableList.innerHTML !== '') {
             availableList.classList.add('active');
         } else {
             availableList.classList.remove('active');
         }
     };
 
-    searchInput.addEventListener('input', () => renderAvailable(searchInput.value));
-    searchInput.addEventListener('focus', () => renderAvailable(searchInput.value));
+    let searchTimeout;
+    const searchRemote = async (query) => {
+        if (!searchEndpoint) return;
+
+        availableList.innerHTML = '<div class="available-item text-center">Buscando...</div>';
+        availableList.classList.add('active');
+
+        try {
+            const res = await fetch(`${searchEndpoint}?query=${encodeURIComponent(query)}`);
+            if (!res.ok) throw new Error('Erro ao buscar dados');
+            const data = await res.json();
+
+            // MUDANÇA: Em vez de apenas sobrescrever, também populamos o cache
+            data.forEach(item => {
+                if (!itemCache.has(item.id)) {
+                    itemCache.set(item.id, item);
+                }
+            });
+
+            allItems = data; // A lista de "todos os itens" ainda representa apenas a última busca
+            renderAvailable(query);
+        } catch (err) {
+            console.error('Erro no MultiSelect remoto:', err);
+            availableList.innerHTML = '<div class="available-item text-center text-danger">Erro ao buscar.</div>';
+        }
+    };
+
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        const query = searchInput.value.trim();
+        if (query.length < 2 && query.length > 0) {
+            availableList.innerHTML = '<div class="available-item text-center">Digite ao menos 2 caracteres.</div>';
+            availableList.classList.add('active');
+            return;
+        }
+        if (query.length === 0) {
+            availableList.classList.remove('active');
+            return;
+        }
+        searchTimeout = setTimeout(() => searchRemote(query), 500);
+    });
+
+    searchInput.addEventListener('focus', () => {
+        if (searchInput.value.trim().length > 1) {
+            searchRemote(searchInput.value.trim());
+        }
+    });
 
     document.addEventListener('click', (e) => {
         if (!parentContainer.contains(e.target)) {
@@ -154,22 +212,4 @@ export function setupMultiSelect(containerId, selectedContainerId, searchInputId
     });
 
     renderSelected();
-    renderAvailable('');
-
-    return {
-        getSelectedIds: () => Array.from(currentSelectedIds),
-        setSelectedIds: (ids) => {
-            currentSelectedIds = new Set(ids);
-            selectedIdsArrayRef.length = 0;
-            ids.forEach(id => selectedIdsArrayRef.push(id));
-            renderSelected();
-            renderAvailable(searchInput.value);
-        },
-        clear: () => {
-            currentSelectedIds.clear();
-            selectedIdsArrayRef.length = 0;
-            renderSelected();
-            renderAvailable('');
-        }
-    };
 }

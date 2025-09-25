@@ -1,0 +1,25 @@
+﻿@* Ficheiro: _UpsertDisciplinasSeriesPartial.cshtml *@
+@model GuedesTime.MVC.ViewModels.SerieViewModel
+
+<div class="form-group">
+    <label>Disciplinas Relacionadas:</label>
+
+    <div class="multi-select-container"
+         id="serie-disciplinas-multi-select"
+         data-component="multi-select"
+         data-selected-container-id="serie-selected-disciplinas-container"
+         data-search-input-id="serie-disciplinas-search-input"
+         data-available-list-id="serie-available-disciplinas-list"
+         data-item-id-prop="id"
+         data-item-name-prop="name"
+         data-search-endpoint="@Url.Action("SearchDisciplinas", "Serie")">
+
+        <div class="selected-items-container" id="serie-selected-disciplinas-container"></div>
+        <input type="text" class="multi-select-search" id="serie-disciplinas-search-input"
+               placeholder="Buscar disciplinas...">
+        <div class="available-items-list" id="serie-available-disciplinas-list"></div>
+    </div>
+
+    <input type="hidden" name="DisciplinaIds" value="@Model.DisciplinaIdsJson" />
+    <span class="text-danger" data-valmsg-for="DisciplinaIds" data-valmsg-replace="true"></span>
+</div>

@@ -59,10 +59,17 @@ namespace GuedesTime.Service.Services
         {
             return await _disciplinaRepository.ObterDisciplinaPorNome(instituicaoId, nomeDisciplina);
         }
+
+        public async Task<IEnumerable<Disciplina>> BuscarPorNomeAsync(Guid instituicaoId, string nomeQuery)
+        {
+            return await _disciplinaRepository.BuscarPorNomeAsync(instituicaoId, nomeQuery);
+        }
+
         public async Task<(bool Existe, List<string> NomesExistentes)> VerificarDisciplinasExistentesPorNomes(Guid instituicaoId, List<string> nomes)
         {
             return await _disciplinaRepository.VerificarDisciplinasExistentesPorNomes(instituicaoId, nomes);
         }
+
         public async Task AdicionarVariasAsync(IEnumerable<Disciplina> disciplinas)
         {
 
