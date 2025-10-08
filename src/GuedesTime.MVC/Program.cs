@@ -56,7 +56,6 @@ app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configuração do Health Check
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

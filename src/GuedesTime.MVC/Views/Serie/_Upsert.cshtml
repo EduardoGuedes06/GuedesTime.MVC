@@ -85,6 +85,10 @@
 				<input type="hidden" name="Ativo" id="hidden-Ativo-value" />
 			</div>
 		}
+
+		@await Html.PartialAsync("_UpsertDisciplinasSeriesPartial", Model)
+
+
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn secondary-btn" data-modal-close>Cancelar</button>

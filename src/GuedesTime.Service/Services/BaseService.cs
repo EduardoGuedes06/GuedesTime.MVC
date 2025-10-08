@@ -56,32 +56,35 @@ namespace GuedesTime.Service.Services
             _context = context;
             _pagedRepository = pagedRepository;
         }
+        protected async Task<PagedResult<T>> PaginarResultadoAsync(IQueryable<T> query, int pageSize, int page)
+        {
+            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
+        }
+        protected virtual IQueryable<T> ApplySearch(IQueryable<T> query, string? search)
+        {
+            if (string.IsNullOrWhiteSpace(search))
+                return query;
 
-		protected virtual IQueryable<T> ApplySearch(IQueryable<T> query, string? search)
-		{
-			if (string.IsNullOrWhiteSpace(search))
-				return query;
+            var parameter = Expression.Parameter(typeof(T), "e");
+            Expression? predicate = null;
+            foreach (var prop in typeof(T).GetProperties().Where(p => p.PropertyType == typeof(string)))
+            {
+                var propertyAccess = Expression.Property(parameter, prop);
+                var searchTerm = Expression.Constant(search, typeof(string));
+                var notNull = Expression.NotEqual(propertyAccess, Expression.Constant(null, typeof(string)));
+                var contains = Expression.Call(propertyAccess, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, searchTerm);
+                var condition = Expression.AndAlso(notNull, contains);
 
-			var parameter = Expression.Parameter(typeof(T), "e");
-			Expression? predicate = null;
-			foreach (var prop in typeof(T).GetProperties().Where(p => p.PropertyType == typeof(string)))
-			{
-				var propertyAccess = Expression.Property(parameter, prop);
-				var searchTerm = Expression.Constant(search, typeof(string));
-				var notNull = Expression.NotEqual(propertyAccess, Expression.Constant(null, typeof(string)));
-				var contains = Expression.Call(propertyAccess, typeof(string).GetMethod("Contains", new[] { typeof(string) })!, searchTerm);
-				var condition = Expression.AndAlso(notNull, contains);
+                predicate = predicate == null ? condition : Expression.OrElse(predicate, condition);
+            }
+            if (predicate == null)
+                return query;
 
-				predicate = predicate == null ? condition : Expression.OrElse(predicate, condition);
-			}
-			if (predicate == null)
-				return query;
+            var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
+            return query.Where(lambda);
+        }
 
-			var lambda = Expression.Lambda<Func<T, bool>>(predicate, parameter);
-			return query.Where(lambda);
-		}
-
-		public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize, bool ativo = true)
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(string? search, int page, int pageSize, bool ativo = true)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
@@ -90,53 +93,53 @@ namespace GuedesTime.Service.Services
             return await _pagedRepository.GetPagedResultAsync(query, pageSize, page, ativo);
         }
 
-		public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(
-			Guid instituicaoId,
-			string? search,
-			int page,
-			int pageSize,
-			bool ativo = true,
-			Expression<Func<T, bool>>? filtroAdicional = null,
-			Func<IQueryable<T>, IOrderedQueryable<T>>? ordenacao = null,
-			params Expression<Func<T, object>>[]? includes)
-		{
-			IQueryable<T> query = _context.Set<T>().AsNoTracking();
+        public virtual async Task<PagedResult<T>> GetPagedByInstituicaoAsync(
+            Guid instituicaoId,
+            string? search,
+            int page,
+            int pageSize,
+            bool ativo = true,
+            Expression<Func<T, bool>>? filtroAdicional = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? ordenacao = null,
+            IQueryable<T>? sourceQuery = null,
+            params Expression<Func<T, object>>[]? includes)
+        {
+            IQueryable<T> query = sourceQuery ?? _context.Set<T>().AsNoTracking();
 
-			if (typeof(T).GetProperty("InstituicaoId") != null)
-			{
-				query = query.Where(e => EF.Property<Guid>(e, "InstituicaoId") == instituicaoId);
-			}
+            if (typeof(T).GetProperty("InstituicaoId") != null)
+            {
+                query = query.Where(e => EF.Property<Guid>(e, "InstituicaoId") == instituicaoId);
+            }
 
-			if (typeof(T).GetProperty("Ativo") != null)
-			{
-				query = query.Where(e => EF.Property<bool?>(e, "Ativo") == ativo);
-			}
+            if (typeof(T).GetProperty("Ativo") != null)
+            {
+                query = query.Where(e => EF.Property<bool?>(e, "Ativo") == ativo);
+            }
 
-			if (filtroAdicional != null)
-			{
-				query = query.Where(filtroAdicional);
-			}
+            if (filtroAdicional != null)
+            {
+                query = query.Where(filtroAdicional);
+            }
 
-			query = ApplySearch(query, search);
+            query = ApplySearch(query, search);
 
-			if (ordenacao != null)
-			{
-				query = ordenacao(query);
-			}
+            if (ordenacao != null)
+            {
+                query = ordenacao(query);
+            }
 
-			if (includes != null)
-			{
-				foreach (var include in includes)
-				{
-					query = query.Include(include);
-				}
-			}
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
 
-			return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
-		}
+            return await _pagedRepository.GetPagedResultAsync(query, pageSize, page);
+        }
 
-
-		public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)
+        public virtual async Task<IEnumerable<T>> GetWithoutPaginationAsync(string? search, int pageSize)
         {
             IQueryable<T> query = _context.Set<T>().AsNoTracking();
 
@@ -146,10 +149,8 @@ namespace GuedesTime.Service.Services
             return paged.Items;
         }
 
-		#region Utils
-		
-		#endregion
-	}
+        #region Utils
 
-
+        #endregion
+    }
 }

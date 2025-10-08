@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace GuedesTime.MVC.ViewModels
 {
@@ -45,5 +47,23 @@ namespace GuedesTime.MVC.ViewModels
 		public InstituicaoViewModel Instituicao { get; set; }
         public ICollection<TurmaViewModel> Turmas { get; set; }
         public ICollection<DisciplinaSerie> Disciplinas { get; set; }
+
+
+        //MultSelect de Disciplinas
+        public string DisciplinaIds { get; set; }
+        [JsonIgnore]
+        public IEnumerable<Guid> DisciplinaIdsList
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(DisciplinaIds))
+                {
+                    return new List<Guid>();
+                }
+                return JsonSerializer.Deserialize<List<Guid>>(DisciplinaIds) ?? new List<Guid>();
+            }
+        }
+        public string DisciplinaIdsJson => JsonSerializer.Serialize(DisciplinaIdsList);
+        public string DisciplinasIniciaisJson { get; set; } = "[]";
     }
 }

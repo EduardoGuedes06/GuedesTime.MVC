@@ -7,6 +7,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Services\BaseService.cs~RFac95713.TMP" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\GuedesTime.Data\GuedesTime.Data.csproj" />
 	  <ProjectReference Include="..\GuedesTime.Domain\GuedesTime.Domain.csproj" />
 	</ItemGroup>

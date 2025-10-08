@@ -54,5 +54,20 @@ namespace GuedesTime.Data.Repository
             return (existe, nomesExistentes);
         }
 
+        public async Task<IEnumerable<Disciplina>> BuscarPorNomeAsync(Guid instituicaoId, string nomeQuery)
+        {
+            if (string.IsNullOrWhiteSpace(nomeQuery) || nomeQuery.Length < 2)
+            {
+                return new List<Disciplina>();
+            }
+
+            return await Db.Disciplina
+                .AsNoTracking()
+                .Where(d => d.InstituicaoId == instituicaoId)
+                .Where(d => d.Nome.Contains(nomeQuery))
+                .Take(10)
+                .ToListAsync();
+        }
+
     }
 }

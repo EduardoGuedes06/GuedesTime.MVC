@@ -1,6 +1,6 @@
 ﻿import './services/fetchInterceptor.js';
 import { loadingService } from './services/loadingService.js';
-
+import { initializeComponents } from './componentInitializer.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     import('./ui.js').then(ui => {
@@ -36,10 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof utils.initializeClearInputButtons === 'function') {
             utils.initializeClearInputButtons();
         }
-
-       
     });
-
 
     if (typeof initializeDynamicFilters === 'function') {
         initializeDynamicFilters();
@@ -50,10 +47,10 @@ document.addEventListener('click', function (event) {
     const modalTrigger = event.target.closest('[data-modal-url]');
     const modalClose = event.target.closest('[data-modal-close]');
     const link = event.target.closest('a');
-
     const deactivateTrigger = event.target.closest('.btn-deactivate');
     const confirmYes = event.target.closest('.btn-confirm-yes');
     const confirmNo = event.target.closest('.btn-confirm-no');
+
     if (deactivateTrigger || confirmNo || confirmYes) {
         event.preventDefault();
 
@@ -136,15 +133,7 @@ document.addEventListener('click', function (event) {
                 .then(response => response.text())
                 .then(html => {
                     modalContent.innerHTML = html;
-
-                    import('./utils.js?v=' + Date.now()).then(utils => {
-                        const toggles = modalContent.querySelectorAll('input[class*="-toggle"]');
-                        toggles.forEach(toggle => {
-                            if (typeof utils.initializeToggleSwitch === 'function') {
-                                utils.initializeToggleSwitch(toggle);
-                            }
-                        });
-                    });
+                    initializeComponents(modalContent);
                 })
                 .catch(err => {
                     console.error('Erro ao carregar conteúdo do modal:', err);
@@ -207,7 +196,6 @@ document.addEventListener('submit', function (event) {
                     if (data.success) {
                         window.location.href = data.url;
                     } else {
-                        debugger
                         const toastType = data.type || 'error';
                         ui.showToast(
                             '<ul>' + data.errors.map(e => `<li>${e}</li>`).join('') + '</ul>',
@@ -225,8 +213,6 @@ document.addEventListener('submit', function (event) {
         loadingService.show("Processando...");
     }
 });
-
-
 
 window.addEventListener('pageshow', (event) => {
     if (event.persisted) {

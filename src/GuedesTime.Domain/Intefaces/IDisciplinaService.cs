@@ -8,17 +8,18 @@ namespace GuedesTime.Domain.Intefaces
 {
     public interface IDisciplinaService : IDisposable
     {
-		Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(
-			Guid instituicaoId,
-			string? search,
-			int page,
-			int pageSize,
-			bool ativo = true,
-			Expression<Func<Disciplina, bool>>? filtroAdicional = null,
-			Func<IQueryable<Disciplina>, IOrderedQueryable<Disciplina>>? ordenacao = null,
-			params Expression<Func<Disciplina, object>>[]? includes
-		);
-		Task Atualizar(Disciplina disciplina);
+        Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(
+            Guid instituicaoId,
+            string? search,
+            int page,
+            int pageSize,
+            bool ativo,
+            Expression<Func<Disciplina, bool>>? filtroAdicional,
+            Func<IQueryable<Disciplina>, IOrderedQueryable<Disciplina>>? ordenacao,
+            IQueryable<Disciplina>? sourceQuery,
+            params Expression<Func<Disciplina, object>>[]? includes
+        );
+        Task Atualizar(Disciplina disciplina);
         Task<Disciplina> ObterPorId(Guid DisciplinaId);
         Task ObterTodos();
         Task Remover(Guid id);
@@ -26,5 +27,6 @@ namespace GuedesTime.Domain.Intefaces
 		Task<(bool Existe, List<string> NomesExistentes)> VerificarDisciplinasExistentesPorNomes(Guid instituicaoId, List<string> nomes);
         Task<List<string>> VerificarDisciplinasDuplicadasAsync(Guid instituicaoId, string? nome, string? nomes, Guid? idDisciplina = null);
         Task AdicionarVariasAsync(IEnumerable<Disciplina> disciplinas);
+        Task<IEnumerable<Disciplina>> BuscarPorNomeAsync(Guid instituicaoId, string nomeQuery);
     }
 }
