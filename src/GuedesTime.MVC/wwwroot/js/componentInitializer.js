@@ -9,6 +9,15 @@
         return;
     }
 
+    let initialItems = [];
+    try {
+        if (config.initialItems) {
+            initialItems = JSON.parse(config.initialItems);
+        }
+    } catch (e) {
+        console.error('Erro ao parsear initial-items do MultiSelect', e);
+    }
+
     let selectedIds = [];
     try {
         if (hiddenInput.value) {
@@ -27,7 +36,8 @@
         itemPropertyName: config.itemNameProp,
         searchEndpoint: config.searchEndpoint,
         selectedIdsArrayRef: selectedIds,
-        hiddenInputToUpdate: hiddenInput
+        hiddenInputToUpdate: hiddenInput,
+        initialItems: initialItems
     });
 }
 

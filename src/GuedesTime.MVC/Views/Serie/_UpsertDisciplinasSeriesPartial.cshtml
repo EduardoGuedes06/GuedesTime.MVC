@@ -1,5 +1,4 @@
-﻿@* Ficheiro: _UpsertDisciplinasSeriesPartial.cshtml *@
-@model GuedesTime.MVC.ViewModels.SerieViewModel
+﻿@model GuedesTime.MVC.ViewModels.SerieViewModel
 
 <div class="form-group">
     <label>Disciplinas Relacionadas:</label>
@@ -12,8 +11,8 @@
          data-available-list-id="serie-available-disciplinas-list"
          data-item-id-prop="id"
          data-item-name-prop="name"
-         data-search-endpoint="@Url.Action("SearchDisciplinas", "Serie")">
-
+         data-search-endpoint="@Url.Action("SearchDisciplinas", "Serie")"
+         data-initial-items="@Model.DisciplinasIniciaisJson">
         <div class="selected-items-container" id="serie-selected-disciplinas-container"></div>
         <input type="text" class="multi-select-search" id="serie-disciplinas-search-input"
                placeholder="Buscar disciplinas...">

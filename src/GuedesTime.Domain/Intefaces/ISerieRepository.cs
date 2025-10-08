@@ -8,6 +8,8 @@ namespace GuedesTime.Domain.Intefaces
 	public interface ISerieRepository : IRepository<Serie>
 	{
 		Task<List<string>> ObterNomesSeriesDuplicadasAsync(Guid instituicaoId, List<string> nomesSeries, EnumTipoEnsino tipoEnsino, string? serieUnica = null, Guid? idSerie = null);
-		Task<Serie> ObterSeriePorNome(Guid instituicaoId, string serieNome);
+        Task<Serie> ObterPorIdComDisciplinas(Guid id);
+        IQueryable<Serie> ObterQueryComDisciplinas();
+        Task<Serie> ObterSeriePorNome(Guid instituicaoId, string serieNome);
 	}
 }

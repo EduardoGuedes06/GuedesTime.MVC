@@ -73,7 +73,7 @@ export function setupMultiSelect(config) {
     const {
         containerId, selectedContainerId, searchInputId, availableListId,
         itemPropertyId, itemPropertyName, selectedIdsArrayRef, searchEndpoint,
-        hiddenInputToUpdate
+        hiddenInputToUpdate, initialItems
     } = config;
 
     const selectedContainer = document.getElementById(selectedContainerId);
@@ -86,11 +86,13 @@ export function setupMultiSelect(config) {
         return;
     }
 
-    let allItems = [];
-    let currentSelectedIds = new Set(selectedIdsArrayRef);
+    const knownItemsMap = new Map();
+    if (initialItems && initialItems.length > 0) {
+        initialItems.forEach(item => knownItemsMap.set(item[itemPropertyId], item));
+    }
 
-    // NOVO: Criamos um cache para guardar os dados dos itens (ID -> {id, name})
-    const itemCache = new Map();
+    let currentSearchResults = [];
+    let currentSelectedIds = new Set(selectedIdsArrayRef);
 
     const updateHiddenInput = () => {
         hiddenInputToUpdate.value = JSON.stringify(Array.from(currentSelectedIds));
@@ -99,10 +101,8 @@ export function setupMultiSelect(config) {
     const renderSelected = () => {
         selectedContainer.innerHTML = '';
         currentSelectedIds.forEach(id => {
-            // MUDANÇA: Buscamos primeiro no nosso cache
-            const item = itemCache.get(id);
+            const item = knownItemsMap.get(id);
             const itemName = item ? item[itemPropertyName] : `Item ID: ${id}`;
-
             const chip = document.createElement('span');
             chip.className = 'selected-item-chip';
             chip.innerHTML = `${itemName} <button type="button" class="remove-btn" data-id="${id}"><i class="fas fa-times"></i></button>`;
@@ -122,7 +122,7 @@ export function setupMultiSelect(config) {
     const renderAvailable = (searchTerm = '') => {
         availableList.innerHTML = '';
 
-        const filteredItems = allItems.filter(item =>
+        const filteredItems = currentSearchResults.filter(item =>
             !currentSelectedIds.has(item[itemPropertyId]) &&
             item[itemPropertyName].toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -137,10 +137,6 @@ export function setupMultiSelect(config) {
             listItem.textContent = item[itemPropertyName];
             listItem.dataset.id = item[itemPropertyId];
             listItem.addEventListener('click', () => {
-                // Adicionamos o item completo ao cache ao selecionar
-                if (!itemCache.has(item[itemPropertyId])) {
-                    itemCache.set(item[itemPropertyId], item);
-                }
                 currentSelectedIds.add(item[itemPropertyId]);
                 searchInput.value = '';
                 renderSelected();
@@ -169,14 +165,9 @@ export function setupMultiSelect(config) {
             if (!res.ok) throw new Error('Erro ao buscar dados');
             const data = await res.json();
 
-            // MUDANÇA: Em vez de apenas sobrescrever, também populamos o cache
-            data.forEach(item => {
-                if (!itemCache.has(item.id)) {
-                    itemCache.set(item.id, item);
-                }
-            });
+            data.forEach(item => knownItemsMap.set(item[itemPropertyId], item));
+            currentSearchResults = data;
 
-            allItems = data; // A lista de "todos os itens" ainda representa apenas a última busca
             renderAvailable(query);
         } catch (err) {
             console.error('Erro no MultiSelect remoto:', err);

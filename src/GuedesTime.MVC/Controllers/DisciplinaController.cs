@@ -78,7 +78,9 @@ namespace GuedesTime.MVC.Controllers
                 pageSize.Value,
                 ativo.Value,
                 filtroAdicional: null,
-                ordenacao: q => q.OrderBy(s => s.Nome).ThenBy(s => s.Nome)
+                ordenacao: q => q.OrderBy(s => s.Nome),
+                sourceQuery: null,
+                includes: null
             );
 
             var disciplinaViewModel = _mapper.Map<IEnumerable<DisciplinaViewModel>>(pagedDisciplinas.Items);
@@ -110,7 +112,17 @@ namespace GuedesTime.MVC.Controllers
                 return NotFound();
 
             ViewBag.InstituicaoId = id;
-            var pagedDisciplinas = await _disciplinaService.GetPagedByInstituicaoAsync(id, search, page, pageSize, ativo);
+            var pagedDisciplinas = await _disciplinaService.GetPagedByInstituicaoAsync(
+                                    id,
+                                    search,
+                                    page,
+                                    pageSize,
+                                    ativo,
+                                    filtroAdicional: null,
+                                    ordenacao: q => q.OrderBy(d => d.Nome),
+                                    sourceQuery: null,
+                                    includes: null
+                                );
 
             var disciplinaViewModels = _mapper.Map<IEnumerable<DisciplinaViewModel>>(pagedDisciplinas.Items);
 

@@ -8,17 +8,18 @@ namespace GuedesTime.Domain.Intefaces
 {
     public interface IDisciplinaService : IDisposable
     {
-		Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(
-			Guid instituicaoId,
-			string? search,
-			int page,
-			int pageSize,
-			bool ativo = true,
-			Expression<Func<Disciplina, bool>>? filtroAdicional = null,
-			Func<IQueryable<Disciplina>, IOrderedQueryable<Disciplina>>? ordenacao = null,
-			params Expression<Func<Disciplina, object>>[]? includes
-		);
-		Task Atualizar(Disciplina disciplina);
+        Task<PagedResult<Disciplina>> GetPagedByInstituicaoAsync(
+            Guid instituicaoId,
+            string? search,
+            int page,
+            int pageSize,
+            bool ativo,
+            Expression<Func<Disciplina, bool>>? filtroAdicional,
+            Func<IQueryable<Disciplina>, IOrderedQueryable<Disciplina>>? ordenacao,
+            IQueryable<Disciplina>? sourceQuery,
+            params Expression<Func<Disciplina, object>>[]? includes
+        );
+        Task Atualizar(Disciplina disciplina);
         Task<Disciplina> ObterPorId(Guid DisciplinaId);
         Task ObterTodos();
         Task Remover(Guid id);

@@ -3,6 +3,8 @@ using GuedesTime.Data.Repository;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.Domain.Models;
 using GuedesTime.Domain.Models.Enums;
+using GuedesTime.Domain.Models.Utils;
+using Microsoft.EntityFrameworkCore;
 
 namespace GuedesTime.Service.Services
 {
@@ -25,7 +27,13 @@ namespace GuedesTime.Service.Services
 
 		public async Task<Serie> ObterPorId(Guid id) => await _serieRepository.ObterPorId(id);
 
-		public async Task<List<string>> VerificarSeriesDuplicadasAsync(
+        public async Task<Serie> ObterPorIdComDisciplinasAsync(Guid id)
+        {
+            return await _serieRepository.ObterPorIdComDisciplinas(id);
+        }
+
+
+        public async Task<List<string>> VerificarSeriesDuplicadasAsync(
 		Guid instituicaoId,
 		string? serieUnica,
 		string? seriesMultiplas,
@@ -60,13 +68,64 @@ namespace GuedesTime.Service.Services
 			);
 		}
 
-		public async Task<Serie> ObterSeriePorNome(Guid instituicaoId, string nomeSerie)
+        public async Task<PagedResult<Serie>> ObterSeriesPaginadoComDisciplinas(
+            Guid instituicaoId,
+            string? search,
+            int page,
+            int pageSize,
+            bool ativo,
+            EnumTipoEnsino? tipoEnsino = null)
+        {
+            var query = _serieRepository.ObterQueryComDisciplinas()
+                .Where(s => s.InstituicaoId == instituicaoId && s.Ativo == ativo);
+
+            if (tipoEnsino.HasValue)
+            {
+                query = query.Where(s => s.TipoEnsino == tipoEnsino.Value);
+            }
+
+            query = ApplySearch(query, search);
+            query = query.OrderBy(s => s.TipoEnsino).ThenBy(s => s.Nome);
+
+            return await PaginarResultadoAsync(query, pageSize, page);
+        }
+        public async Task<Serie> ObterSeriePorNome(Guid instituicaoId, string nomeSerie)
 		{
 			return await _serieRepository.ObterSeriePorNome(instituicaoId, nomeSerie);
 		}
 
+        public async Task SincronizarDisciplinasAsync(Guid serieId, IEnumerable<Guid> novasDisciplinaIds)
+        {
+            var associacoesAtuais = await _context.DisciplinaSerie
+                .Where(ds => ds.SerieId == serieId)
+                .ToListAsync();
 
-		public async Task AdicionarVariasAsync(IEnumerable<Serie> series)
+            var idsAtuais = associacoesAtuais.Select(ds => ds.DisciplinaId).ToList();
+
+            var idsParaRemover = idsAtuais.Except(novasDisciplinaIds).ToList();
+            if (idsParaRemover.Any())
+            {
+                var associacoesParaRemover = associacoesAtuais.Where(ds => idsParaRemover.Contains(ds.DisciplinaId));
+                _context.DisciplinaSerie.RemoveRange(associacoesParaRemover);
+            }
+
+            var idsParaAdicionar = novasDisciplinaIds.Except(idsAtuais).ToList();
+            if (idsParaAdicionar.Any())
+            {
+                foreach (var disciplinaId in idsParaAdicionar)
+                {
+                    var novaAssociacao = new DisciplinaSerie
+                    {
+                        SerieId = serieId,
+                        DisciplinaId = disciplinaId,
+                        CargaHoraria = TimeSpan.FromHours(1)
+                    };
+                    await _context.DisciplinaSerie.AddAsync(novaAssociacao);
+                }
+            }
+        }
+
+        public async Task AdicionarVariasAsync(IEnumerable<Serie> series)
 		{
 
 			foreach (var serie in series)

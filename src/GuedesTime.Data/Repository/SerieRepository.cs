@@ -46,6 +46,36 @@ namespace GuedesTime.Data.Repository
 				.ToListAsync();
 		}
 
+        public async Task<Serie> ObterPorIdComDisciplinas(Guid id)
+        {
+            return await Db.Serie.AsNoTracking()
+                .Include(s => s.Disciplinas)
+                .ThenInclude(ds => ds.Disciplina)
+                .FirstOrDefaultAsync(s => s.Id == id);
+        }
 
-	}
+        public IQueryable<Serie> ObterQueryComDisciplinas()
+        {
+            return Db.Set<Serie>().AsNoTracking()
+                .Include(s => s.Disciplinas)
+                .ThenInclude(ds => ds.Disciplina);
+        }
+
+        public override async Task Remover(Guid id)
+        {
+            var disciplinasDaSerie = await Db.DisciplinaSerie
+                .Where(ds => ds.SerieId == id)
+                .ToListAsync();
+            if (disciplinasDaSerie.Any())
+            {
+                Db.DisciplinaSerie.RemoveRange(disciplinasDaSerie);
+            }
+            var serie = await Db.Serie.FindAsync(id);
+            if (serie != null)
+            {
+                Db.Serie.Remove(serie);
+            }
+        }
+
+    }
 }

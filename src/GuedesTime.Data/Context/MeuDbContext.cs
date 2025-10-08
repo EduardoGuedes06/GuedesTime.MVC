@@ -33,7 +33,7 @@ namespace GuedesTime.Data.Context
         public DbSet<ProfessorDisciplinaTurma> ProfessorDisciplinaTurma { get; set; }
         public DbSet<PlanejamentoDeAulaItem> PlanejamentoDeAulaItem { get; set; }
         public DbSet<Serie> Serie { get; set; }
-        public DbSet<PlanejamentoDeAulaItem> DisciplinaSerie { get; set; }
+        public DbSet<DisciplinaSerie> DisciplinaSerie { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

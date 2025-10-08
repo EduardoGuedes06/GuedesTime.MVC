@@ -14,7 +14,9 @@ using k8s.KubeConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Text.Json;
 
 namespace GuedesTime.MVC.Controllers
 {
@@ -64,16 +66,14 @@ namespace GuedesTime.MVC.Controllers
                 filtroAdicional = s => s.TipoEnsino == tipoEnsinoFiltro;
             }
 
-            var pagedSerie = await _serieService.GetPagedByInstituicaoAsync(
-                instituicaoId,
-                search,
-                page.Value,
-                pageSize.Value,
-                ativo.Value,
-                filtroAdicional: filtroAdicional,
-                ordenacao: q => q.OrderBy(s => s.TipoEnsino).ThenBy(s => s.Nome),
-                includes: s => s.Disciplinas
-            );
+            var pagedSerie = await _serieService.ObterSeriesPaginadoComDisciplinas(
+                 instituicaoId,
+                 search,
+                 page.Value,
+                 pageSize.Value,
+                 ativo.Value,
+                 tipoEnsino
+             );
 
             var serieViewModels = _mapper.Map<IEnumerable<SerieViewModel>>(pagedSerie.Items);
 
@@ -97,8 +97,6 @@ namespace GuedesTime.MVC.Controllers
             return View(pagedViewModel);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> SearchDisciplinas(string query)
         {
@@ -111,8 +109,6 @@ namespace GuedesTime.MVC.Controllers
             return Json(results);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
@@ -123,12 +119,13 @@ namespace GuedesTime.MVC.Controllers
 
             if (id.HasValue)
             {
-                var serie = await _serieService.ObterPorId(id.Value);
+                var serie = await _serieService.ObterPorIdComDisciplinasAsync(id.Value);
                 if (serie == null) return NotFound();
 
-
                 serieViewModel = _mapper.Map<SerieViewModel>(serie);
-                serieViewModel.DisciplinaIds = serie.Disciplinas.Select(d => d.DisciplinaId).ToList();
+                var disciplinasIniciais = serie.Disciplinas.Select(ds => new { id = ds.Disciplina.Id, name = ds.Disciplina.Nome });
+                serieViewModel.DisciplinasIniciaisJson = JsonSerializer.Serialize(disciplinasIniciais);
+
                 serieViewModel.SerieUnica = serieViewModel.Nome;
                 serieViewModel.InstituicaoId = instituicaoId;
 
@@ -189,8 +186,6 @@ namespace GuedesTime.MVC.Controllers
             else
                 return await ProcessarAtualizacaoAsync(serieViewModel);
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -255,19 +250,35 @@ namespace GuedesTime.MVC.Controllers
             if (nomesSeries == null || !nomesSeries.Any())
                 return Json(new { success = false, errors = new[] { "Nenhuma série válida informada." } });
 
-            var viewModels = nomesSeries.Select(nome => new SerieViewModel
+            var entidades = new List<Serie>();
+            foreach (var nome in nomesSeries)
             {
-                Nome = nome,
-                InstituicaoId = instituicaoId,
-                TipoEnsino = serieViewModel.TipoEnsino,
-                Ativo = serieViewModel.Ativo ?? true,
-                Codigo = null,
-                DataCriacao = DateTime.UtcNow
-            }).ToList();
+                var novaSerie = new Serie
+                {
+                    Nome = nome,
+                    InstituicaoId = instituicaoId,
+                    TipoEnsino = _mapper.Map<EnumTipoEnsino>(serieViewModel.TipoEnsino),
+                    Ativo = serieViewModel.Ativo ?? true,
+                };
 
-            var entidades = _mapper.Map<List<Serie>>(viewModels);
+                if (serieViewModel.DisciplinaIdsList.Any())
+                {
+
+                    novaSerie.Disciplinas = serieViewModel.DisciplinaIdsList.Select(disciplinaId => new DisciplinaSerie
+                    {
+                        DisciplinaId = disciplinaId,
+                        Serie = novaSerie,
+                        CargaHoraria = TimeSpan.FromHours(1)
+                    }).ToList();
+                }
+
+                entidades.Add(novaSerie);
+            }
 
             await _serieService.AdicionarVariasAsync(entidades);
+
+            if (!OperacaoValida())
+                return Json(new { success = false, errors = ObterErrosDeNegocio() });
 
             TempData["success"] = "Séries cadastradas com sucesso!";
             return Json(new { success = true, url = Url.Action("index", "Serie") });
@@ -275,7 +286,7 @@ namespace GuedesTime.MVC.Controllers
 
         private async Task<IActionResult> ProcessarAtualizacaoAsync(SerieViewModel serieViewModel)
         {
-            var serieExiste = await _serieService.ObterPorId((Guid)serieViewModel.Id);
+            var serieExiste = await _serieService.ObterPorIdComDisciplinasAsync((Guid)serieViewModel.Id);
             if (serieExiste == null)
                 return Json(new { success = false, errors = new[] { "Série não encontrada." } });
 
@@ -285,15 +296,15 @@ namespace GuedesTime.MVC.Controllers
             _mapper.Map(serieViewModel, serieExiste);
             await _serieService.Atualizar(serieExiste);
 
-            TempData["success"] = "Dados da Série alterados com sucesso!";
+            await _serieService.SincronizarDisciplinasAsync(serieExiste.Id, serieViewModel.DisciplinaIdsList);
 
             if (!OperacaoValida())
                 return Json(new { success = false, errors = ObterErrosDeNegocio() });
 
+            TempData["success"] = "Dados da Série alterados com sucesso!";
             return Json(new { success = true, url = Url.Action("index", "Serie") });
         }
 
         #endregion
-
     }
 }

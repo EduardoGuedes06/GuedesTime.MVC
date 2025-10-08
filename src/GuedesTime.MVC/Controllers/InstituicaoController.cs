@@ -51,18 +51,20 @@ namespace GuedesTime.MVC.Controllers
 
         public async Task<IActionResult> SelecionarInstituicao(string? search, int? page = 1, bool? ativo = true)
         {
+            
             var UserId = Guid.Parse(_userManager.GetUserId(User));
 
             var instituicoes = await _instituicaoService.GetPagedByInstituicaoAsync(
-                                                                            UserId,
-                                                                            search,
-                                                                            page.Value,
-                                                                            (int)EnumQuantidadeDeItensPorPagina.Poucos,
-                                                                            ativo.Value,
-                                                                            filtroAdicional: null,
-                                                                            ordenacao: q => q.OrderBy(s => s.Nome),
-                                                                            includes: null
-                                                                        );
+                UserId,
+                search,
+                page.Value,
+                (int)EnumQuantidadeDeItensPorPagina.Poucos,
+                ativo.Value,
+                filtroAdicional: null,
+                ordenacao: q => q.OrderBy(s => s.Nome),
+                sourceQuery: null,
+                includes: null
+            );
 
             var instituicaoIds = instituicoes.Items.Select(i => i.Id).ToList();
             var dadosResumo = _mapper.Map<Dictionary<Guid, DadosAgregadosInstituicaoViewModel>>(await _instituicaoService.ObterCalculoGeralDosDadosDaInstituicao(instituicaoIds));
@@ -107,8 +109,7 @@ namespace GuedesTime.MVC.Controllers
 
             return View(instituicoesViewModel);
         }
-
-
+        
         [HttpGet]
         public async Task<IActionResult> Upsert(Guid? id)
         {
