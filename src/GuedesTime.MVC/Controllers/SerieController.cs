@@ -123,12 +123,15 @@ namespace GuedesTime.MVC.Controllers
                 if (serie == null) return NotFound();
 
                 serieViewModel = _mapper.Map<SerieViewModel>(serie);
+
                 var disciplinasIniciais = serie.Disciplinas.Select(ds => new { id = ds.Disciplina.Id, name = ds.Disciplina.Nome });
                 serieViewModel.DisciplinasIniciaisJson = JsonSerializer.Serialize(disciplinasIniciais);
 
+                var disciplinaIdList = serie.Disciplinas.Select(d => d.DisciplinaId).ToList();
+                serieViewModel.DisciplinaIds = JsonSerializer.Serialize(disciplinaIdList);
+
                 serieViewModel.SerieUnica = serieViewModel.Nome;
                 serieViewModel.InstituicaoId = instituicaoId;
-
             }
             else
             {

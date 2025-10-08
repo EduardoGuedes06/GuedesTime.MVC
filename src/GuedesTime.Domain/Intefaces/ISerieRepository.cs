@@ -11,5 +11,6 @@ namespace GuedesTime.Domain.Intefaces
         Task<Serie> ObterPorIdComDisciplinas(Guid id);
         IQueryable<Serie> ObterQueryComDisciplinas();
         Task<Serie> ObterSeriePorNome(Guid instituicaoId, string serieNome);
-	}
+        Task SincronizarDisciplinasAsync(Guid serieId, IEnumerable<Guid> novasDisciplinaIds);
+    }
 }

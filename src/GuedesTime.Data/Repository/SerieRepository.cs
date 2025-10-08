@@ -77,5 +77,37 @@ namespace GuedesTime.Data.Repository
             }
         }
 
+        public async Task SincronizarDisciplinasAsync(Guid serieId, IEnumerable<Guid> novasDisciplinaIds)
+        {
+            var associacoesAtuais = await Db.Set<DisciplinaSerie>()
+                .Where(ds => ds.SerieId == serieId)
+                .ToListAsync();
+
+            var idsAtuais = associacoesAtuais.Select(ds => ds.DisciplinaId).ToList();
+
+            var idsParaRemover = idsAtuais.Except(novasDisciplinaIds).ToList();
+            if (idsParaRemover.Any())
+            {
+                var associacoesParaRemover = associacoesAtuais.Where(ds => idsParaRemover.Contains(ds.DisciplinaId));
+                Db.Set<DisciplinaSerie>().RemoveRange(associacoesParaRemover);
+            }
+
+            var idsParaAdicionar = novasDisciplinaIds.Except(idsAtuais).ToList();
+            if (idsParaAdicionar.Any())
+            {
+                foreach (var disciplinaId in idsParaAdicionar)
+                {
+                    var novaAssociacao = new DisciplinaSerie
+                    {
+                        SerieId = serieId,
+                        DisciplinaId = disciplinaId,
+                        CargaHoraria = TimeSpan.FromHours(1)
+                    };
+                    Db.Set<DisciplinaSerie>().Add(novaAssociacao);
+                }
+            }
+            await SaveChanges();
+        }
+
     }
 }
