@@ -32,14 +32,14 @@ namespace GuedesTime.MVC.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Definir(Guid id)
+        public IActionResult Definir(Guid id, string? redirectController = "Painel", string? redirectAction = "Index")
         {
             if (id == Guid.Empty) return NotFound();
 
             HttpContext.Session.SetString("InstituicaoId", id.ToString());
 
             TempData["success"] = "Instituição selecionada com sucesso!";
-            return RedirectToAction("Index", "Painel");
+            return RedirectToAction(redirectAction ?? "Index", redirectController ?? "Painel");
         }
 
         public IActionResult Index()

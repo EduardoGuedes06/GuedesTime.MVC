@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Diagnostics;
 using static GuedesTime.MVC.Configurations.HealthChecksConfig;
+using GuedesTime.MVC.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddHealthChecksConfig(builder.Configuration);
 
 var app = builder.Build();
 
+await IdentitySeeder.SeedAsync(app.Services, app.Environment.IsDevelopment());
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -55,6 +58,10 @@ app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

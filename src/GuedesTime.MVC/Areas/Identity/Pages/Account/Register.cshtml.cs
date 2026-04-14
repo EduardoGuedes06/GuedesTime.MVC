@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using GuedesTime.MVC.Interfaces;
 using GuedesTime.MVC.Models;
+using GuedesTime.MVC.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -43,6 +44,15 @@ namespace GuedesTime.MVC.Areas.Identity.Pages.Account
 		public class InputModel
 		{
 			[Required(ErrorMessage = "O campo {0} é obrigatório.")]
+			[StringLength(120, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+			[Display(Name = "Nome")]
+			public string Nome { get; set; }
+
+			[StringLength(14, ErrorMessage = "CPF inválido.")]
+			[Display(Name = "CPF (opcional)")]
+			public string? Cpf { get; set; }
+
+			[Required(ErrorMessage = "O campo {0} é obrigatório.")]
 			[EmailAddress(ErrorMessage = "O campo {0} não está em um formato válido.")]
 			[Display(Name = "Email")]
 			public string Email { get; set; }
@@ -70,13 +80,26 @@ namespace GuedesTime.MVC.Areas.Identity.Pages.Account
 			returnUrl ??= Url.Content("~/");
 			ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+			var cpfDigits = CpfUtils.OnlyDigits(Input?.Cpf ?? string.Empty);
+			if (!string.IsNullOrWhiteSpace(Input?.Cpf) && !CpfUtils.IsValid(cpfDigits))
+			{
+				ModelState.AddModelError(nameof(Input.Cpf), "CPF inválido.");
+			}
+
 			if (!ModelState.IsValid)
 			{
 				TempData["error"] = "Dados inválidos. Por favor, verifique os erros no formulário.";
 				return Page();
 			}
 
-			var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email };
+			var user = new ApplicationUser
+			{
+				UserName = Input.Email,
+				Email = Input.Email,
+				Nome = Input.Nome?.Trim() ?? string.Empty,
+				Documento = cpfDigits,
+				CreatedAt = DateTime.UtcNow
+			};
 			var result = await _userManager.CreateAsync(user, Input.Password);
 
 			if (result.Succeeded)

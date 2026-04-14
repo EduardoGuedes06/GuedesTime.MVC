@@ -1,0 +1,42 @@
+@model GuedesTime.MVC.Areas.Admin.ViewModels.UserRolesEditVm
+@{
+	ViewData["Title"] = "Editar roles do usuário";
+}
+
+<div class="page-header">
+	<h2>Roles do usuário</h2>
+	<div style="display:flex; gap:12px;">
+		<a class="btn secondary-btn" asp-area="Admin" asp-controller="Users" asp-action="Index">
+			<i class="fas fa-arrow-left"></i> Voltar
+		</a>
+	</div>
+</div>
+
+<div class="card">
+	<div class="card-body">
+		<p><strong>Email:</strong> @Model.Email</p>
+
+		<form asp-area="Admin" asp-controller="Users" asp-action="EditRoles" method="post">
+			@Html.AntiForgeryToken()
+			<input type="hidden" asp-for="UserId" />
+
+			<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-top: 12px;">
+				@foreach (var r in Model.AllRoles)
+				{
+					var isChecked = Model.SelectedRoles.Contains(r, StringComparer.OrdinalIgnoreCase);
+					<label style="display:flex; gap:10px; align-items:center; padding:10px; border:1px solid rgba(0,0,0,0.08); border-radius:10px;">
+						<input type="checkbox" name="SelectedRoles" value="@r" @(isChecked ? "checked" : "") />
+						<span>@r</span>
+					</label>
+				}
+			</div>
+
+			<div style="display:flex; gap:12px; margin-top: 18px;">
+				<button type="submit" class="btn primary-btn">
+					<i class="fas fa-save"></i> Salvar
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+

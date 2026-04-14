@@ -37,6 +37,9 @@ namespace GuedesTime.MVC.Migrations
                     b.Property<string>("ConfirmPassord")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Documento")
                         .HasColumnType("longtext");
 
@@ -57,6 +60,7 @@ namespace GuedesTime.MVC.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Nome")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("NormalizedEmail")

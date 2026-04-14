@@ -10,6 +10,19 @@
     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
     <div class="form-group">
+        <label asp-for="Input.Nome">Nome completo</label>
+        <input asp-for="Input.Nome" class="form-control" autocomplete="name" aria-required="true" />
+        <span asp-validation-for="Input.Nome" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Input.Cpf">CPF (opcional)</label>
+        <input asp-for="Input.Cpf" class="form-control" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" />
+        <span asp-validation-for="Input.Cpf" class="text-danger"></span>
+        <small id="cpf-live-msg" class="text-danger" style="display:none;"></small>
+    </div>
+
+    <div class="form-group">
         <label asp-for="Input.Email">Endereço de e-mail</label>
         <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
         <span asp-validation-for="Input.Email" class="text-danger"></span>
@@ -34,4 +47,46 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            const cpfInput = document.getElementById('Input_Cpf');
+            const live = document.getElementById('cpf-live-msg');
+            if (!cpfInput) return;
+
+            function onlyDigits(v) { return (v || '').replace(/\D/g, ''); }
+            function maskCpf(v) {
+                const d = onlyDigits(v).slice(0, 11);
+                let out = '';
+                for (let i = 0; i < d.length; i++) {
+                    out += d[i];
+                    if (i === 2 || i === 5) out += '.';
+                    if (i === 8) out += '-';
+                }
+                return out;
+            }
+            function isValidCpf(v) {
+                const d = onlyDigits(v);
+                if (d.length !== 11) return false;
+                if (/^(\d)\1{10}$/.test(d)) return false;
+                const calc = (len) => {
+                    let sum = 0;
+                    for (let i = 0; i < len; i++) sum += parseInt(d[i], 10) * (len + 1 - i);
+                    const mod = sum % 11;
+                    return mod < 2 ? 0 : 11 - mod;
+                };
+                return calc(9) === parseInt(d[9], 10) && calc(10) === parseInt(d[10], 10);
+            }
+
+            cpfInput.addEventListener('input', () => {
+                const old = cpfInput.value;
+                cpfInput.value = maskCpf(old);
+                const d = onlyDigits(cpfInput.value);
+                if (d.length === 0) { live.style.display = 'none'; live.textContent = ''; return; }
+                if (d.length < 11) { live.style.display = 'none'; live.textContent = ''; return; }
+                const ok = isValidCpf(cpfInput.value);
+                live.textContent = ok ? '' : 'CPF inválido.';
+                live.style.display = ok ? 'none' : 'block';
+            });
+        })();
+    </script>
 }

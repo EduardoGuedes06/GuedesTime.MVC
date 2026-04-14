@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GuedesTime.MVC.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250721160907_InitialIdentity")]
+    [Migration("20260414171829_InitialIdentity")]
     partial class InitialIdentity
     {
         /// <inheritdoc />
@@ -40,6 +40,9 @@ namespace GuedesTime.MVC.Migrations
                     b.Property<string>("ConfirmPassord")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Documento")
                         .HasColumnType("longtext");
 
@@ -60,6 +63,7 @@ namespace GuedesTime.MVC.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Nome")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("NormalizedEmail")

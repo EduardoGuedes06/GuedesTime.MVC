@@ -1,0 +1,54 @@
+@model List<GuedesTime.MVC.Areas.Admin.ViewModels.RoleListItemVm>
+@{
+	ViewData["Title"] = "Roles";
+}
+
+<div class="page-header">
+	<h2>Roles</h2>
+	<div style="display:flex; gap:12px;">
+		<a class="btn primary-btn" asp-area="Admin" asp-controller="Roles" asp-action="Create">
+			<i class="fas fa-plus"></i> Nova role
+		</a>
+	</div>
+</div>
+
+<div class="card">
+	<div class="card-body">
+		<table class="table" style="width:100%;">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th style="width:220px;">Ações</th>
+				</tr>
+			</thead>
+			<tbody>
+			@if (Model.Count == 0)
+			{
+				<tr><td colspan="2">Nenhuma role cadastrada.</td></tr>
+			}
+			else
+			{
+				foreach (var r in Model)
+				{
+					<tr>
+						<td>@r.Name</td>
+						<td>
+							<div style="display:flex; gap:10px; align-items:center;">
+								<a class="btn secondary-btn" asp-area="Admin" asp-controller="Roles" asp-action="Edit" asp-route-id="@r.Id">
+									<i class="fas fa-edit"></i> Editar
+								</a>
+								<form asp-area="Admin" asp-controller="Roles" asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline;">
+									<button type="submit" class="btn danger-btn" onclick="return confirm('Remover esta role?');">
+										<i class="fas fa-trash"></i> Remover
+									</button>
+								</form>
+							</div>
+						</td>
+					</tr>
+				}
+			}
+			</tbody>
+		</table>
+	</div>
+</div>
+

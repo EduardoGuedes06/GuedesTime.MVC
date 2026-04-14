@@ -1,0 +1,57 @@
+@model GuedesTime.MVC.Areas.Admin.ViewModels.RoleEditVm
+@{
+	ViewData["Title"] = string.IsNullOrWhiteSpace(Model.Id) ? "Nova role" : "Editar role";
+	var isCreate = string.IsNullOrWhiteSpace(Model.Id);
+}
+
+<div class="page-header">
+	<h2>@ViewData["Title"]</h2>
+	<div style="display:flex; gap:12px;">
+		<a class="btn secondary-btn" asp-area="Admin" asp-controller="Roles" asp-action="Index">
+			<i class="fas fa-arrow-left"></i> Voltar
+		</a>
+	</div>
+</div>
+
+<div class="card">
+	<div class="card-body">
+		<form asp-area="Admin" asp-controller="Roles" asp-action="@(isCreate ? "Create" : "Edit")" method="post">
+			@Html.AntiForgeryToken()
+			@if (!isCreate)
+			{
+				<input type="hidden" asp-for="Id" />
+			}
+
+			<div class="form-group" style="margin-bottom:16px;">
+				<label asp-for="Name"></label>
+				<input asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+
+			<div style="margin: 18px 0;">
+				<h3 style="margin-bottom:10px;">Permissões</h3>
+				<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
+					@foreach (var p in Model.AllPermissions)
+					{
+						var isChecked = Model.SelectedPermissions.Contains(p, StringComparer.OrdinalIgnoreCase);
+						<label style="display:flex; gap:10px; align-items:center; padding:10px; border:1px solid rgba(0,0,0,0.08); border-radius:10px;">
+							<input type="checkbox" name="SelectedPermissions" value="@p" @(isChecked ? "checked" : "") />
+							<span>@p</span>
+						</label>
+					}
+				</div>
+			</div>
+
+			<div style="display:flex; gap:12px; margin-top: 18px;">
+				<button type="submit" class="btn primary-btn">
+					<i class="fas fa-save"></i> Salvar
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
+

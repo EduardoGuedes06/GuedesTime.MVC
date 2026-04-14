@@ -1,4 +1,4 @@
-use guedestimedatabase;
+use GuedesTimeDataBase;
 
 -- Script de Incicialização
 SET FOREIGN_KEY_CHECKS = 0;

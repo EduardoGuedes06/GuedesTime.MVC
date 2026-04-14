@@ -26,41 +26,50 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Painel")" asp-controller="Painel" asp-action="Index"><i class="fas fa-home"></i>Painel</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Painel")" asp-area="" asp-controller="Painel" asp-action="Index"><i class="fas fa-home"></i>Painel</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Instituicao")" asp-controller="Instituicao" asp-action="Index"><i class="fas fa-university"></i>Instituição</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Instituicao")" asp-area="" asp-controller="Instituicao" asp-action="Index"><i class="fas fa-university"></i>Instituição</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Professor")" asp-controller="Professor" asp-action="Index"><i class="fas fa-chalkboard-teacher"></i>Professores</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Professor")" asp-area="" asp-controller="Professor" asp-action="Index"><i class="fas fa-chalkboard-teacher"></i>Professores</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Disciplina")" asp-controller="Disciplina" asp-action="Index"><i class="fas fa-book-open"></i>Disciplinas</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Disciplina")" asp-area="" asp-controller="Disciplina" asp-action="Index"><i class="fas fa-book-open"></i>Disciplinas</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Serie")" asp-controller="Serie" asp-action="Index"><i class="fas fa-graduation-cap"></i>Séries</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Serie")" asp-area="" asp-controller="Serie" asp-action="Index"><i class="fas fa-graduation-cap"></i>Séries</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Turma")" asp-controller="Turma" asp-action="Index"><i class="fas fa-users"></i>Turmas</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Turma")" asp-area="" asp-controller="Turma" asp-action="Index"><i class="fas fa-users"></i>Turmas</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Sala")" asp-controller="Sala" asp-action="Index"><i class="fas fa-building"></i>Salas de Aula</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Sala")" asp-area="" asp-controller="Sala" asp-action="Index"><i class="fas fa-building"></i>Salas de Aula</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Horario")" asp-controller="Horario" asp-action="Index"><i class="fas fa-clock"></i>Horários</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Horario")" asp-area="" asp-controller="Horario" asp-action="Index"><i class="fas fa-clock"></i>Horários</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Feriado")" asp-controller="Feriado" asp-action="Index"><i class="fas fa-calendar-alt"></i>Feriados</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Feriado")" asp-area="" asp-controller="Feriado" asp-action="Index"><i class="fas fa-calendar-alt"></i>Feriados</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "PlanoDeAula")" asp-controller="PlanoDeAula" asp-action="Index"><i class="fas fa-calendar-check"></i>Planos de Aula</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "PlanoDeAula")" asp-area="" asp-controller="PlanoDeAula" asp-action="Index"><i class="fas fa-calendar-check"></i>Planos de Aula</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Revisao")" asp-controller="Revisao" asp-action="Index"><i class="fas fa-user-check"></i>Revisão</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Revisao")" asp-area="" asp-controller="Revisao" asp-action="Index"><i class="fas fa-user-check"></i>Revisão</a>
                     </li>
                     <li>
-                        <a class="@ViewHelper.IsActive(ViewContext, "Configuracao")" asp-controller="Configuracao" asp-action="Index"><i class="fas fa-cog"></i>Configurações</a>
+                        <a class="@ViewHelper.IsActive(ViewContext, "Configuracao")" asp-area="" asp-controller="Configuracao" asp-action="Index"><i class="fas fa-cog"></i>Configurações</a>
                     </li>
+                    @if (User.Identity?.IsAuthenticated == true && (User.IsInRole("Admin") || User.HasClaim("permission", "Admin")))
+                    {
+                        <li>
+                            <a class="@(ViewContext.RouteData.Values["area"]?.ToString() == "Admin" ? "active" : "")"
+                               asp-area="Admin" asp-controller="Users" asp-action="Index">
+                                <i class="fas fa-user-shield"></i>Admin
+                            </a>
+                        </li>
+                    }
                 </ul>
             </nav>
             <div style="margin-top: auto; padding-top: 24px;">
