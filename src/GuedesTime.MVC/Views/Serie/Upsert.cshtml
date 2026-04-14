@@ -1,0 +1,10 @@
+@model GuedesTime.MVC.ViewModels.SerieViewModel
+
+@{
+	ViewData["Title"] = (Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar Séries" : "Editar Série";
+}
+
+<div class="card" style="margin-top: 0;">
+	@await Html.PartialAsync("_Upsert", Model)
+</div>
+

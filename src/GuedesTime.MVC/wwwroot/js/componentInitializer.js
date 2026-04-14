@@ -65,10 +65,18 @@ async function initializeUserAvatarUploader(container) {
     }
 }
 
+async function initializeDisciplinaNomesHelper(container) {
+    const mod = await import('./pages/disciplinaNomes.js');
+    if (typeof mod.initializeDisciplinaNomesHelper === 'function') {
+        mod.initializeDisciplinaNomesHelper(container);
+    }
+}
+
 const componentMap = {
     '[data-component="multi-select"]': initializeMultiSelect,
     'input[class*="-toggle"]': initializeToggle,
-    '[data-component="user-avatar-uploader"]': initializeUserAvatarUploader
+    '[data-component="user-avatar-uploader"]': initializeUserAvatarUploader,
+    '[data-component="disciplina-nomes-helper"]': initializeDisciplinaNomesHelper
 };
 
 export function initializeComponents(container) {

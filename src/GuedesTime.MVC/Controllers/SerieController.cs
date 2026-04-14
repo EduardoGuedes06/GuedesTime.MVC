@@ -144,20 +144,33 @@ namespace GuedesTime.MVC.Controllers
             ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
             serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
 
-            return PartialView("_Upsert", serieViewModel);
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_Upsert", serieViewModel);
+            }
+
+            return View("Upsert", serieViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(SerieViewModel serieViewModel)
         {
+            var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+
             var validator = new SerieViewModelValidation();
             var validationResult = await validator.ValidateAsync(serieViewModel);
 
             if (!validationResult.IsValid)
             {
                 var erros = validationResult.Errors.Select(e => e.ErrorMessage).ToArray();
-                return Json(new { success = false, errors = erros });
+                if (isAjax) return Json(new { success = false, errors = erros });
+
+                foreach (var err in erros) ModelState.AddModelError(string.Empty, err);
+                serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
+                ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", erros);
+                return View("Upsert", serieViewModel);
             }
 
             var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
@@ -181,13 +194,19 @@ namespace GuedesTime.MVC.Controllers
                 var mensagensErro = nomesDuplicados
                     .Select(n => $"A série '{n}' já existe para o tipo de ensino selecionado.")
                     .ToArray();
-                return Json(new { success = false, errors = mensagensErro });
+                if (isAjax) return Json(new { success = false, errors = mensagensErro });
+
+                foreach (var err in mensagensErro) ModelState.AddModelError(string.Empty, err);
+                serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
+                ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", mensagensErro);
+                return View("Upsert", serieViewModel);
             }
 
             if (isCadastro)
-                return await ProcessarCadastroAsync(serieViewModel, instituicaoId);
+                return await ProcessarCadastroAsync(serieViewModel, instituicaoId, isAjax);
             else
-                return await ProcessarAtualizacaoAsync(serieViewModel);
+                return await ProcessarAtualizacaoAsync(serieViewModel, isAjax);
         }
 
         [HttpPost]
@@ -242,7 +261,7 @@ namespace GuedesTime.MVC.Controllers
             return null;
         }
 
-        private async Task<IActionResult> ProcessarCadastroAsync(SerieViewModel serieViewModel, Guid instituicaoId)
+        private async Task<IActionResult> ProcessarCadastroAsync(SerieViewModel serieViewModel, Guid instituicaoId, bool isAjax)
         {
             var nomesSeries = serieViewModel.SeriesMultiplas?
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -251,7 +270,16 @@ namespace GuedesTime.MVC.Controllers
                 .ToList();
 
             if (nomesSeries == null || !nomesSeries.Any())
-                return Json(new { success = false, errors = new[] { "Nenhuma série válida informada." } });
+            {
+                var errors = new[] { "Nenhuma série válida informada." };
+                if (isAjax) return Json(new { success = false, errors });
+
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
+                ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", serieViewModel);
+            }
 
             var entidades = new List<Serie>();
             foreach (var nome in nomesSeries)
@@ -281,17 +309,36 @@ namespace GuedesTime.MVC.Controllers
             await _serieService.AdicionarVariasAsync(entidades);
 
             if (!OperacaoValida())
-                return Json(new { success = false, errors = ObterErrosDeNegocio() });
+            {
+                var errors = ObterErrosDeNegocio();
+                if (isAjax) return Json(new { success = false, errors });
+
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
+                ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", serieViewModel);
+            }
 
             TempData["success"] = "Séries cadastradas com sucesso!";
-            return Json(new { success = true, url = Url.Action("index", "Serie") });
+            if (isAjax) return Json(new { success = true, url = Url.Action("index", "Serie") });
+            return RedirectToAction(nameof(Index));
         }
 
-        private async Task<IActionResult> ProcessarAtualizacaoAsync(SerieViewModel serieViewModel)
+        private async Task<IActionResult> ProcessarAtualizacaoAsync(SerieViewModel serieViewModel, bool isAjax)
         {
             var serieExiste = await _serieService.ObterPorIdComDisciplinasAsync((Guid)serieViewModel.Id);
             if (serieExiste == null)
-                return Json(new { success = false, errors = new[] { "Série não encontrada." } });
+            {
+                var errors = new[] { "Série não encontrada." };
+                if (isAjax) return Json(new { success = false, errors });
+
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
+                ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", serieViewModel);
+            }
 
             serieViewModel.Nome = serieViewModel.SerieUnica;
             serieViewModel.Codigo = serieExiste.Codigo ?? 0;
@@ -302,10 +349,20 @@ namespace GuedesTime.MVC.Controllers
             await _serieService.SincronizarDisciplinasAsync(serieExiste.Id, serieViewModel.DisciplinaIdsList);
 
             if (!OperacaoValida())
-                return Json(new { success = false, errors = ObterErrosDeNegocio() });
+            {
+                var errors = ObterErrosDeNegocio();
+                if (isAjax) return Json(new { success = false, errors });
+
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                serieViewModel.ListaTipoEnsino = EnumTipoEnsinoViewModel.Todos.ToSelectListItemsFiltered();
+                ViewBag.EstadoInicialAtivo = serieViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", serieViewModel);
+            }
 
             TempData["success"] = "Dados da Série alterados com sucesso!";
-            return Json(new { success = true, url = Url.Action("index", "Serie") });
+            if (isAjax) return Json(new { success = true, url = Url.Action("index", "Serie") });
+            return RedirectToAction(nameof(Index));
         }
 
         #endregion

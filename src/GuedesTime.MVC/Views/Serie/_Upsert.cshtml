@@ -4,34 +4,47 @@
 @inject UserManager<ApplicationUser> UserManager
 @model GuedesTime.MVC.ViewModels.SerieViewModel
 
-<div class="modal-header">
-	<div class="modal-title-container">
-		<h3 class="modal-title">
-			@((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar Novas Séries" : "Editar dados da Série")
-		</h3>
+@{
+	var isAjax = Context.Request.Headers["X-Requested-With"] == "XMLHttpRequest";
+}
 
-		<div class="info-tooltip-container">
-			<i class="fas fa-info-circle info-icon"></i>
-			<div class="info-tooltip-text tooltip-bottom">
-				<h4 class="tooltip-title">Dica sobre Cadastro Múltiplo</h4>
-				<p>
-					Para cadastrar várias séries de uma vez, separe-as por vírgula (ex: 1º, 2º, 3º). O sistema criará cada uma individualmente.<br><br>
-					<strong>Educação Infantil:</strong> Maternal, Jardim I, Jardim II.<br>
-					<strong>Ensino Fundamental I:</strong> 1º, 2º, 3º, 4º e 5º ano.<br>
-					<strong>Ensino Fundamental II:</strong> 6º, 7º, 8º e 9º ano.<br>
-					<strong>Ensino Médio:</strong> 1º, 2º e 3º ano do Ensino Médio.
-				</p>
+@if (isAjax)
+{
+	<div class="modal-header">
+		<div class="modal-title-container">
+			<h3 class="modal-title">
+				@((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar Novas Séries" : "Editar dados da Série")
+			</h3>
+
+			<div class="info-tooltip-container">
+				<i class="fas fa-info-circle info-icon"></i>
+				<div class="info-tooltip-text tooltip-bottom">
+					<h4 class="tooltip-title">Dica sobre Cadastro Múltiplo</h4>
+					<p>
+						Para cadastrar várias séries de uma vez, separe-as por vírgula (ex: 1º, 2º, 3º). O sistema criará cada uma individualmente.<br><br>
+						<strong>Educação Infantil:</strong> Maternal, Jardim I, Jardim II.<br>
+						<strong>Ensino Fundamental I:</strong> 1º, 2º, 3º, 4º e 5º ano.<br>
+						<strong>Ensino Fundamental II:</strong> 6º, 7º, 8º e 9º ano.<br>
+						<strong>Ensino Médio:</strong> 1º, 2º e 3º ano do Ensino Médio.
+					</p>
+				</div>
 			</div>
-		</div>
 
+		</div>
 	</div>
-</div>
+}
+else
+{
+	<h2 class="section-title" style="margin-top: 0;">
+		@((Model.Id == null || Model.Id == Guid.Empty) ? "Cadastrar Novas Séries" : "Editar dados da Série")
+	</h2>
+}
 <form asp-controller="Serie" asp-action="Upsert" method="post" id="form-upsert-serie">
 	@Html.AntiForgeryToken()
 	<input type="hidden" asp-for="Id" />
 	<vc:summary />
 
-	<div class="modal-body">
+	<div class="modal-body" style="@(isAjax ? "" : "padding-left:0; padding-right:0;")">
 		@if (Model.Id != null && Model.Id != Guid.Empty)
 		{
 			<div class="form-group">
@@ -90,10 +103,22 @@
 
 
 	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn secondary-btn" data-modal-close>Cancelar</button>
-		<button type="submit" class="btn primary-btn">
-			@((Model.Id == null || Model.Id == Guid.Empty) ? "Criar" : "Salvar Alterações")
-		</button>
-	</div>
+	@if (isAjax)
+	{
+		<div class="modal-footer">
+			<button type="button" class="btn secondary-btn" data-modal-close>Cancelar</button>
+			<button type="submit" class="btn primary-btn">
+				@((Model.Id == null || Model.Id == Guid.Empty) ? "Criar" : "Salvar Alterações")
+			</button>
+		</div>
+	}
+	else
+	{
+		<div class="modal-actions" style="margin-top: 16px; display:flex; gap:12px; justify-content:flex-end;">
+			<a asp-controller="Serie" asp-action="Index" class="btn secondary-btn">Cancelar</a>
+			<button type="submit" class="btn primary-btn">
+				@((Model.Id == null || Model.Id == Guid.Empty) ? "Criar" : "Salvar Alterações")
+			</button>
+		</div>
+	}
 </form>

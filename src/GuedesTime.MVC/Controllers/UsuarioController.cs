@@ -79,6 +79,7 @@ namespace GuedesTime.MVC.Controllers
             if (Guid.TryParse(user.Id, out var userId))
             {
                 var instituicoes = await _instituicaoService.ObterDadosInstituicoesUsuario(userId);
+
                 vm.Instituicoes = instituicoes
                     .OrderBy(i => i.Nome)
                     .Select(i => new UsuarioPerfilViewModel.InstituicaoResumoVm
@@ -161,19 +162,19 @@ namespace GuedesTime.MVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AtualizarDados(string nome, string? cpf)
+        public async Task<IActionResult> AtualizarDados(UsuarioPerfilViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user is null) return Challenge();
 
-            nome = (nome ?? string.Empty).Trim();
+            var nome = (model.Nome ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(nome))
             {
                 TempData["error"] = "Nome é obrigatório.";
                 return RedirectToAction(nameof(Index));
             }
 
-            var cpfDigits = CpfUtils.OnlyDigits(cpf ?? string.Empty);
+            var cpfDigits = CpfUtils.OnlyDigits(model.CpfMascarado ?? string.Empty);
             if (!string.IsNullOrWhiteSpace(cpfDigits) && !CpfUtils.IsValid(cpfDigits))
             {
                 TempData["error"] = "CPF inválido.";

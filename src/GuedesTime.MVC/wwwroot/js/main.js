@@ -129,7 +129,10 @@ document.addEventListener('click', function (event) {
             modalContent.innerHTML = '<p style="text-align:center; padding: 20px;">Carregando...</p>';
             ui.openModal(modal);
 
-            fetch(url)
+            fetch(url, {
+                method: 'GET',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
                 .then(response => response.text())
                 .then(html => {
                     modalContent.innerHTML = html;

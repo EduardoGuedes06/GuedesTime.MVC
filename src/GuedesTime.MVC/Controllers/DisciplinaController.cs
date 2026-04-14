@@ -163,13 +163,19 @@ namespace GuedesTime.MVC.Controllers
 
             ViewBag.EstadoInicialAtivo = disciplinaViewModel.Ativo.GetValueOrDefault(true);
 
-            return PartialView("_Upsert", disciplinaViewModel);
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_Upsert", disciplinaViewModel);
+            }
+
+            return View("Upsert", disciplinaViewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Upsert(DisciplinaViewModel disciplinaViewModel)
         {
+            var isAjax = Request.Headers["X-Requested-With"] == "XMLHttpRequest";
             var validator = new DisciplinaViewModelValidation();
 
             var validationResult = await validator.ValidateAsync(disciplinaViewModel);
@@ -177,7 +183,12 @@ namespace GuedesTime.MVC.Controllers
             if (!validationResult.IsValid)
             {
                 var erros = validationResult.Errors.Select(e => e.ErrorMessage).ToArray();
-                return Json(new { success = false, errors = erros });
+                if (isAjax) return Json(new { success = false, errors = erros });
+
+                foreach (var err in erros) ModelState.AddModelError(string.Empty, err);
+                ViewBag.EstadoInicialAtivo = disciplinaViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", erros);
+                return View("Upsert", disciplinaViewModel);
             }
 
             var instituicaoId = Guid.Parse(HttpContext.Session.GetString("InstituicaoId"));
@@ -197,13 +208,18 @@ namespace GuedesTime.MVC.Controllers
                 var mensagensErro = nomesDuplicados
                     .Select(n => $"A Disciplina '{n}' já existe para o tipo de ensino selecionado.")
                     .ToArray();
-                return Json(new { success = false, errors = mensagensErro });
+                if (isAjax) return Json(new { success = false, errors = mensagensErro });
+
+                foreach (var err in mensagensErro) ModelState.AddModelError(string.Empty, err);
+                ViewBag.EstadoInicialAtivo = disciplinaViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", mensagensErro);
+                return View("Upsert", disciplinaViewModel);
             }
 
             if (isCadastro)
-                return await ProcessarCadastroAsync(disciplinaViewModel, instituicaoId);
+                return await ProcessarCadastroAsync(disciplinaViewModel, instituicaoId, isAjax);
             else
-                return await ProcessarAtualizacaoAsync(disciplinaViewModel);
+                return await ProcessarAtualizacaoAsync(disciplinaViewModel, isAjax);
         }
 
         [HttpPost]
@@ -244,7 +260,7 @@ namespace GuedesTime.MVC.Controllers
 
         #region Funções de Apoio
 
-        private async Task<IActionResult> ProcessarCadastroAsync(DisciplinaViewModel disciplinaViewModel, Guid instituicaoId)
+        private async Task<IActionResult> ProcessarCadastroAsync(DisciplinaViewModel disciplinaViewModel, Guid instituicaoId, bool isAjax)
         {
             var nomesDisciplinas = disciplinaViewModel.Nomes?
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -253,7 +269,15 @@ namespace GuedesTime.MVC.Controllers
                 .ToList();
 
             if (nomesDisciplinas == null || !nomesDisciplinas.Any())
-                return Json(new { success = false, errors = new[] { "Nenhuma Disciplina válida informada." } });
+            {
+                var errors = new[] { "Nenhuma Disciplina válida informada." };
+                if (isAjax) return Json(new { success = false, errors });
+
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                ViewBag.EstadoInicialAtivo = disciplinaViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", disciplinaViewModel);
+            }
 
             var viewModels = nomesDisciplinas.Select(nome => new DisciplinaViewModel
             {
@@ -268,27 +292,45 @@ namespace GuedesTime.MVC.Controllers
 
             await _disciplinaService.AdicionarVariasAsync(entidades);
 
-            TempData["success"] = "Séries cadastradas com sucesso!";
-            return Json(new { success = true, url = Url.Action("index", "Disciplina") });
+            TempData["success"] = "Disciplinas cadastradas com sucesso!";
+            if (isAjax) return Json(new { success = true, url = Url.Action("index", "Disciplina") });
+            return RedirectToAction(nameof(Index));
         }
 
-        private async Task<IActionResult> ProcessarAtualizacaoAsync(DisciplinaViewModel disciplinaViewModel)
+        private async Task<IActionResult> ProcessarAtualizacaoAsync(DisciplinaViewModel disciplinaViewModel, bool isAjax)
         {
             var serieExiste = await _disciplinaService.ObterPorId((Guid)disciplinaViewModel.Id);
             if (serieExiste == null)
-                return Json(new { success = false, errors = new[] { "Série não encontrada." } });
+            {
+                var errors = new[] { "Disciplina não encontrada." };
+                if (isAjax) return Json(new { success = false, errors });
+
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                ViewBag.EstadoInicialAtivo = disciplinaViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", disciplinaViewModel);
+            }
 
             disciplinaViewModel.Codigo = serieExiste.Codigo ?? 0;
 
             _mapper.Map(disciplinaViewModel, serieExiste);
             await _disciplinaService.Atualizar(serieExiste);
 
-            TempData["success"] = "Dados da Série alterados com sucesso!";
+            TempData["success"] = "Dados da Disciplina alterados com sucesso!";
 
             if (!OperacaoValida())
-                return Json(new { success = false, errors = ObterErrosDeNegocio() });
+            {
+                var errors = ObterErrosDeNegocio();
+                if (isAjax) return Json(new { success = false, errors });
 
-            return Json(new { success = true, url = Url.Action("index", "Disciplina") });
+                foreach (var err in errors) ModelState.AddModelError(string.Empty, err);
+                ViewBag.EstadoInicialAtivo = disciplinaViewModel.Ativo.GetValueOrDefault(true);
+                TempData["error"] = string.Join(" ", errors);
+                return View("Upsert", disciplinaViewModel);
+            }
+
+            if (isAjax) return Json(new { success = true, url = Url.Action("index", "Disciplina") });
+            return RedirectToAction(nameof(Index));
         }
 
         #endregion
