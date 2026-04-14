@@ -58,9 +58,17 @@ async function initializeClearButtons() {
     }
 }
 
+async function initializeUserAvatarUploader(container) {
+    const mod = await import('./pages/usuarioAvatar.js');
+    if (typeof mod.initializeUserAvatarUploader === 'function') {
+        mod.initializeUserAvatarUploader(container);
+    }
+}
+
 const componentMap = {
     '[data-component="multi-select"]': initializeMultiSelect,
-    'input[class*="-toggle"]': initializeToggle
+    'input[class*="-toggle"]': initializeToggle,
+    '[data-component="user-avatar-uploader"]': initializeUserAvatarUploader
 };
 
 export function initializeComponents(container) {

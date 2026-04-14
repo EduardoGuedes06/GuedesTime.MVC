@@ -5,9 +5,18 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    var appUser = await UserManager.GetUserAsync(User);
+    var avatarUrl = "/img/userPlaceholder.png";
+    if (appUser is not null)
+    {
+        avatarUrl = !string.IsNullOrWhiteSpace(appUser.AvatarDataProtected)
+            ? Url.Action("Avatar", "Usuario", new { area = "" }) ?? avatarUrl
+            : string.IsNullOrWhiteSpace(appUser.Imagem) ? avatarUrl : appUser.Imagem;
+    }
+
     <div class="sidebar-user-profile" onclick="window.location.href='@Url.Action("Index", "Usuario", new { area = "" })'" style="cursor: pointer;">
         <div class="sidebar-user-avatar" id="sidebar-user-avatar">
-            <i class="fas fa-user-circle"></i>
+            <img src="@avatarUrl" alt="Avatar" style="width:100%; height:100%; border-radius:999px; object-fit:cover;" />
         </div>
         <div class="user-details">
             <span class="user-name" id="sidebar-user-name">@UserManager.GetUserName(User)</span>

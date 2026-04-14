@@ -1,36 +1,56 @@
-# Documentação do Projeto
+# GuedesTime.MVC
 
-## Objetivo
-O objetivo deste projeto é desenvolver uma interface web para escolas integrais criarem e planejarem suas aulas ao longo do ano letivo. O sistema visa facilitar a organização do cronograma escolar, permitindo a distribuição eficiente de disciplinas e professores.
+Sistema web para gestão escolar focado em **planejamento de aulas**, organização de cadastros (instituições, séries, turmas, disciplinas, professores) e controle de acesso com **ASP.NET Core Identity**.
 
-## Análise do Projeto
-O projeto busca solucionar a dificuldade das escolas em gerenciar e distribuir a carga horária das disciplinas ao longo do ano letivo. Para isso, será desenvolvida uma interface intuitiva e funcional que permita a criação, edição e acompanhamento do planejamento escolar.
+## Visão geral
+- **Domínio**: organização de uma instituição de ensino com foco em manter o planejamento anual.
+- **Contexto ativo**: as telas dependem de uma **instituição selecionada** via sessão (`InstituicaoId`), definida em `Instituicao/Definir`.
+- **Autenticação**: `ASP.NET Core Identity` com cookie.
+- **Autorização**: roles + permissões (claims/policies) para a área administrativa.
 
-### Requisitos Funcionais
-- Cadastro de disciplinas, professores e turmas.
-- Planejamento de aulas distribuídas ao longo do ano letivo.
-- Interface intuitiva para visualização e edição do cronograma.
-- Exportação do planejamento em formatos acessíveis.
-- Controle de acessos conforme o perfil do usuário.
+## Stack
+- **.NET**: ASP.NET Core (MVC + Razor Pages para Identity)
+- **Persistência**: MySQL (Pomelo EF Core)
+- **UI**: Razor + assets em `wwwroot`
+- **Healthchecks**: endpoints e UI
 
-### Requisitos Não Funcionais
-- Responsividade para diferentes dispositivos.
-- Segurança no armazenamento e manipulação dos dados.
-- Performance otimizada para grandes volumes de dados.
+## Estrutura (alto nível)
+- `src/GuedesTime.MVC`: UI (controllers, views, Identity, sessão e permissões)
+- `src/GuedesTime.Domain`: modelos e contratos
+- `src/GuedesTime.Data`: repositórios e contexto principal (`MeuDbContext`)
+- `src/GuedesTime.Service`: serviços de domínio
 
-## Inspirações
-| Base             | Fonte     |
-|------------------|-----------|
-| Ideias           | Behance   |
-| Paleta de cores  | Coolors.co|
-| Ilustrações      | Undraw    |
-| Teste com Usuario| Maze      |
+## Regras de negócio (resumo)
+### Instituição (contexto)
+- **Seleção**: o usuário seleciona uma instituição em `Instituicao/Definir`, que grava `InstituicaoId` na sessão.
+- **Acesso**: para controllers sensíveis, o sistema valida se a instituição selecionada pertence ao usuário autenticado.
 
-### Organização
-- [Trello](https://trello.com/b/KtC5DkE8/helphtime)
+### Cadastros base
+- **Disciplinas**: cadastro e edição; suporte a cadastro múltiplo (separado por vírgula).
+- **Séries**: suporte a cadastro múltiplo e edição individual; vínculo com disciplinas.
+- **Professores**: cadastro e associação com instituição.
+- **Turmas / Salas / Horários / Feriados**: cadastros complementares para o planejamento.
 
-## Paleta de Cores
-A identidade visual do sistema seguirá uma paleta de cores frias, priorizando modernidade e inovação.
+### Planejamento de aulas
+- O planejamento depende dos cadastros de base e do contexto da instituição selecionada.
+- O sistema evolui com telas específicas para operação e consulta do planejamento.
+
+## Identidade e acesso
+### Cookie do Identity
+- Login baseado em cookie. Reiniciar o servidor não invalida o cookie no browser por padrão.
+- O SecurityStamp é validado periodicamente para refletir mudanças de roles/claims.
+
+### Permissões (Admin)
+Permissões são modeladas como **claims** e expostas como **policies**.
+
+Área `Admin`:
+- `/Admin/Users`: listar usuários e atribuir roles
+- `/Admin/Roles`: CRUD de roles + permissões por role
+
+Permissões padrão:
+- `Admin`
+- `Roles.Read`, `Roles.Write`
+- `Users.Read`, `Users.Write`
 
 | Cor           | Exemplo  | Hex       |
 |--------------|----------|-----------|
@@ -39,62 +59,21 @@ A identidade visual do sistema seguirá uma paleta de cores frias, priorizando m
 | Cinza-claro  | ![#E5E7EB](https://www.colorhexa.com/E5E7EB.png) | `#E5E7EB` |
 | Branco       | ![#FFFFFF](https://www.colorhexa.com/FFFFFF.png) | `#FFFFFF` |
 
-## Tecnologias Utilizadas
-Para o desenvolvimento da plataforma, foram utilizadas as seguintes tecnologias:
+## Perfil do usuário (`/Usuario`)
+- Exibe dados reais do usuário autenticado (Nome, Email, Roles, CPF opcional, membro desde).
+- **Instituições relacionadas**: lista instituições do usuário e permite trocar o contexto chamando `Instituicao/Definir`.
+- Edição de dados e avatar seguem o padrão do projeto: **partials carregadas no modal global**.
 
-### Front-end:
-- HTML5
-- CSS
-- JavaScript
-- Razor
+## Avatar (armazenamento)
+- Avatares podem ser:
+  - **pré-definidos** em `wwwroot/assets/avatar` (referência por URL)
+  - **protegidos** com Data Protection e armazenados no banco (sem salvar arquivo em `wwwroot`)
+- O avatar protegido é servido via endpoint autenticado: `GET /Usuario/Avatar`.
 
-### Back-end:
+## Como rodar
+### Pré-requisitos
+- .NET SDK
 - MySQL
-- C#
-- .NET Framework
-- Entity Framework
-- LINQ
-
-## Arquitetura do Sistema
-O sistema seguirá a arquitetura MVC (Model-View-Controller), garantindo a separação das responsabilidades e melhor manutenção do código.
-
-### Camadas:
-- **Model**: Responsável pelos dados e regras de negócio.
-- **View**: Interface gráfica para interação do usuário.
-- **Controller**: Manipula as requisições e conecta a View ao Model.
-
-## Health Check
-Para garantir a estabilidade e disponibilidade do sistema, foi implementado um **Health Check** que monitora os principais serviços essenciais.
-
-### **Configuração**
-No `Program.cs`, os Health Checks foram configurados para verificar a API e seus serviços dependentes:
-
-```csharp
-app.UseHealthChecksUI(options => options.UIPath = "/Saude-ui");
-
-app.MapHealthChecks("/health", new HealthCheckOptions
-{
-    Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-});
-```
-
-### **Acesso**
-- **Endpoint de monitoramento:** `/health`
-- **Interface de visualização:** `/Saude-ui`
-
-Essa funcionalidade ajuda na **observabilidade do sistema**, permitindo identificar falhas antes que impactem os usuários.
-
-## Banco de Dados
-Para gerenciamento do banco de dados, utilizamos os seguintes comandos:
-
-```sh
-Add-Migration InitialIdentity -Context ApplicationDbContext
-Update-Database -Context ApplicationDbContext
-
-Add-Migration InitialDatabase -Context MeuDbContext
-Update-Database -Context MeuDbContext
-```
 
 ### Estrutura do Banco de Dados
 O banco de dados do sistema foi projetado com as seguintes tabelas principais:
@@ -119,8 +98,32 @@ O banco de dados do sistema foi projetado com as seguintes tabelas principais:
 - Feriados
 - Log
 
+### Executar
+- Configure a connection string em `src/GuedesTime.MVC/appsettings.json`
+- Rode:
+
+```bash
+dotnet run --project src/GuedesTime.MVC
+```
+
+## Migrações / Banco
+Contextos:
+- `ApplicationDbContext` (Identity)
+- `MeuDbContext` (domínio)
+
+Com `dotnet-ef` (ferramenta local via `dotnet-tools.json`):
+
+```bash
+dotnet tool run dotnet-ef database update --project src/GuedesTime.MVC --startup-project src/GuedesTime.MVC --context GuedesTime.MVC.Data.ApplicationDbContext
+```
+
+## Health checks
+- UI: `/Saude-ui`
+- Endpoints:
+  - `/Saude`
+  - `/Saude/db`
+  - `/Saude/system`
 
 ## Contato
-Eduardo Guedes  
-Email: eduardoguedeslibra@gmail.com  
-LinkedIn: [Eduardo Guedes Pereira](https://www.linkedin.com/in/eduardoguedespereira/)
+- Eduardo Guedes
+- Email: `eduardoguedeslibra@gmail.com`

@@ -19,9 +19,12 @@
 					<button class="avatar-action-btn" id="btn-view-photo" title="Visualizar Foto">
 						<i class="fas fa-eye"></i>
 					</button>
-					<label for="profile-picture-input" class="avatar-action-btn" title="Editar Foto">
+					<button type="button"
+							class="avatar-action-btn"
+							title="Editar Foto"
+							data-modal-url="@Url.Action("UploadModal", "Usuario", new { area = "" })">
 						<i class="fas fa-pencil-alt"></i>
-					</label>
+					</button>
 				</div>
 			</div>
 		</div>
@@ -48,8 +51,9 @@
 			</div>
 		</div>
 		<div class="modal-actions" style="border-top: none; padding-top: 0; margin-top: 16px; display:flex; gap:12px;">
-			<button class="btn secondary-btn" type="button" id="btn-edit-dados">Editar Dados</button>
-			<button class="btn secondary-btn" type="button" id="btn-edit-avatar">Avatar</button>
+			<button class="btn secondary-btn" type="button" data-modal-url="@Url.Action("EditModal", "Usuario", new { area = "" })">
+				Editar Dados
+			</button>
 		</div>
 	</div>
 
@@ -87,158 +91,4 @@
 
 	</div>
 </div>
-
-<div id="modal-edit-dados" class="modal-overlay">
-	<div class="modal-content" style="max-width: 520px;">
-		<div class="modal-header">
-			<h3>Editar dados</h3>
-			<button type="button" class="close-modal" id="btn-close-edit-dados" aria-label="Fechar">&times;</button>
-		</div>
-		<form asp-area="" asp-controller="Usuario" asp-action="AtualizarDados" method="post" style="padding: 16px;">
-			@Html.AntiForgeryToken()
-			<div class="form-group">
-				<label for="nome">Nome</label>
-				<input class="form-control" id="nome" name="nome" value="@Model.Nome" required />
-			</div>
-			<div class="form-group">
-				<label for="cpf">CPF (opcional)</label>
-				<input class="form-control" id="cpf" name="cpf" value="@Model.CpfMascarado" inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" />
-				<small id="cpf-live-msg" class="text-danger" style="display:none;"></small>
-			</div>
-			<div class="modal-actions">
-				<button type="submit" class="btn primary-btn">Salvar</button>
-			</div>
-		</form>
-	</div>
-</div>
-
-<div id="modal-edit-avatar" class="modal-overlay">
-	<div class="modal-content" style="max-width: 760px;">
-		<div class="modal-header">
-			<h3>Avatar</h3>
-			<button type="button" class="close-modal" id="btn-close-edit-avatar" aria-label="Fechar">&times;</button>
-		</div>
-		<div style="padding: 16px; display:grid; gap:16px;">
-			<div class="card" style="margin:0;">
-				<h3 class="card-title">Upload (com recorte)</h3>
-				<input type="file" id="avatar-file" accept="image/png,image/jpeg" />
-				<div style="display:none;" id="crop-area">
-					<div style="max-height: 360px; overflow:hidden; border-radius: 12px; margin-top:12px;">
-						<img id="avatar-crop-img" style="max-width: 100%; display:block;" />
-					</div>
-					<form asp-area="" asp-controller="Usuario" asp-action="UploadAvatarBase64" method="post" style="margin-top:12px;">
-						@Html.AntiForgeryToken()
-						<input type="hidden" name="dataUrl" id="avatar-dataurl" />
-						<button type="submit" class="btn primary-btn" id="btn-save-avatar">Salvar avatar</button>
-					</form>
-				</div>
-			</div>
-
-			<div class="card" style="margin:0;">
-				<h3 class="card-title">Selecionar avatar pré-definido</h3>
-				@if (Model.AvataresDisponiveis.Count == 0)
-				{
-					<div style="padding: 8px 0;">Nenhum avatar encontrado em <code>wwwroot/assets/avatar</code>.</div>
-				}
-				else
-				{
-					<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px;">
-						@foreach (var a in Model.AvataresDisponiveis)
-						{
-							<form asp-area="" asp-controller="Usuario" asp-action="SelecionarAvatar" method="post" style="margin:0;">
-								@Html.AntiForgeryToken()
-								<input type="hidden" name="avatarUrl" value="@a" />
-								<button type="submit" class="btn secondary-btn" style="padding:8px;">
-									<img src="@a" alt="avatar" style="width:64px; height:64px; border-radius:999px; object-fit:cover;" />
-								</button>
-							</form>
-						}
-					</div>
-				}
-			</div>
-		</div>
-	</div>
-</div>
-
-@section Scripts {
-	<script type="module">
-		import { openModal, closeModal } from '/js/ui.js';
-
-		const btnOpen = document.getElementById('btn-edit-dados');
-		const modal = document.getElementById('modal-edit-dados');
-		const btnClose = document.getElementById('btn-close-edit-dados');
-		const btnOpenAvatar = document.getElementById('btn-edit-avatar');
-		const modalAvatar = document.getElementById('modal-edit-avatar');
-		const btnCloseAvatar = document.getElementById('btn-close-edit-avatar');
-		const cpfInput = document.getElementById('cpf');
-		const live = document.getElementById('cpf-live-msg');
-
-		btnOpen?.addEventListener('click', () => openModal(modal));
-		btnClose?.addEventListener('click', () => closeModal(modal));
-		modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal); });
-
-		btnOpenAvatar?.addEventListener('click', () => openModal(modalAvatar));
-		btnCloseAvatar?.addEventListener('click', () => closeModal(modalAvatar));
-		modalAvatar?.addEventListener('click', (e) => { if (e.target === modalAvatar) closeModal(modalAvatar); });
-
-		function onlyDigits(v) { return (v || '').replace(/\D/g, ''); }
-		function maskCpf(v) {
-			const d = onlyDigits(v).slice(0, 11);
-			let out = '';
-			for (let i = 0; i < d.length; i++) {
-				out += d[i];
-				if (i === 2 || i === 5) out += '.';
-				if (i === 8) out += '-';
-			}
-			return out;
-		}
-		function isValidCpf(v) {
-			const d = onlyDigits(v);
-			if (d.length !== 11) return false;
-			if (/^(\d)\1{10}$/.test(d)) return false;
-			const calc = (len) => {
-				let sum = 0;
-				for (let i = 0; i < len; i++) sum += parseInt(d[i], 10) * (len + 1 - i);
-				const mod = sum % 11;
-				return mod < 2 ? 0 : 11 - mod;
-			};
-			return calc(9) === parseInt(d[9], 10) && calc(10) === parseInt(d[10], 10);
-		}
-
-		cpfInput?.addEventListener('input', () => {
-			cpfInput.value = maskCpf(cpfInput.value);
-			const d = onlyDigits(cpfInput.value);
-			if (d.length === 0 || d.length < 11) { live.style.display = 'none'; live.textContent = ''; return; }
-			const ok = isValidCpf(cpfInput.value);
-			live.textContent = ok ? '' : 'CPF inválido.';
-			live.style.display = ok ? 'none' : 'block';
-		});
-
-		// Avatar crop -> base64 (transporte). Observação: base64 não é criptografia.
-		const avatarFile = document.getElementById('avatar-file');
-		const cropArea = document.getElementById('crop-area');
-		const cropImg = document.getElementById('avatar-crop-img');
-		const dataUrlInput = document.getElementById('avatar-dataurl');
-		let cropper;
-
-		avatarFile?.addEventListener('change', (e) => {
-			const file = e.target.files?.[0];
-			if (!file) return;
-			const reader = new FileReader();
-			reader.onload = () => {
-				cropImg.src = reader.result;
-				cropArea.style.display = 'block';
-				if (cropper) cropper.destroy();
-				cropper = new Cropper(cropImg, { aspectRatio: 1, viewMode: 1, background: false, autoCropArea: 0.9 });
-			};
-			reader.readAsDataURL(file);
-		});
-
-		document.getElementById('btn-save-avatar')?.addEventListener('click', () => {
-			if (!cropper) return;
-			const canvas = cropper.getCroppedCanvas({ width: 256, height: 256 });
-			dataUrlInput.value = canvas.toDataURL('image/png');
-		});
-	</script>
-}
 

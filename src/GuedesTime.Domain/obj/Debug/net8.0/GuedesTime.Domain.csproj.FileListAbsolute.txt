@@ -74,3 +74,16 @@ D:\AMBIENTE DEV\Csharp\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\
 D:\AMBIENTE DEV\Csharp\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\refint\GuedesTime.Domain.dll
 D:\AMBIENTE DEV\Csharp\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.pdb
 D:\AMBIENTE DEV\Csharp\PROJETO GUEDES TIME\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\ref\GuedesTime.Domain.dll
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\bin\Debug\net8.0\GuedesTime.Domain.deps.json
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\bin\Debug\net8.0\GuedesTime.Domain.dll
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\bin\Debug\net8.0\GuedesTime.Domain.pdb
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.csproj.AssemblyReference.cache
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.AssemblyInfoInputs.cache
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.AssemblyInfo.cs
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.csproj.CoreCompileInputs.cache
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.sourcelink.json
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.dll
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\refint\GuedesTime.Domain.dll
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\GuedesTime.Domain.pdb
+C:\PESSOAL\DEV\EDUARDO\GuedesTime.MVC\src\GuedesTime.Domain\obj\Debug\net8.0\ref\GuedesTime.Domain.dll

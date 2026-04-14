@@ -33,7 +33,6 @@ namespace GuedesTime.MVC.Configurations
 
 			services.AddAuthorization(options =>
 			{
-				// Policies por permissão (via claim). Ex.: [Authorize(Policy = PermissionPolicies.Require(Permission.Admin))]
 				foreach (var permission in Permissions.All)
 				{
 					options.AddPolicy(PermissionPolicies.Require(permission), policy =>
@@ -46,16 +45,12 @@ namespace GuedesTime.MVC.Configurations
 				options.LoginPath = "/Identity/Account/Login";
 				options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 				options.LogoutPath = "/Identity/Account/Logout";
-
-				// Cookie auth (Identity) — é normal persistir após reiniciar.
-				// Ajustes abaixo deixam expiração e revalidação mais previsíveis.
 				options.SlidingExpiration = true;
 				options.ExpireTimeSpan = TimeSpan.FromHours(8);
 				options.Cookie.HttpOnly = true;
 				options.Cookie.IsEssential = true;
 			});
 
-			// Revalida (e regenera) o principal com mais frequência (roles/claims mudam “quase em tempo real”)
 			services.Configure<SecurityStampValidatorOptions>(options =>
 			{
 				options.ValidationInterval = TimeSpan.FromMinutes(1);
@@ -64,28 +59,4 @@ namespace GuedesTime.MVC.Configurations
 			return services;
 		}
 	}
-    public static class PermissionClaimTypes
-    {
-        public const string Permission = "permission";
-    }
-    public static class Permissions
-    {
-        public const string Admin = "Admin";
-        public const string RolesRead = "Roles.Read";
-        public const string RolesWrite = "Roles.Write";
-        public const string UsersRead = "Users.Read";
-        public const string UsersWrite = "Users.Write";
-        public static readonly IReadOnlyList<string> All = new[]
-        {
-            Admin,
-            RolesRead,
-            RolesWrite,
-            UsersRead,
-            UsersWrite
-        }.Distinct().OrderBy(x => x).ToList();
-    }
-    public static class PermissionPolicies
-    {
-        public static string Require(string permission) => $"Permission:{permission}";
-    }
 }

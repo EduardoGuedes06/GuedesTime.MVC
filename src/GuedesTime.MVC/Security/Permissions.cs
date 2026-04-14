@@ -3,8 +3,6 @@ using System.Linq;
 
 namespace GuedesTime.MVC.Security
 {
-	// Básico: permissões como strings (bom p/ claims e policies).
-	// Você pode evoluir isso depois para persistir em tabela se quiser.
 	public static class Permissions
 	{
 		public const string Admin = "Admin";

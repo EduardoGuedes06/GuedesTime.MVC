@@ -11,6 +11,9 @@ namespace GuedesTime.MVC.Models
         // URL/Path relativo da imagem (ex.: "/uploads/avatars/<id>.png" ou "/assets/avatar/x.jpg")
         public string Imagem { get; set; } = string.Empty;
 
+        public string AvatarContentType { get; set; } = string.Empty;
+        public string AvatarDataProtected { get; set; } = string.Empty;
+
         // CPF (opcional) - armazenado sem máscara (somente dígitos)
         public string Documento { get; set; } = string.Empty;
 

@@ -127,6 +127,38 @@ function handleNomeInput(nomeInput) {
     if (nameError) nameError.textContent = "";
 }
 
+function validarCPF(cpf) {
+    if (!cpf || cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+    const calc = (len) => {
+        let sum = 0;
+        for (let i = 0; i < len; i++) sum += parseInt(cpf[i], 10) * (len + 1 - i);
+        const mod = sum % 11;
+        return mod < 2 ? 0 : 11 - mod;
+    };
+    return calc(9) === parseInt(cpf[9], 10) && calc(10) === parseInt(cpf[10], 10);
+}
+
+function handleCpfInput(cpfInput) {
+    const errorId = cpfInput.getAttribute('data-error-id');
+    const cpfError = errorId ? document.getElementById(errorId) : null;
+
+    let cpf = cpfInput.value.replace(/\D/g, '');
+    if (cpf.length > 11) cpf = cpf.substring(0, 11);
+
+    if (cpf.length > 3) cpf = cpf.replace(/^(\d{3})(\d)/, '$1.$2');
+    if (cpf.length > 7) cpf = cpf.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+    if (cpf.length > 11) cpf = cpf.replace(/\.(\d{3})(\d)/, '.$1-$2');
+
+    cpfInput.value = cpf;
+
+    const digits = cpf.replace(/\D/g, '');
+    if (cpfError) {
+        if (digits.length > 0 && digits.length < 11) cpfError.textContent = "CPF incompleto.";
+        else if (digits.length === 11 && !validarCPF(digits)) cpfError.textContent = "CPF inválido.";
+        else cpfError.textContent = "";
+    }
+}
+
 function handleFiltroInput(filtroInput) {
 
     debugger
@@ -216,6 +248,7 @@ export {
     initializeToggleSwitch,
     handleCnpjInput,
     handleNomeInput,
+    handleCpfInput,
     handleNumeroInput,
     handleFiltroInput,
     handleOrdinalUnicoInput,

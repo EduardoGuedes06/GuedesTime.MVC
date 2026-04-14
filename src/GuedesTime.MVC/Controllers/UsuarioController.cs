@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using GuedesTime.Domain.Intefaces;
 using GuedesTime.MVC.Models;
+using GuedesTime.MVC.Services;
 using GuedesTime.MVC.Utils;
 using GuedesTime.MVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 
 namespace GuedesTime.MVC.Controllers
 {
@@ -17,17 +17,20 @@ namespace GuedesTime.MVC.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IInstituicaoService _instituicaoService;
         private readonly IWebHostEnvironment _env;
+        private readonly IUserAvatarService _userAvatarService;
 
         public UsuarioController(IMapper mapper, 
         INotificador notificador,
         UserManager<ApplicationUser> userManager,
         IInstituicaoService instituicaoService,
-        IWebHostEnvironment env) : base(notificador)
+        IWebHostEnvironment env,
+        IUserAvatarService userAvatarService) : base(notificador)
         {
             _mapper = mapper;
             _userManager = userManager;
             _instituicaoService = instituicaoService;
             _env = env;
+            _userAvatarService = userAvatarService;
         }
 
 
@@ -55,10 +58,10 @@ namespace GuedesTime.MVC.Controllers
                 TipoConta = tipoConta,
                 MembroDesdeTexto = membroDesde,
                 CpfMascarado = cpfMascarado,
-                AvatarUrl = string.IsNullOrWhiteSpace(user.Imagem) ? "/img/userPlaceholder.png" : user.Imagem
+                AvatarUrl = !string.IsNullOrWhiteSpace(user.AvatarDataProtected) ? Url.Action("Avatar", "Usuario", new { area = "" })!
+					: string.IsNullOrWhiteSpace(user.Imagem) ? "/img/userPlaceholder.png" : user.Imagem
             };
 
-            // Avatares pré-carregados (se existirem em wwwroot/assets/avatar)
             var avatarDir = Path.Combine(_env.WebRootPath, "assets", "avatar");
             if (Directory.Exists(avatarDir))
             {
@@ -88,6 +91,72 @@ namespace GuedesTime.MVC.Controllers
             }
 
             return View(vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditModal()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null) return Challenge();
+
+            var cpfDigits = CpfUtils.OnlyDigits(user.Documento ?? string.Empty);
+            var cpfMascarado = cpfDigits.Length == 11
+                ? $"{cpfDigits[..3]}.{cpfDigits.Substring(3, 3)}.{cpfDigits.Substring(6, 3)}-{cpfDigits.Substring(9, 2)}"
+                : string.Empty;
+
+            var vm = new UsuarioPerfilViewModel
+            {
+                Nome = user.Nome ?? user.UserName ?? string.Empty,
+                Email = user.Email ?? string.Empty,
+                CpfMascarado = cpfMascarado
+            };
+
+            return PartialView("_edit", vm);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UploadModal()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null) return Challenge();
+
+            var vm = new UsuarioPerfilViewModel
+            {
+                AvatarUrl = string.IsNullOrWhiteSpace(user.Imagem) ? "/img/userPlaceholder.png" : user.Imagem,
+                AvataresDisponiveis = new List<string>()
+            };
+
+            var avatarDir = Path.Combine(_env.WebRootPath, "assets", "avatar");
+            if (Directory.Exists(avatarDir))
+            {
+                vm.AvataresDisponiveis = Directory.GetFiles(avatarDir)
+                    .Select(f => Path.GetFileName(f))
+                    .Where(n => n.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                n.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                n.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                n.EndsWith(".webp", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(n => n)
+                    .Select(n => $"/assets/avatar/{n}")
+                    .ToList();
+            }
+
+            return PartialView("_upload", vm);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Avatar()
+        {
+            if (!User.Identity?.IsAuthenticated ?? true) return Unauthorized();
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null) return Unauthorized();
+
+            var (ok, _, bytes, contentType) = _userAvatarService.UnprotectToBytes(user.AvatarDataProtected, user.AvatarContentType);
+            if (!ok) return NotFound();
+
+            Response.Headers.CacheControl = "no-store";
+            return File(bytes, contentType);
         }
 
         [HttpPost]
@@ -137,7 +206,6 @@ namespace GuedesTime.MVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // segurança: somente arquivo existente dentro de wwwroot/assets/avatar
             var fileName = Path.GetFileName(avatarUrl);
             var physical = Path.Combine(_env.WebRootPath, "assets", "avatar", fileName);
             if (!System.IO.File.Exists(physical))
@@ -147,6 +215,8 @@ namespace GuedesTime.MVC.Controllers
             }
 
             user.Imagem = $"/assets/avatar/{fileName}";
+            user.AvatarContentType = string.Empty;
+            user.AvatarDataProtected = string.Empty;
             var res = await _userManager.UpdateAsync(user);
             if (!res.Succeeded)
             {
@@ -165,59 +235,22 @@ namespace GuedesTime.MVC.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user is null) return Challenge();
 
-            if (string.IsNullOrWhiteSpace(dataUrl) || !dataUrl.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+            if (string.IsNullOrWhiteSpace(dataUrl))
             {
-                TempData["error"] = "Imagem inválida.";
+                TempData["error"] = "Selecione uma imagem para upload.";
                 return RedirectToAction(nameof(Index));
             }
 
-            var commaIdx = dataUrl.IndexOf(',');
-            if (commaIdx < 0)
-            {
-                TempData["error"] = "Imagem inválida.";
-                return RedirectToAction(nameof(Index));
-            }
+			var (ok, error, contentType, protectedBase64) = _userAvatarService.ProtectFromDataUrl(dataUrl);
+			if (!ok)
+			{
+				TempData["error"] = error;
+				return RedirectToAction(nameof(Index));
+			}
 
-            var header = dataUrl.Substring(0, commaIdx);
-            var base64 = dataUrl.Substring(commaIdx + 1);
-
-            var ext = header.Contains("image/png", StringComparison.OrdinalIgnoreCase) ? "png"
-                : header.Contains("image/jpeg", StringComparison.OrdinalIgnoreCase) ? "jpg"
-                : header.Contains("image/jpg", StringComparison.OrdinalIgnoreCase) ? "jpg"
-                : null;
-
-            if (ext is null)
-            {
-                TempData["error"] = "Formato não suportado (use PNG ou JPG).";
-                return RedirectToAction(nameof(Index));
-            }
-
-            byte[] bytes;
-            try
-            {
-                bytes = Convert.FromBase64String(base64);
-            }
-            catch
-            {
-                TempData["error"] = "Imagem inválida (base64).";
-                return RedirectToAction(nameof(Index));
-            }
-
-            // limite simples (1MB)
-            if (bytes.Length > 1_000_000)
-            {
-                TempData["error"] = "Imagem muito grande (máx. 1MB).";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var uploadDir = Path.Combine(_env.WebRootPath, "uploads", "avatars");
-            Directory.CreateDirectory(uploadDir);
-
-            var fileName = $"{user.Id}.{ext}";
-            var path = Path.Combine(uploadDir, fileName);
-            await System.IO.File.WriteAllBytesAsync(path, bytes);
-
-            user.Imagem = $"/uploads/avatars/{fileName}";
+			user.Imagem = string.Empty;
+			user.AvatarContentType = contentType;
+			user.AvatarDataProtected = protectedBase64;
             var res = await _userManager.UpdateAsync(user);
             if (!res.Succeeded)
             {
@@ -229,19 +262,16 @@ namespace GuedesTime.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: ConfiguracoesController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: ConfiguracoesController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: ConfiguracoesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -256,13 +286,11 @@ namespace GuedesTime.MVC.Controllers
             }
         }
 
-        // GET: ConfiguracoesController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ConfiguracoesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -277,13 +305,11 @@ namespace GuedesTime.MVC.Controllers
             }
         }
 
-        // GET: ConfiguracoesController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ConfiguracoesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

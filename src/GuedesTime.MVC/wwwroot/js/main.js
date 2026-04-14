@@ -162,6 +162,7 @@ const classeParaFuncao = {
     'campo-cep': 'handleCepInput',
     'campo-cnpj': 'handleCnpjInput',
     'campo-nome': 'handleNomeInput',
+    'campo-cpf': 'handleCpfInput',
     'campo-numero': 'handleNumeroInput',
     'campo-filtro': 'handleFiltroInput',
     'campo-ordinal-unico': 'handleOrdinalUnicoInput',
@@ -184,15 +185,26 @@ document.addEventListener('input', function (event) {
 
 document.addEventListener('submit', function (event) {
     const form = event.target;
-    if (form.closest('#modal-global')) {
+    // Por padrão, formulários em modais devem fazer post normal (redirect/HTML).
+    // Só usamos AJAX quando o form sinaliza explicitamente.
+    if (form.closest('#modal-global') && form.dataset.ajax === 'true') {
         event.preventDefault();
         import('./ui.js').then(ui => {
             fetch(form.action, {
                 method: 'POST',
                 body: new FormData(form)
             })
-                .then(res => res.json())
+                .then(async res => {
+                    const contentType = res.headers.get('content-type') || '';
+                    if (!contentType.includes('application/json')) {
+                        // Fallback para endpoints que retornam redirect/HTML.
+                        window.location.href = res.url || window.location.href;
+                        return null;
+                    }
+                    return res.json();
+                })
                 .then(data => {
+                    if (!data) return;
                     if (data.success) {
                         window.location.href = data.url;
                     } else {

@@ -18,6 +18,9 @@ namespace GuedesTime.Configurations
     {
         public static IServiceCollection ResolveDependencies(this IServiceCollection services)
         {
+            services.AddDataProtection();
+            services.AddScoped<IUserAvatarService, UserAvatarService>();
+
             services.AddScoped<IEmailSenderGripGrip, EmailSenderGrip>();
 
             services.AddScoped<MeuDbContext>();

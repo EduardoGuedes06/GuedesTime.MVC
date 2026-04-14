@@ -1,0 +1,86 @@
+﻿@model GuedesTime.MVC.ViewModels.UsuarioPerfilViewModel
+
+<div class="modal-header">
+	<div class="modal-title-container">
+		<h3 class="modal-title">Foto / Avatar</h3>
+	</div>
+</div>
+
+<div class="modal-body">
+	<div class="card" style="margin:0;">
+		<h3 class="card-title">Selecionar avatar pré-definido</h3>
+		@if (Model.AvataresDisponiveis.Count == 0)
+		{
+			<div style="padding: 8px 0;">Nenhum avatar encontrado em <code>wwwroot/assets/avatar</code>.</div>
+		}
+		else
+		{
+			<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px;">
+				@foreach (var a in Model.AvataresDisponiveis)
+				{
+					<form asp-area="" asp-controller="Usuario" asp-action="SelecionarAvatar" method="post" style="margin:0;">
+						@Html.AntiForgeryToken()
+						<input type="hidden" name="avatarUrl" value="@a" />
+						<button type="submit" class="btn secondary-btn" style="padding:8px; width:100%;">
+							<img src="@a" alt="avatar" style="width:64px; height:64px; border-radius:999px; object-fit:cover;" />
+						</button>
+					</form>
+				}
+			</div>
+		}
+	</div>
+
+	<div class="card" style="margin:16px 0 0 0;">
+		<h3 class="card-title">Upload</h3>
+		<form asp-area="" asp-controller="Usuario" asp-action="UploadAvatarBase64" method="post" style="margin-top:12px;">
+			@Html.AntiForgeryToken()
+
+			<div data-component="user-avatar-uploader">
+				<div class="form-group" style="margin-bottom:12px;">
+					<label class="control-label">Imagem</label>
+					<input type="file" class="form-control" accept="image/*" data-avatar-file style="display:none;" />
+
+					<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+						<button type="button" class="btn secondary-btn" data-avatar-pick>Escolher arquivo</button>
+						<span data-avatar-filename style="color:#6b7280; font-size: 12px;">Nenhum arquivo selecionado</span>
+					</div>
+					<div style="margin-top:6px; color:#6b7280; font-size: 12px;">
+						PNG ou JPG, até 1MB.
+					</div>
+				</div>
+
+				<div data-avatar-editor style="display:none; margin-top:14px;">
+					<div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+					<div style="flex: 1; min-width: 320px;">
+						<canvas data-avatar-canvas
+								style="width:100%; height:auto; border-radius: 12px; background:#111827; touch-action:none; cursor:grab;"></canvas>
+						<div style="margin-top:10px; display:flex; align-items:center; gap:10px;">
+							<label style="min-width:52px;">Zoom</label>
+							<input type="range" min="1" max="3" step="0.01" value="1" data-avatar-zoom style="flex:1;" />
+						</div>
+						<div style="margin-top:8px; color:#6b7280; font-size: 12px;">
+							Arraste a imagem para posicionar e use o zoom para ajustar o recorte.
+						</div>
+					</div>
+
+					<div style="min-width: 220px; flex: 0 0 220px;">
+						<div style="display:flex; flex-direction:column; gap:10px;">
+							<input type="hidden" name="dataUrl" data-avatar-dataurl />
+							<button type="button" class="btn primary-btn" data-avatar-save>Salvar avatar</button>
+							<button type="button" class="btn secondary-btn" data-avatar-reset>Limpar</button>
+							<div style="color:#6b7280; font-size: 12px;">
+								Seu avatar é salvo no banco de dados com criptografia. Nada fica gravado no servidor.
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="modal-footer">
+	<button type="button" class="btn secondary-btn" data-modal-close>Fechar</button>
+</div>
+

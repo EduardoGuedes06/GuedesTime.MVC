@@ -1,0 +1,41 @@
+@model GuedesTime.MVC.ViewModels.UsuarioPerfilViewModel
+
+<div class="modal-header">
+	<div class="modal-title-container">
+		<h3 class="modal-title">Editar dados</h3>
+	</div>
+</div>
+
+<form asp-area="" asp-controller="Usuario" asp-action="AtualizarDados" method="post" id="form-usuario-edit">
+	@Html.AntiForgeryToken()
+	<div class="modal-body">
+		<div class="form-group">
+			<label for="nome" class="control-label">Nome</label>
+			<div class="input-with-button">
+				<input class="form-control campo-nome" id="nome" name="nome" value="@Model.Nome" required />
+				<button type="button" class="clear-input-btn js-clear-input-btn" title="Limpar campo">
+					<i class="fas fa-times-circle"></i>
+				</button>
+			</div>
+			<span id="name-error" class="text-danger"></span>
+		</div>
+
+		<div class="form-group">
+			<label for="cpf" class="control-label">CPF (opcional)</label>
+			<div class="input-with-button">
+				<input class="form-control campo-cpf" id="cpf" name="cpf" value="@Model.CpfMascarado"
+					   inputmode="numeric" autocomplete="off" placeholder="000.000.000-00" data-error-id="cpf-error" />
+				<button type="button" class="clear-input-btn js-clear-input-btn" title="Limpar campo">
+					<i class="fas fa-times-circle"></i>
+				</button>
+			</div>
+			<span id="cpf-error" class="text-danger"></span>
+		</div>
+	</div>
+
+	<div class="modal-footer">
+		<button type="button" class="btn secondary-btn" data-modal-close>Cancelar</button>
+		<button type="submit" class="btn primary-btn">Salvar</button>
+	</div>
+</form>
+
